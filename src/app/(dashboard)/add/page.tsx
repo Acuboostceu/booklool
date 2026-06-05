@@ -100,9 +100,10 @@ export default function AddBookPage() {
   }
 
   async function handleSearch(q?: string) {
-    const searchQ = q || query
+    const searchQ = q !== undefined ? q : query
     if (!searchQ.trim()) return
     setSearching(true)
+    setQuery(searchQ)
     const res = await fetch(`/api/books/search?q=${encodeURIComponent(searchQ)}`)
     const { results } = await res.json()
     setSearchResults(results)
