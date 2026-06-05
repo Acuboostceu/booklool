@@ -71,10 +71,10 @@ export default function SignupPage() {
         <div className="bg-white rounded-3xl shadow-sm p-8" style={{border: '2px solid var(--green-light)'}}>
           <h2 className="text-xl font-black text-center mb-6 text-gray-700">회원가입</h2>
 
-          {/* Google Login */}
+          {/* Google Login — hidden until Supabase project is separated */}
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 rounded-2xl py-3 px-4 text-sm font-semibold text-gray-700 hover:opacity-80 transition mb-4"
+            className="hidden w-full flex items-center justify-center gap-3 rounded-2xl py-3 px-4 text-sm font-semibold text-gray-700 hover:opacity-80 transition mb-4"
             style={{border: '2px solid var(--green-light)', background: 'var(--green-light)'}}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -86,11 +86,6 @@ export default function SignupPage() {
             Google로 시작하기
           </button>
 
-          <div className="flex items-center gap-3 my-4">
-            <div className="flex-1 h-px bg-gray-100" />
-            <span className="text-xs text-gray-400">또는</span>
-            <div className="flex-1 h-px bg-gray-100" />
-          </div>
 
           <form onSubmit={handleSignup} className="space-y-3">
             <input
