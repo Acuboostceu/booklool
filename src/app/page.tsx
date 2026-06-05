@@ -89,7 +89,15 @@ export default function LandingPage() {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) setLoggedIn(true)
     })
+    const saved = localStorage.getItem('bl_locale')
+    if (saved === 'ko') setLang('ko')
   }, [supabase])
+
+  function toggleLang() {
+    const next = lang === 'en' ? 'ko' : 'en'
+    setLang(next)
+    localStorage.setItem('bl_locale', next)
+  }
 
   const steps = [
     { icon: '📸', title: t.step1_title, desc: t.step1_desc, color: 'var(--green-light)' },
@@ -106,7 +114,7 @@ export default function LandingPage() {
           <img src="/booklool.png" alt="Booklool" className="h-8 w-auto object-contain" />
           <div className="flex items-center gap-2 sm:gap-3">
             <button
-              onClick={() => setLang(lang === 'en' ? 'ko' : 'en')}
+              onClick={toggleLang}
               className="text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-200 text-gray-500 hover:border-gray-400 transition"
             >
               {t.lang_toggle}
