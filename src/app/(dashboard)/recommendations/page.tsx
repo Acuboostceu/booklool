@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { RECOMMENDED_BOOKS } from '@/lib/recommendations'
+import { useLocale } from '@/lib/i18n/LocaleContext'
+import { Locale } from '@/lib/i18n/translations'
 
 const gradeColors = [
   { bg: 'var(--green-light)', accent: 'var(--green-dark)', border: 'var(--green-light)' },
@@ -11,24 +13,28 @@ const gradeColors = [
   { bg: 'var(--yellow-light)', accent: 'var(--yellow-dark)', border: 'var(--yellow-light)' },
 ]
 
+const langLabel: Record<Locale, string> = { ko: '한국어', en: 'EN', es: 'ES' }
+
 export default function RecommendationsPage() {
+  const { t, bookLocales } = useLocale()
   const grades = Object.keys(RECOMMENDED_BOOKS)
   const [openGrade, setOpenGrade] = useState<string>(grades[0])
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-bold text-gray-800 mb-1">추천 도서</h1>
-      <p className="text-sm text-gray-400 mb-6">학년별 추천 책 목록이에요</p>
+      <h1 className="text-2xl font-bold text-gray-800 mb-1">{t('rec_title')}</h1>
+      <p className="text-sm text-gray-400 mb-6">{t('rec_subtitle')}</p>
 
       <div className="space-y-3">
         {grades.map((grade, idx) => {
-          const books = RECOMMENDED_BOOKS[grade]
+          const allBooks = RECOMMENDED_BOOKS[grade]
+          const books = allBooks.filter(b => bookLocales.includes(b.lang as Locale))
+          if (books.length === 0) return null
           const color = gradeColors[idx % gradeColors.length]
           const isOpen = openGrade === grade
 
           return (
             <div key={grade} className="rounded-2xl overflow-hidden border" style={{borderColor: isOpen ? color.border : '#f0f0f0', background: 'white'}}>
-              {/* Header */}
               <button
                 onClick={() => setOpenGrade(isOpen ? '' : grade)}
                 className="w-full flex items-center justify-between px-5 py-4 text-left"
@@ -36,7 +42,7 @@ export default function RecommendationsPage() {
               >
                 <div className="flex items-center gap-3">
                   <span className="font-semibold text-base" style={{color: color.accent}}>{grade}</span>
-                  <span className="text-xs text-gray-400 font-medium">{books.length}권</span>
+                  <span className="text-xs text-gray-400 font-medium">{t('rec_count', books.length as never)}</span>
                 </div>
                 {isOpen
                   ? <ChevronUp className="w-5 h-5" style={{color: color.accent}} />
@@ -44,7 +50,6 @@ export default function RecommendationsPage() {
                 }
               </button>
 
-              {/* Books list */}
               {isOpen && (
                 <div className="px-4 pb-4 pt-1 space-y-2">
                   {books.map((book, i) => (
@@ -61,10 +66,12 @@ export default function RecommendationsPage() {
                         className="flex-shrink-0 text-xs px-2 py-1 rounded-full font-bold"
                         style={book.lang === 'ko'
                           ? {background: 'var(--purple-light)', color: 'var(--purple-dark)'}
-                          : {background: 'var(--green-light)', color: 'var(--green-dark)'}
+                          : book.lang === 'en'
+                          ? {background: 'var(--green-light)', color: 'var(--green-dark)'}
+                          : {background: 'var(--yellow-light)', color: 'var(--yellow-dark)'}
                         }
                       >
-                        {book.lang === 'ko' ? '한국' : 'EN'}
+                        {langLabel[book.lang as Locale] || book.lang}
                       </span>
                     </div>
                   ))}

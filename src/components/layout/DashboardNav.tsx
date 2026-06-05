@@ -3,23 +3,26 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { BookOpen, PlusCircle, Star, Users, LogOut } from 'lucide-react'
+import { BookOpen, PlusCircle, Star, Users, LogOut, Settings } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useLocale } from '@/lib/i18n/LocaleContext'
 
-const navItems = [
-  { href: '/bookshelf', icon: BookOpen, label: '책장' },
-  { href: '/add', icon: PlusCircle, label: '책 추가' },
-  { href: '/recommendations', icon: Star, label: '추천' },
-  { href: '/parent', icon: Users, label: '가족' },
-]
-
-const navColors = ['var(--green)', 'var(--pink)', 'var(--purple)', 'var(--yellow-dark)']
+const navColors = ['var(--green)', 'var(--pink)', 'var(--purple)', 'var(--yellow-dark)', 'var(--purple)']
 
 export default function DashboardNav() {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
+  const { t } = useLocale()
+
+  const navItems = [
+    { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf') },
+    { href: '/add', icon: PlusCircle, label: t('nav_add') },
+    { href: '/recommendations', icon: Star, label: t('nav_recommendations') },
+    { href: '/parent', icon: Users, label: t('nav_family') },
+    { href: '/settings', icon: Settings, label: t('settings_title') },
+  ]
 
   async function handleLogout() {
     await supabase.auth.signOut()
@@ -86,7 +89,7 @@ export default function DashboardNav() {
           className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-gray-400 hover:text-gray-600 transition"
         >
           <LogOut className="w-5 h-5" />
-          로그아웃
+          {t('nav_logout')}
         </button>
       </aside>
     </>

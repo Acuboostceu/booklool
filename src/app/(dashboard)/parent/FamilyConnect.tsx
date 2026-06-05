@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Copy, Check, Users } from 'lucide-react'
+import { useLocale } from '@/lib/i18n/LocaleContext'
 
 export default function FamilyConnect({
   familyCode,
@@ -12,6 +13,7 @@ export default function FamilyConnect({
   partnerName: string | null
 }) {
   const router = useRouter()
+  const { t } = useLocale()
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -45,12 +47,11 @@ export default function FamilyConnect({
     <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
       <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
         <Users className="w-4 h-4" style={{color: 'var(--purple)'}} />
-        가족 연결
+        {t('family_connect')}
       </h3>
 
-      {/* My family code */}
       <div className="mb-4">
-        <p className="text-xs text-gray-500 mb-2">내 가족 코드 (배우자에게 공유하세요)</p>
+        <p className="text-xs text-gray-500 mb-2">{t('family_code_label')}</p>
         <div className="flex items-center gap-2">
           <div className="flex-1 bg-gray-50 rounded-2xl px-4 py-3 font-semibold text-lg tracking-widest text-center" style={{color: 'var(--purple-dark)'}}>
             {familyCode}
@@ -68,23 +69,22 @@ export default function FamilyConnect({
         </div>
       </div>
 
-      {/* Partner status or join form */}
       {partnerName ? (
-        <div className="flex items-center gap-3 bg-green-50 rounded-2xl px-4 py-3">
+        <div className="flex items-center gap-3 rounded-2xl px-4 py-3" style={{background: 'var(--green-light)'}}>
           <span className="text-xl">💑</span>
           <div>
-            <p className="text-sm font-bold text-gray-800">{partnerName}님과 연결됨</p>
-            <p className="text-xs text-gray-500">같은 가족 책장을 보고 있어요</p>
+            <p className="text-sm font-bold text-gray-800">{t('family_connected', partnerName as never)}</p>
+            <p className="text-xs text-gray-500">{t('family_connected_desc')}</p>
           </div>
         </div>
       ) : (
         <form onSubmit={handleJoin} className="space-y-2">
-          <p className="text-xs text-gray-500">배우자의 가족 코드 입력</p>
+          <p className="text-xs text-gray-500">{t('family_enter_code')}</p>
           <div className="flex gap-2">
             <input
               value={code}
               onChange={e => setCode(e.target.value.toUpperCase())}
-              placeholder="코드 6자리"
+              placeholder={t('family_code_placeholder')}
               maxLength={6}
               className="flex-1 border-2 rounded-2xl px-4 py-3 text-sm font-bold tracking-widest uppercase outline-none"
               style={{borderColor: 'var(--purple-light)'}}
@@ -97,7 +97,7 @@ export default function FamilyConnect({
               className="text-white font-black rounded-2xl px-4 py-3 text-sm transition disabled:opacity-60"
               style={{background: 'var(--purple)'}}
             >
-              {loading ? '...' : '연결'}
+              {loading ? t('family_connecting') : t('family_connect_btn')}
             </button>
           </div>
           {error && <p className="text-red-500 text-xs">{error}</p>}
