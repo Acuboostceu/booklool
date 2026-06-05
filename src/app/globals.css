@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f9fdf6;
+  --foreground: #2a2a2a;
+
+  /* Booklool palette */
+  --green:        #7ec96a;  /* 새싹 초록 */
+  --green-light:  #e8f7e3;
+  --green-dark:   #4e9a3c;
+
+  --pink:         #f9a8c9;  /* 파스텔 핑크 */
+  --pink-light:   #fde8f2;
+  --pink-dark:    #d96097;
+
+  --purple:       #c4a8e8;  /* 연보라 */
+  --purple-light: #f0e8fb;
+  --purple-dark:  #8a5cc9;
+
+  --yellow:       #ffe080;  /* 노랑 */
+  --yellow-light: #fff8d6;
+  --yellow-dark:  #c9a000;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-nunito);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bl-green:         var(--green);
+  --color-bl-green-light:   var(--green-light);
+  --color-bl-green-dark:    var(--green-dark);
+  --color-bl-pink:          var(--pink);
+  --color-bl-pink-light:    var(--pink-light);
+  --color-bl-pink-dark:     var(--pink-dark);
+  --color-bl-purple:        var(--purple);
+  --color-bl-purple-light:  var(--purple-light);
+  --color-bl-purple-dark:   var(--purple-dark);
+  --color-bl-yellow:        var(--yellow);
+  --color-bl-yellow-light:  var(--yellow-light);
+  --color-bl-yellow-dark:   var(--yellow-dark);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-nunito), sans-serif;
 }
