@@ -18,8 +18,8 @@ const copy = {
     hero_sub_cta: 'No credit card required',
     how_label: 'HOW IT WORKS',
     how_title: 'Three steps to a lifetime of memories',
-    step1_title: 'Snap & recognize',
-    step1_desc: 'Take a photo of the book cover. Our AI reads the title and author instantly.',
+    step1_title: 'Snap the moment',
+    step1_desc: "Take a photo of your child holding the book — that goofy proud face is the whole point. Our AI reads the title automatically.",
     step2_title: 'Log & reflect',
     step2_desc: 'Rate the book, write a short review, and answer a thoughtful AI reading question.',
     step3_title: 'Print your year',
@@ -54,8 +54,8 @@ const copy = {
     hero_sub_cta: '신용카드 불필요',
     how_label: '사용 방법',
     how_title: '세 단계로 평생의 추억을',
-    step1_title: '사진 찍기',
-    step1_desc: '책 표지를 찍으면 AI가 제목과 저자를 자동으로 인식해요.',
+    step1_title: '그 순간을 찍어요',
+    step1_desc: '책을 들고 있는 아이의 개구진 얼굴을 찍어요. 그게 포인트예요. AI가 책 제목은 알아서 읽어줘요.',
     step2_title: '기록하기',
     step2_desc: '별점, 한 줄 감상, AI 독후 질문에 답하며 독서를 기록해요.',
     step3_title: '책으로 만들기',
@@ -148,11 +148,10 @@ export default function LandingPage() {
             {t.hero_tag}
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight mb-1">
-            {t.hero_title}
+            {t.hero_title}<br />
+            <span style={{ color: 'var(--green-dark)' }}>{t.hero_title2}</span>
           </h1>
-          <h1 className="text-4xl md:text-6xl font-black leading-tight mb-7" style={{ color: 'var(--green-dark)' }}>
-            {t.hero_title2}
-          </h1>
+          <div className="mb-7" />
           <p className="text-base md:text-lg text-gray-500 max-w-lg mx-auto mb-10 leading-relaxed">
             {t.hero_sub}
           </p>
