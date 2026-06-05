@@ -28,7 +28,6 @@ export default function SignupPage() {
       return
     }
 
-    // Create parent profile with unique family_code
     if (data.user) {
       const family_code = Math.random().toString(36).slice(2, 8).toUpperCase()
       const { error: profileError } = await supabase.from('bl_profiles').insert({
@@ -55,25 +54,28 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#fffbf5] px-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{background: 'var(--background)'}}>
+      {/* Decorative blobs */}
+      <div className="fixed top-0 left-0 w-48 h-48 rounded-full opacity-30 -translate-x-1/2 -translate-y-1/2" style={{background: 'var(--green-light)'}} />
+      <div className="fixed top-0 right-0 w-40 h-40 rounded-full opacity-30 translate-x-1/3 -translate-y-1/3" style={{background: 'var(--pink-light)'}} />
+      <div className="fixed bottom-0 left-0 w-44 h-44 rounded-full opacity-30 -translate-x-1/3 translate-y-1/3" style={{background: 'var(--purple-light)'}} />
+      <div className="fixed bottom-0 right-0 w-36 h-36 rounded-full opacity-30 translate-x-1/4 translate-y-1/4" style={{background: 'var(--yellow-light)'}} />
+
+      <div className="w-full max-w-sm relative">
+        {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-black text-amber-500 tracking-tight">
-            Book<span className="relative">
-              l<span className="inline-block w-5 h-5 rounded-full bg-amber-900 mx-0.5 align-middle" style={{marginBottom: '2px'}} />
-              <span className="inline-block w-5 h-5 rounded-full bg-amber-900 mx-0.5 align-middle" style={{marginBottom: '2px'}} />
-              l
-            </span>
-          </h1>
-          <p className="text-amber-700 mt-2 text-sm font-medium">책 그림일기</p>
+          <img src="/booklool.png" alt="Booklool" className="h-12 w-auto mx-auto" />
+          <p className="mt-2 text-sm font-bold" style={{color: 'var(--green)'}}>책 그림일기 🌱</p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-amber-100 p-8">
-          <h2 className="text-xl font-bold text-center mb-6 text-gray-800">회원가입</h2>
+        <div className="bg-white rounded-3xl shadow-sm p-8" style={{border: '2px solid var(--green-light)'}}>
+          <h2 className="text-xl font-black text-center mb-6 text-gray-700">회원가입</h2>
 
+          {/* Google Login */}
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 border border-gray-200 rounded-2xl py-3 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 transition mb-4"
+            className="w-full flex items-center justify-center gap-3 rounded-2xl py-3 px-4 text-sm font-semibold text-gray-700 hover:opacity-80 transition mb-4"
+            style={{border: '2px solid var(--green-light)', background: 'var(--green-light)'}}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -97,7 +99,10 @@ export default function SignupPage() {
               value={name}
               onChange={e => setName(e.target.value)}
               required
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm outline-none focus:border-amber-400 transition"
+              className="w-full border-2 rounded-2xl px-4 py-3 text-sm outline-none transition"
+              style={{borderColor: 'var(--green-light)'}}
+              onFocus={e => e.target.style.borderColor = 'var(--green)'}
+              onBlur={e => e.target.style.borderColor = 'var(--green-light)'}
             />
             <input
               type="email"
@@ -105,7 +110,10 @@ export default function SignupPage() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              className="w-full border border-gray-200 rounded-2xl px-4 py-3 text-sm outline-none focus:border-amber-400 transition"
+              className="w-full border-2 rounded-2xl px-4 py-3 text-sm outline-none transition"
+              style={{borderColor: 'var(--green-light)'}}
+              onFocus={e => e.target.style.borderColor = 'var(--green)'}
+              onBlur={e => e.target.style.borderColor = 'var(--green-light)'}
             />
             <div className="relative">
               <input
@@ -115,7 +123,10 @@ export default function SignupPage() {
                 onChange={e => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full border border-gray-200 rounded-2xl px-4 py-3 pr-11 text-sm outline-none focus:border-amber-400 transition"
+                className="w-full border-2 rounded-2xl px-4 py-3 pr-11 text-sm outline-none transition"
+                style={{borderColor: 'var(--green-light)'}}
+                onFocus={e => e.target.style.borderColor = 'var(--green)'}
+                onBlur={e => e.target.style.borderColor = 'var(--green-light)'}
               />
               <button
                 type="button"
@@ -129,19 +140,29 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-2xl py-3 text-sm transition disabled:opacity-60"
+              className="w-full text-white font-black rounded-2xl py-3 text-sm transition disabled:opacity-60"
+              style={{background: 'var(--green)'}}
             >
-              {loading ? '가입 중...' : '시작하기 🎉'}
+              {loading ? '가입 중...' : '시작하기 🌿'}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-gray-500 mt-4">
           이미 계정이 있으신가요?{' '}
-          <Link href="/login" className="text-amber-600 font-semibold">
+          <Link href="/login" className="font-black" style={{color: 'var(--green-dark)'}}>
             로그인
           </Link>
         </p>
+        <div className="mt-3 text-center">
+          <Link
+            href="/child-login"
+            className="inline-flex items-center gap-2 text-sm font-black px-5 py-2.5 rounded-2xl transition"
+            style={{background: 'var(--yellow-light)', color: 'var(--yellow-dark)'}}
+          >
+            📚 어린이 로그인
+          </Link>
+        </div>
       </div>
     </div>
   )

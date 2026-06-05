@@ -46,13 +46,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-black tracking-tight" style={{color: 'var(--green-dark)'}}>
-            Book<span className="relative">
-              l<span className="inline-block w-5 h-5 rounded-full mx-0.5 align-middle" style={{background: 'var(--green-dark)', marginBottom: '2px'}} />
-              <span className="inline-block w-5 h-5 rounded-full mx-0.5 align-middle" style={{background: 'var(--green-dark)', marginBottom: '2px'}} />
-              l
-            </span>
-          </h1>
+          <img src="/booklool.png" alt="Booklool" className="h-12 w-auto mx-auto" />
           <p className="mt-2 text-sm font-bold" style={{color: 'var(--green)'}}>책 그림일기 🌱</p>
         </div>
 

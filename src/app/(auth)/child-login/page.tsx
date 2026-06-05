@@ -33,14 +33,17 @@ export default function ChildLoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#fffbf5] px-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{background: 'var(--background)'}}>
+      {/* Decorative blobs */}
+      <div className="fixed top-0 left-0 w-48 h-48 rounded-full opacity-30 -translate-x-1/2 -translate-y-1/2" style={{background: 'var(--yellow-light)'}} />
+      <div className="fixed top-0 right-0 w-40 h-40 rounded-full opacity-30 translate-x-1/3 -translate-y-1/3" style={{background: 'var(--green-light)'}} />
+      <div className="fixed bottom-0 left-0 w-44 h-44 rounded-full opacity-30 -translate-x-1/3 translate-y-1/3" style={{background: 'var(--pink-light)'}} />
+      <div className="fixed bottom-0 right-0 w-36 h-36 rounded-full opacity-30 translate-x-1/4 translate-y-1/4" style={{background: 'var(--purple-light)'}} />
+
+      <div className="w-full max-w-sm relative">
         <div className="text-center mb-8">
-          <div className="text-6xl mb-3">📚</div>
-          <h1 className="text-3xl font-black tracking-tight" style={{ color: 'var(--green-dark)' }}>
-            어린이 로그인
-          </h1>
-          <p className="text-sm mt-2" style={{ color: 'var(--green-dark)' }}>내 책장에 들어가기</p>
+          <img src="/booklool.png" alt="Booklool" className="h-12 w-auto mx-auto" />
+          <p className="mt-3 text-sm font-black" style={{ color: 'var(--green)' }}>📚 내 책장에 들어가기</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm p-8" style={{ border: '2px solid var(--green-light)' }}>
@@ -110,3 +113,4 @@ export default function ChildLoginPage() {
     </div>
   )
 }
+
