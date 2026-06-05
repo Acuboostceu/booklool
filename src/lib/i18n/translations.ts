@@ -61,7 +61,7 @@ export const translations = {
     family_connecting: '...',
 
     // Settings
-    settings_title: '설정',
+    settings_title: '언어',
     settings_language: '언어',
     settings_book_language: '추천 도서 언어',
 
@@ -134,7 +134,7 @@ export const translations = {
     family_connect_btn: 'Connect',
     family_connecting: '...',
 
-    settings_title: 'Settings',
+    settings_title: 'Language',
     settings_language: 'App Language',
     settings_book_language: 'Recommended Book Languages',
 
@@ -206,7 +206,7 @@ export const translations = {
     family_connect_btn: 'Conectar',
     family_connecting: '...',
 
-    settings_title: 'Configuración',
+    settings_title: 'Idioma',
     settings_language: 'Idioma de la app',
     settings_book_language: 'Idiomas de libros recomendados',
 
