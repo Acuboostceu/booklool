@@ -6,6 +6,37 @@ export default async function BookshelfPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
 
+  // 아이 계정인지 확인
+  const { data: childProfile } = await supabase
+    .from('bl_profiles')
+    .select('id, name, color')
+    .eq('user_id', user.id)
+    .eq('role', 'child')
+    .single()
+
+  // 아이 계정이면 본인 책장만
+  if (childProfile) {
+    const { data: books } = await supabase
+      .from('bl_books')
+      .select('id, title, cover_url, rating, profile_id')
+      .eq('profile_id', childProfile.id)
+      .order('created_at', { ascending: false })
+
+    const { data: badges } = await supabase
+      .from('bl_badges')
+      .select('id, badge_type, profile_id')
+      .eq('profile_id', childProfile.id)
+
+    return (
+      <BookshelfView
+        profiles={[childProfile]}
+        books={books || []}
+        badges={badges || []}
+      />
+    )
+  }
+
+  // 부모 계정
   const { data: parent } = await supabase
     .from('bl_profiles')
     .select('id, name, partner_parent_id')

@@ -29,20 +29,31 @@ export default function DashboardNav() {
   const supabase = createClient()
   const { t } = useLocale()
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [isChild, setIsChild] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       setUserEmail(data.user?.email ?? null)
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from('bl_profiles')
+          .select('role')
+          .eq('user_id', data.user.id)
+          .single()
+        setIsChild(profile?.role === 'child')
+      }
     })
   }, [supabase])
 
-  const navItems = [
-    { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf') },
-    { href: '/add', icon: PlusCircle, label: t('nav_add') },
-    { href: '/recommendations', icon: Star, label: t('nav_recommendations') },
-    { href: '/parent', icon: Users, label: t('nav_family') },
-    { href: '/settings', icon: Settings, label: t('settings_title') },
+  const allNavItems = [
+    { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf'), childOk: true },
+    { href: '/add', icon: PlusCircle, label: t('nav_add'), childOk: true },
+    { href: '/recommendations', icon: Star, label: t('nav_recommendations'), childOk: true },
+    { href: '/parent', icon: Users, label: t('nav_family'), childOk: false },
+    { href: '/settings', icon: Settings, label: t('settings_title'), childOk: true },
   ]
+
+  const navItems = allNavItems.filter(item => !isChild || item.childOk)
 
   async function handleLogout() {
     await supabase.auth.signOut()
