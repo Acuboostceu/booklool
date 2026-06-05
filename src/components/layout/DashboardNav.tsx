@@ -62,9 +62,18 @@ export default function DashboardNav() {
         <Link href="/bookshelf">
           <Image src="/booklool.png" alt="Booklool" width={120} height={40} className="object-contain h-8 w-auto" />
         </Link>
-        <button onClick={handleLogout} className="text-gray-400 hover:text-gray-600 transition p-1">
-          <LogOut className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <Link
+            href="/settings"
+            className="p-2 rounded-xl transition"
+            style={{ color: pathname === '/settings' ? 'var(--purple-dark)' : '#bbb' }}
+          >
+            <Settings className="w-5 h-5" />
+          </Link>
+          <button onClick={handleLogout} className="text-gray-400 hover:text-gray-600 transition p-2">
+            <LogOut className="w-5 h-5" />
+          </button>
+        </div>
       </header>
 
       {/* ── 모바일: 하단 네비 (Settings 제외, 5개 → 4개) ── */}
