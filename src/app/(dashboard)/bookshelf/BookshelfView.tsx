@@ -12,17 +12,11 @@ type Book = {
 type Badge = { id: string; badge_type: string; profile_id: string }
 
 const profileColors = [
-  { bg: 'var(--green-light)', accent: 'var(--green-dark)', star: 'var(--green)', avatar: '#6ab87a' },
-  { bg: 'var(--pink-light)', accent: 'var(--pink-dark)', star: 'var(--pink)', avatar: '#e8a0b4' },
-  { bg: 'var(--purple-light)', accent: 'var(--purple-dark)', star: 'var(--purple)', avatar: '#a896d4' },
-  { bg: 'var(--yellow-light)', accent: 'var(--yellow-dark)', star: 'var(--yellow)', avatar: '#e8cc78' },
+  { bg: 'var(--green-light)', accent: 'var(--green-dark)', star: 'var(--green)', dot: '#6ab87a' },
+  { bg: 'var(--pink-light)', accent: 'var(--pink-dark)', star: 'var(--pink)', dot: '#e8a0b4' },
+  { bg: 'var(--purple-light)', accent: 'var(--purple-dark)', star: 'var(--purple)', dot: '#a896d4' },
+  { bg: 'var(--yellow-light)', accent: 'var(--yellow-dark)', star: 'var(--yellow)', dot: '#e8cc78' },
 ]
-
-function initials(name: string) {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length === 1) return name.slice(0, 2)
-  return parts[0][0] + parts[parts.length - 1][0]
-}
 
 export default function BookshelfView({
   profiles,
@@ -54,21 +48,14 @@ export default function BookshelfView({
         return (
           <div key={profile.id} className="mb-10">
             {/* Profile header */}
-            <div className="flex items-center gap-3 mb-4">
-              {/* Avatar */}
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                style={{ background: color.avatar }}
-              >
-                {initials(profile.name)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 className="font-bold text-base text-gray-800 leading-tight">{profile.name}</h2>
-                <p className="text-xs text-gray-400">{t('bookshelf_count', profileBooks.length as never)}</p>
-              </div>
+            <div className="flex items-center gap-2 mb-4">
+              {/* Color dot */}
+              <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color.dot }} />
+              <h2 className="font-bold text-base text-gray-800">{profile.name}</h2>
+              <span className="text-xs text-gray-400">{t('bookshelf_count', profileBooks.length as never)}</span>
               {profileBadges.length > 0 && (
                 <span
-                  className="text-xs font-semibold px-2.5 py-1 rounded-full"
+                  className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full"
                   style={{ background: color.bg, color: color.accent }}
                 >
                   {t('bookshelf_badges', profileBadges.length as never)}
@@ -84,7 +71,7 @@ export default function BookshelfView({
               >
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                  style={{ background: color.avatar + '25' }}
+                  style={{ background: color.dot + '25' }}
                 >
                   <BookOpen className="w-7 h-7" style={{ color: color.accent }} />
                 </div>
@@ -136,7 +123,7 @@ export default function BookshelfView({
                 <Link href="/add" className="group">
                   <div
                     className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
-                    style={{ borderColor: color.avatar + '60' }}
+                    style={{ borderColor: color.dot + '60' }}
                   >
                     <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
                   </div>
