@@ -20,6 +20,7 @@ export default function AddBookPage() {
   const [photoPreview, setPhotoPreview] = useState<string>('')
   const [ocrLoading, setOcrLoading] = useState(false)
   const [query, setQuery] = useState('')
+  const [authorQuery, setAuthorQuery] = useState('')
   const [searchResults, setSearchResults] = useState<BookSearchResult[]>([])
   const [searching, setSearching] = useState(false)
   const [selected, setSelected] = useState<BookSearchResult | null>(null)
@@ -88,9 +89,9 @@ export default function AddBookPage() {
       })
       if (res.ok) {
         const { title, author } = await res.json()
-        const searchQ = [title, author].filter(Boolean).join(' ').trim()
         setQuery(title || '')
-        if (searchQ) handleSearch(searchQ)
+        setAuthorQuery(author || '')
+        if (title || author) handleSearch(title || '', author || '')
       }
     } catch (e) {
       // OCR 실패해도 검색 단계로 넘어감
@@ -100,11 +101,15 @@ export default function AddBookPage() {
     }
   }
 
-  async function handleSearch(q?: string) {
-    const searchQ = q !== undefined ? q : query
-    if (!searchQ.trim()) return
+  async function handleSearch(titleQ?: string, authorQ?: string) {
+    const t = titleQ !== undefined ? titleQ : query
+    const a = authorQ !== undefined ? authorQ : authorQuery
+    if (!t.trim() && !a.trim()) return
     setSearching(true)
-    setQuery(searchQ)
+    const parts = []
+    if (t.trim()) parts.push(`intitle:${t.trim()}`)
+    if (a.trim()) parts.push(`inauthor:${a.trim()}`)
+    const searchQ = parts.join('+')
     const res = await fetch(`/api/books/search?q=${encodeURIComponent(searchQ)}`)
     const { results } = await res.json()
     setSearchResults(results)
@@ -239,7 +244,8 @@ export default function AddBookPage() {
 
           <button
             onClick={() => setStep('search')}
-            className="w-full bg-white border border-amber-200 text-amber-700 font-semibold rounded-3xl py-4 flex items-center justify-center gap-2 transition hover:bg-amber-50"
+            className="w-full bg-white font-semibold rounded-3xl py-4 flex items-center justify-center gap-2 transition border-2"
+            style={{borderColor: 'var(--green-light)', color: 'var(--green-dark)'}}
           >
             <Search className="w-5 h-5" />
             직접 검색하기
@@ -261,21 +267,37 @@ export default function AddBookPage() {
               책 제목 인식 중...
             </div>
           )}
-          <div className="flex gap-2">
+          <div className="space-y-2">
             <input
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
-              placeholder="책 제목 또는 저자"
-              className="flex-1 border border-gray-200 rounded-2xl px-4 py-3 text-sm outline-none focus:border-amber-400"
+              placeholder="책 제목"
+              className="w-full border-2 rounded-2xl px-4 py-3 text-sm outline-none transition"
+              style={{borderColor: 'var(--green-light)'}}
+              onFocus={e => e.target.style.borderColor = 'var(--green)'}
+              onBlur={e => e.target.style.borderColor = 'var(--green-light)'}
             />
-            <button
-              onClick={() => handleSearch()}
-              disabled={searching}
-              className="bg-amber-400 text-white rounded-2xl px-4 font-semibold"
-            >
-              {searching ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
-            </button>
+            <div className="flex gap-2">
+              <input
+                value={authorQuery}
+                onChange={e => setAuthorQuery(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSearch()}
+                placeholder="저자 (선택)"
+                className="flex-1 border-2 rounded-2xl px-4 py-3 text-sm outline-none transition"
+                style={{borderColor: 'var(--purple-light)'}}
+                onFocus={e => e.target.style.borderColor = 'var(--purple)'}
+                onBlur={e => e.target.style.borderColor = 'var(--purple-light)'}
+              />
+              <button
+                onClick={() => handleSearch()}
+                disabled={searching}
+                className="text-white rounded-2xl px-4 font-semibold"
+                style={{background: 'var(--green)'}}
+              >
+                {searching ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-2">
