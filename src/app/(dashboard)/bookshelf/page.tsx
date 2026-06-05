@@ -86,11 +86,7 @@ export default async function BookshelfPage() {
                 <p className="text-xs text-gray-400">읽은 책 {profileBooks.length}권</p>
               </div>
               {profileBadges.length > 0 && (
-                <div className="flex gap-1">
-                  {profileBadges.map(b => (
-                    <span key={b.id} className="text-lg" title={b.type}>{badgeEmoji[b.type] || '🏅'}</span>
-                  ))}
-                </div>
+                <span className="text-xs text-gray-400 font-medium">{profileBadges.length}개 배지</span>
               )}
             </div>
 
