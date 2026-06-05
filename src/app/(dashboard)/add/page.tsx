@@ -63,17 +63,24 @@ export default function AddBookPage() {
 
     const reader = new FileReader()
     reader.onloadend = async () => {
-      const base64 = (reader.result as string).split(',')[1]
-      const res = await fetch('/api/ocr', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageBase64: base64 }),
-      })
-      const { title } = await res.json()
-      setQuery(title || '')
-      setOcrLoading(false)
-      setStep('search')
-      if (title) handleSearch(title)
+      try {
+        const base64 = (reader.result as string).split(',')[1]
+        const res = await fetch('/api/ocr', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageBase64: base64 }),
+        })
+        if (res.ok) {
+          const { title } = await res.json()
+          setQuery(title || '')
+          if (title) handleSearch(title)
+        }
+      } catch (e) {
+        // OCR 실패해도 검색 단계로 넘어감
+      } finally {
+        setOcrLoading(false)
+        setStep('search')
+      }
     }
     reader.readAsDataURL(file)
   }
