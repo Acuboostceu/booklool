@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   if (!query) return NextResponse.json({ results: [] })
 
   // Google Books API
-  const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5&key=${process.env.NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY}`
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=8&orderBy=relevance&key=${process.env.NEXT_PUBLIC_GOOGLE_BOOKS_API_KEY}`
   const res = await fetch(url)
   const data = await res.json()
 

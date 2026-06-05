@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
           },
           {
             type: 'text',
-            text: '이 책 표지에서 책 제목만 추출해줘. 제목만 딱 한 줄로 답해줘. 부제목이나 저자는 빼고 메인 제목만.',
+            text: '이 책 표지에서 책 제목과 저자 이름을 추출해줘. 다음 형식으로만 답해줘:\n제목: xxx\n저자: xxx\n저자가 안 보이면 저자: 없음 으로 써줘.',
           },
         ],
       },
@@ -29,6 +29,10 @@ export async function POST(req: NextRequest) {
     max_tokens: 100,
   })
 
-  const title = response.choices[0]?.message?.content?.trim() || ''
-  return NextResponse.json({ title })
+  const content = response.choices[0]?.message?.content?.trim() || ''
+  const titleMatch = content.match(/제목:\s*(.+)/i)
+  const authorMatch = content.match(/저자:\s*(.+)/i)
+  const title = titleMatch?.[1]?.trim() || ''
+  const author = authorMatch?.[1]?.trim().replace('없음', '') || ''
+  return NextResponse.json({ title, author })
 }

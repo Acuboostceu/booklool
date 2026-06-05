@@ -87,9 +87,10 @@ export default function AddBookPage() {
         body: JSON.stringify({ imageBase64: base64, mimeType: 'image/jpeg' }),
       })
       if (res.ok) {
-        const { title } = await res.json()
+        const { title, author } = await res.json()
+        const searchQ = [title, author].filter(Boolean).join(' ').trim()
         setQuery(title || '')
-        if (title) handleSearch(title)
+        if (searchQ) handleSearch(searchQ)
       }
     } catch (e) {
       // OCR 실패해도 검색 단계로 넘어감
