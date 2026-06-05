@@ -64,11 +64,13 @@ export default function AddBookPage() {
     const reader = new FileReader()
     reader.onloadend = async () => {
       try {
-        const base64 = (reader.result as string).split(',')[1]
+        const dataUrl = reader.result as string
+        const base64 = dataUrl.split(',')[1]
+        const mimeType = dataUrl.split(';')[0].split(':')[1]
         const res = await fetch('/api/ocr', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageBase64: base64 }),
+          body: JSON.stringify({ imageBase64: base64, mimeType }),
         })
         if (res.ok) {
           const { title } = await res.json()

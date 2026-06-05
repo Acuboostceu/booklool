@@ -1,28 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server'
+import OpenAI from 'openai'
 
 export async function POST(req: NextRequest) {
-  const { imageBase64 } = await req.json()
+  const { imageBase64, mimeType } = await req.json()
 
-  const response = await fetch(
-    `https://vision.googleapis.com/v1/images:annotate?key=${process.env.GOOGLE_VISION_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        requests: [{
-          image: { content: imageBase64 },
-          features: [{ type: 'TEXT_DETECTION', maxResults: 1 }],
-        }],
-      }),
-    }
-  )
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-  const data = await response.json()
-  const text = data.responses?.[0]?.fullTextAnnotation?.text || ''
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'image_url',
+            image_url: {
+              url: `data:${mimeType || 'image/jpeg'};base64,${imageBase64}`,
+              detail: 'low',
+            },
+          },
+          {
+            type: 'text',
+            text: '이 책 표지에서 책 제목만 추출해줘. 제목만 딱 한 줄로 답해줘. 부제목이나 저자는 빼고 메인 제목만.',
+          },
+        ],
+      },
+    ],
+    max_tokens: 100,
+  })
 
-  // Extract likely title: first meaningful line
-  const lines = text.split('\n').map((l: string) => l.trim()).filter(Boolean)
-  const title = lines[0] || ''
-
-  return NextResponse.json({ text, title })
+  const title = response.choices[0]?.message?.content?.trim() || ''
+  return NextResponse.json({ title })
 }
