@@ -108,12 +108,13 @@ export default function AddBookPage() {
 
     let photoUrl = ''
     if (photoFile) {
-      const ext = photoFile.name.split('.').pop()
-      const path = `${selectedChild}/${Date.now()}.${ext}`
-      const { data } = await supabase.storage.from('book-photos').upload(path, photoFile)
-      if (data) {
-        const { data: url } = supabase.storage.from('book-photos').getPublicUrl(path)
-        photoUrl = url.publicUrl
+      const formData = new FormData()
+      formData.append('file', photoFile)
+      formData.append('profileId', selectedChild)
+      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+      if (uploadRes.ok) {
+        const { url } = await uploadRes.json()
+        photoUrl = url
       }
     }
 
