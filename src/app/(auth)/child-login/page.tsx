@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useAuthLocale } from '@/lib/i18n/useAuthLocale'
 
 export default function ChildLoginPage() {
   const router = useRouter()
   const supabase = createClient()
+  const { t } = useAuthLocale()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -34,7 +36,6 @@ export default function ChildLoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{background: 'var(--background)'}}>
-      {/* Decorative blobs */}
       <div className="fixed top-0 left-0 w-48 h-48 rounded-full opacity-30 -translate-x-1/2 -translate-y-1/2" style={{background: 'var(--yellow-light)'}} />
       <div className="fixed top-0 right-0 w-40 h-40 rounded-full opacity-30 translate-x-1/3 -translate-y-1/3" style={{background: 'var(--green-light)'}} />
       <div className="fixed bottom-0 left-0 w-44 h-44 rounded-full opacity-30 -translate-x-1/3 translate-y-1/3" style={{background: 'var(--pink-light)'}} />
@@ -48,10 +49,10 @@ export default function ChildLoginPage() {
         <div className="bg-white rounded-3xl shadow-sm p-8" style={{ border: '2px solid var(--green-light)' }}>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="text-xs font-bold text-gray-500 mb-1 block">아이디</label>
+              <label className="text-xs font-bold text-gray-500 mb-1 block">{t('auth_child_id')}</label>
               <input
                 type="text"
-                placeholder="내 아이디를 입력해요"
+                placeholder={t('auth_child_id_placeholder')}
                 value={username}
                 onChange={e => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9]/g, ''))}
                 required
@@ -62,11 +63,11 @@ export default function ChildLoginPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-gray-500 mb-1 block">비밀번호</label>
+              <label className="text-xs font-bold text-gray-500 mb-1 block">{t('auth_password_placeholder').split(' ')[0]}</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="비밀번호를 입력해요"
+                  placeholder={t('auth_child_pw_placeholder')}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
@@ -97,19 +98,17 @@ export default function ChildLoginPage() {
               className="w-full text-white font-black rounded-2xl py-3 text-sm transition disabled:opacity-60"
               style={{ background: 'var(--green)' }}
             >
-              {loading ? '들어가는 중...' : '📖 내 책장 열기'}
+              {loading ? t('auth_child_opening') : t('auth_child_open')}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-gray-400 mt-4">
-          부모님이신가요?{' '}
           <Link href="/login" className="font-bold" style={{ color: 'var(--green-dark)' }}>
-            부모 로그인
+            ← {t('auth_parent_login')}
           </Link>
         </p>
       </div>
     </div>
   )
 }
-
