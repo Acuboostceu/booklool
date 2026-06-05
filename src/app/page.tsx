@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
 const copy = {
@@ -104,7 +103,7 @@ export default function LandingPage() {
       {/* ── Nav ── */}
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
-          <Image src="/booklool.png" alt="Booklool" width={120} height={40} className="h-8 w-auto object-contain" />
+          <img src="/booklool.png" alt="Booklool" className="h-8 w-auto object-contain" />
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setLang(lang === 'en' ? 'ko' : 'en')}
@@ -286,7 +285,7 @@ export default function LandingPage() {
 
       {/* ── Footer ── */}
       <footer className="py-10 border-t border-gray-100 text-center bg-white">
-        <Image src="/booklool.png" alt="Booklool" width={80} height={26} className="h-6 w-auto object-contain mx-auto mb-3 opacity-40" />
+        <img src="/booklool.png" alt="Booklool" className="h-6 w-auto object-contain mx-auto mb-3 opacity-40" />
         <p className="text-xs text-gray-400">{t.footer_copy}</p>
       </footer>
 
