@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Star, ArrowLeft } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import BookActions from './BookActions'
 
 export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -17,6 +18,9 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
       <Link href="/bookshelf" className="flex items-center gap-1 text-gray-500 text-sm mb-4">
         <ArrowLeft className="w-4 h-4" /> 책장으로
       </Link>
+
+      {/* Edit / Delete */}
+      <BookActions book={{ id: book.id, rating: book.rating, comment: book.comment, ai_answer: book.ai_answer, ai_question: book.ai_question }} />
 
       {/* Cover */}
       <div className="flex gap-4 mb-6">
