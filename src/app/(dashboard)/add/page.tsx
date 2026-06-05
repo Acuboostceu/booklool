@@ -53,38 +53,50 @@ export default function AddBookPage() {
 
   useState(() => { loadChildren() })
 
+  async function compressImage(file: File, maxWidth = 800): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new window.Image()
+      const url = URL.createObjectURL(file)
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ratio = Math.min(maxWidth / img.width, 1)
+        canvas.width = img.width * ratio
+        canvas.height = img.height * ratio
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+        URL.revokeObjectURL(url)
+        resolve(canvas.toDataURL('image/jpeg', 0.7))
+      }
+      img.src = url
+    })
+  }
+
   async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
     setPhotoFile(file)
-    const preview = URL.createObjectURL(file)
-    setPhotoPreview(preview)
+    setPhotoPreview(URL.createObjectURL(file))
     setOcrLoading(true)
 
-    const reader = new FileReader()
-    reader.onloadend = async () => {
-      try {
-        const dataUrl = reader.result as string
-        const base64 = dataUrl.split(',')[1]
-        const mimeType = dataUrl.split(';')[0].split(':')[1]
-        const res = await fetch('/api/ocr', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageBase64: base64, mimeType }),
-        })
-        if (res.ok) {
-          const { title } = await res.json()
-          setQuery(title || '')
-          if (title) handleSearch(title)
-        }
-      } catch (e) {
-        // OCR 실패해도 검색 단계로 넘어감
-      } finally {
-        setOcrLoading(false)
-        setStep('search')
+    try {
+      const compressed = await compressImage(file)
+      const base64 = compressed.split(',')[1]
+      const res = await fetch('/api/ocr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64: base64, mimeType: 'image/jpeg' }),
+      })
+      if (res.ok) {
+        const { title } = await res.json()
+        setQuery(title || '')
+        if (title) handleSearch(title)
       }
+    } catch (e) {
+      // OCR 실패해도 검색 단계로 넘어감
+    } finally {
+      setOcrLoading(false)
+      setStep('search')
     }
-    reader.readAsDataURL(file)
   }
 
   async function handleSearch(q?: string) {
