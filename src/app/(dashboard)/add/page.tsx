@@ -191,7 +191,7 @@ export default function AddBookPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-6">책 추가</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">책 추가</h1>
 
       {/* Child selector */}
       {children.length > 0 && (
@@ -202,7 +202,10 @@ export default function AddBookPage() {
               <button
                 key={c.id}
                 onClick={() => setSelectedChild(c.id)}
-                className={`px-4 py-2 rounded-2xl text-sm font-semibold transition ${selectedChild === c.id ? 'bg-amber-400 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}
+                className="px-4 py-2 rounded-2xl text-sm font-medium transition border"
+                style={selectedChild === c.id
+                  ? {background: 'var(--green-light)', borderColor: 'var(--green)', color: 'var(--green-dark)'}
+                  : {background: 'white', borderColor: '#e5e7eb', color: '#6b7280'}}
               >
                 {c.name}
               </button>
@@ -210,7 +213,10 @@ export default function AddBookPage() {
             {profileId && (
               <button
                 onClick={() => setSelectedChild(profileId)}
-                className={`px-4 py-2 rounded-2xl text-sm font-semibold transition ${selectedChild === profileId ? 'bg-amber-400 text-white' : 'bg-white border border-gray-200 text-gray-600'}`}
+                className="px-4 py-2 rounded-2xl text-sm font-medium transition border"
+                style={selectedChild === profileId
+                  ? {background: 'var(--green-light)', borderColor: 'var(--green)', color: 'var(--green-dark)'}
+                  : {background: 'white', borderColor: '#e5e7eb', color: '#6b7280'}}
               >
                 내 책장
               </button>
@@ -224,21 +230,21 @@ export default function AddBookPage() {
         <div className="space-y-4">
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full text-white font-bold rounded-3xl py-6 flex flex-col items-center gap-3 transition"
-            style={{background: 'var(--green)'}}
+            className="w-full font-bold rounded-2xl py-6 flex flex-col items-center gap-3 transition"
+            style={{background: 'var(--green-light)', color: 'var(--green-dark)'}}
           >
-            <Camera className="w-10 h-10" />
-            <span className="text-lg">카메라로 찍기</span>
-            <span className="text-sm opacity-80">책 표지를 찍으면 제목을 자동 인식해요</span>
+            <Camera className="w-8 h-8" />
+            <span className="text-base">카메라로 찍기</span>
+            <span className="text-xs opacity-70">책 표지를 찍으면 제목을 자동 인식해요</span>
           </button>
           <button
             onClick={() => galleryRef.current?.click()}
-            className="w-full font-bold rounded-3xl py-6 flex flex-col items-center gap-3 transition border-2"
-            style={{background: 'var(--purple-light)', borderColor: 'var(--purple-light)', color: 'var(--purple-dark)'}}
+            className="w-full font-bold rounded-2xl py-6 flex flex-col items-center gap-3 transition"
+            style={{background: 'var(--purple-light)', color: 'var(--purple-dark)'}}
           >
-            <ImageIcon className="w-10 h-10" />
-            <span className="text-lg">사진첩에서 선택</span>
-            <span className="text-sm opacity-60">저장된 사진에서 골라요</span>
+            <ImageIcon className="w-8 h-8" />
+            <span className="text-base">사진첩에서 선택</span>
+            <span className="text-xs opacity-60">저장된 사진에서 골라요</span>
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} className="hidden" />
           <input ref={galleryRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
@@ -263,7 +269,7 @@ export default function AddBookPage() {
             </div>
           )}
           {ocrLoading && (
-            <div className="flex items-center gap-2 text-amber-600 text-sm">
+            <div className="flex items-center gap-2 text-gray-400 text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
               책 제목 인식 중...
             </div>
@@ -293,8 +299,8 @@ export default function AddBookPage() {
               <button
                 onClick={() => handleSearch()}
                 disabled={searching}
-                className="text-white rounded-2xl px-4 font-semibold"
-                style={{background: 'var(--green)'}}
+                className="rounded-2xl px-4 font-semibold"
+                style={{background: 'var(--green-light)', color: 'var(--green-dark)'}}
               >
                 {searching ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
               </button>
@@ -306,12 +312,12 @@ export default function AddBookPage() {
               <button
                 key={i}
                 onClick={() => selectBook(book)}
-                className="w-full bg-white border border-gray-100 rounded-2xl p-3 flex items-center gap-3 hover:border-amber-300 transition text-left"
+                className="w-full bg-white border border-gray-100 rounded-2xl p-3 flex items-center gap-3 hover:border-gray-300 transition text-left"
               >
                 {book.cover_url ? (
                   <Image src={book.cover_url} alt={book.title} width={40} height={56} className="rounded-lg object-cover flex-shrink-0" />
                 ) : (
-                  <div className="w-10 h-14 bg-amber-100 rounded-lg flex-shrink-0 flex items-center justify-center text-xl">📖</div>
+                  <div className="w-10 h-14 bg-gray-100 rounded-lg flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-gray-800 truncate">{book.title}</p>
@@ -332,10 +338,10 @@ export default function AddBookPage() {
             {selected.cover_url ? (
               <Image src={selected.cover_url} alt={selected.title} width={64} height={90} className="rounded-xl object-cover flex-shrink-0" />
             ) : (
-              <div className="w-16 h-24 bg-amber-100 rounded-xl flex items-center justify-center text-3xl flex-shrink-0">📖</div>
+              <div className="w-16 h-24 bg-gray-100 rounded-xl flex-shrink-0" />
             )}
             <div>
-              <p className="font-black text-gray-800">{selected.title}</p>
+              <p className="font-semibold text-gray-800">{selected.title}</p>
               <p className="text-sm text-gray-500 mt-0.5">{selected.author}</p>
               {selected.publisher && <p className="text-xs text-gray-400 mt-0.5">{selected.publisher}</p>}
             </div>
@@ -343,7 +349,7 @@ export default function AddBookPage() {
 
           {/* Rating */}
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
-            <p className="font-semibold text-gray-700 mb-3">별점을 줘봐요! ⭐</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">별점</p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map(n => (
                 <button key={n} onClick={() => setRating(n)}>
@@ -355,33 +361,33 @@ export default function AddBookPage() {
 
           {/* Comment */}
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
-            <p className="font-semibold text-gray-700 mb-2">한 줄 감상 ✏️</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">한 줄 감상</p>
             <textarea
               value={comment}
               onChange={e => setComment(e.target.value)}
               placeholder="이 책을 읽고 어떤 생각이 들었나요?"
               rows={2}
-              className="w-full text-sm border border-gray-100 rounded-2xl p-3 outline-none focus:border-amber-300 resize-none"
+              className="w-full text-sm border border-gray-100 rounded-2xl p-3 outline-none focus:border-gray-300 resize-none"
             />
           </div>
 
           {/* AI Question */}
           {step === 'review' && aiQuestion && (
-            <div className="bg-amber-50 rounded-3xl p-4 border border-amber-100">
-              <p className="text-xs font-semibold text-amber-600 mb-2">🤖 AI 독후 질문</p>
-              <p className="font-semibold text-gray-800 mb-3">{aiQuestion}</p>
+            <div className="bg-white rounded-2xl p-4 border border-gray-100">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">AI 독후 질문</p>
+              <p className="font-semibold text-gray-800 mb-3 text-sm">{aiQuestion}</p>
               <textarea
                 value={aiAnswer}
                 onChange={e => setAiAnswer(e.target.value)}
                 placeholder="내 생각을 써봐요..."
                 rows={3}
-                className="w-full text-sm border border-amber-200 rounded-2xl p-3 outline-none focus:border-amber-400 resize-none bg-white"
+                className="w-full text-sm border border-gray-100 rounded-xl p-3 outline-none focus:border-gray-300 resize-none bg-gray-50"
               />
             </div>
           )}
 
           {step === 'confirm' && (
-            <div className="flex items-center gap-2 text-amber-600 text-sm">
+            <div className="flex items-center gap-2 text-gray-400 text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
               AI 질문 생성 중...
             </div>
@@ -390,9 +396,10 @@ export default function AddBookPage() {
           <button
             onClick={handleSave}
             disabled={saving || rating === 0}
-            className="w-full bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-3xl py-4 transition disabled:opacity-60"
+            className="w-full font-bold rounded-2xl py-4 transition disabled:opacity-60"
+            style={{background: 'var(--green-light)', color: 'var(--green-dark)'}}
           >
-            {saving ? '저장 중...' : '저장하기 🎉'}
+            {saving ? '저장 중...' : '저장하기'}
           </button>
           {rating === 0 && <p className="text-xs text-center text-gray-400">별점을 선택해주세요</p>}
         </div>

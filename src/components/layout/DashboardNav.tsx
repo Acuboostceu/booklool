@@ -11,7 +11,7 @@ const navItems = [
   { href: '/bookshelf', icon: BookOpen, label: '책장' },
   { href: '/add', icon: PlusCircle, label: '책 추가' },
   { href: '/recommendations', icon: Star, label: '추천' },
-  { href: '/parent', icon: Users, label: '부모' },
+  { href: '/parent', icon: Users, label: '가족' },
 ]
 
 const navColors = ['var(--green)', 'var(--pink)', 'var(--purple)', 'var(--yellow-dark)']

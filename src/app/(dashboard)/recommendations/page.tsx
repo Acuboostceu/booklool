@@ -5,10 +5,10 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { RECOMMENDED_BOOKS } from '@/lib/recommendations'
 
 const gradeColors = [
-  { bg: 'var(--green-light)', accent: 'var(--green-dark)', border: 'var(--green)' },
-  { bg: 'var(--pink-light)', accent: 'var(--pink-dark)', border: 'var(--pink)' },
-  { bg: 'var(--purple-light)', accent: 'var(--purple-dark)', border: 'var(--purple)' },
-  { bg: 'var(--yellow-light)', accent: 'var(--yellow-dark)', border: 'var(--yellow)' },
+  { bg: 'var(--green-light)', accent: 'var(--green-dark)', border: 'var(--green-light)' },
+  { bg: 'var(--pink-light)', accent: 'var(--pink-dark)', border: 'var(--pink-light)' },
+  { bg: 'var(--purple-light)', accent: 'var(--purple-dark)', border: 'var(--purple-light)' },
+  { bg: 'var(--yellow-light)', accent: 'var(--yellow-dark)', border: 'var(--yellow-light)' },
 ]
 
 export default function RecommendationsPage() {
@@ -17,7 +17,7 @@ export default function RecommendationsPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-1">추천 도서</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-1">추천 도서</h1>
       <p className="text-sm text-gray-400 mb-6">학년별 추천 책 목록이에요</p>
 
       <div className="space-y-3">
@@ -27,7 +27,7 @@ export default function RecommendationsPage() {
           const isOpen = openGrade === grade
 
           return (
-            <div key={grade} className="rounded-3xl overflow-hidden border-2" style={{borderColor: isOpen ? color.border : 'transparent', background: 'white'}}>
+            <div key={grade} className="rounded-2xl overflow-hidden border" style={{borderColor: isOpen ? color.border : '#f0f0f0', background: 'white'}}>
               {/* Header */}
               <button
                 onClick={() => setOpenGrade(isOpen ? '' : grade)}
@@ -35,7 +35,7 @@ export default function RecommendationsPage() {
                 style={{background: isOpen ? color.bg : 'white'}}
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-black text-base" style={{color: color.accent}}>{grade}</span>
+                  <span className="font-semibold text-base" style={{color: color.accent}}>{grade}</span>
                   <span className="text-xs text-gray-400 font-medium">{books.length}권</span>
                 </div>
                 {isOpen
@@ -50,8 +50,8 @@ export default function RecommendationsPage() {
                   {books.map((book, i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-3 bg-white rounded-2xl p-3 border"
-                      style={{borderColor: color.bg}}
+                      className="flex items-center gap-3 bg-white rounded-xl p-3 border"
+                      style={{borderColor: '#f0f0f0'}}
                     >
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-sm text-gray-800 leading-tight">{book.title}</p>

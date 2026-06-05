@@ -43,7 +43,7 @@ export default function FamilyConnect({
 
   return (
     <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
-      <h3 className="font-black text-gray-800 mb-4 flex items-center gap-2">
+      <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
         <Users className="w-4 h-4" style={{color: 'var(--purple)'}} />
         가족 연결
       </h3>
@@ -52,7 +52,7 @@ export default function FamilyConnect({
       <div className="mb-4">
         <p className="text-xs text-gray-500 mb-2">내 가족 코드 (배우자에게 공유하세요)</p>
         <div className="flex items-center gap-2">
-          <div className="flex-1 bg-gray-50 rounded-2xl px-4 py-3 font-black text-lg tracking-widest text-center" style={{color: 'var(--purple-dark)'}}>
+          <div className="flex-1 bg-gray-50 rounded-2xl px-4 py-3 font-semibold text-lg tracking-widest text-center" style={{color: 'var(--purple-dark)'}}>
             {familyCode}
           </div>
           <button

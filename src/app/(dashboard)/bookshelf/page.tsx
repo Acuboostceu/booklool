@@ -71,7 +71,7 @@ export default async function BookshelfPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-6">가족 책장</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">가족 책장</h1>
 
       {profiles.map((profile, idx) => {
         if (!profile) return null
@@ -82,7 +82,7 @@ export default async function BookshelfPage() {
           <div key={profile.id} className="mb-8">
             <div className="flex items-center justify-between mb-3 px-1">
               <div>
-                <h2 className="font-black text-lg" style={{color: color.accent}}>{profile.name}</h2>
+                <h2 className="font-semibold text-lg" style={{color: color.accent}}>{profile.name}</h2>
                 <p className="text-xs text-gray-400">읽은 책 {profileBooks.length}권</p>
               </div>
               {profileBadges.length > 0 && (
@@ -91,7 +91,7 @@ export default async function BookshelfPage() {
             </div>
 
             {profileBooks.length === 0 ? (
-              <div className="rounded-2xl border p-8 text-center" style={{borderColor: color.accent + '40', background: color.bg}}>
+              <div className="rounded-2xl border p-8 text-center" style={{borderColor: color.accent + '30', background: color.bg}}>
                 <p className="text-gray-400 text-sm mb-3">아직 읽은 책이 없어요</p>
                 <Link href="/add" className="inline-block font-bold text-sm" style={{color: color.accent}}>
                   + 첫 번째 책 추가하기

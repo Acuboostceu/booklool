@@ -61,7 +61,7 @@ export default async function ParentPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-2">부모 대시보드</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">가족 대시보드</h1>
       <p className="text-sm text-gray-500 mb-6">안녕하세요, {parent?.name}님!</p>
 
       {/* Children overview */}
@@ -74,7 +74,7 @@ export default async function ParentPage() {
               <div key={child.id} className="bg-white rounded-3xl p-4 border border-gray-100">
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h3 className="font-black text-gray-800">{child.name}</h3>
+                    <h3 className="font-semibold text-gray-800">{child.name}</h3>
                     {child.grade !== null && (
                       <p className="text-xs text-gray-500">
                         {gradeLabel(child.grade, child.grade_system)}
@@ -82,7 +82,7 @@ export default async function ParentPage() {
                     )}
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-amber-500">{childBooks.length}</p>
+                    <p className="text-2xl font-bold text-amber-500">{childBooks.length}</p>
                     <p className="text-xs text-gray-400">권</p>
                   </div>
                 </div>
@@ -136,7 +136,7 @@ export default async function ParentPage() {
 
       {/* Add child */}
       <div className="bg-white rounded-3xl p-4 border border-gray-100">
-        <h3 className="font-black text-gray-800 mb-4">+ 자녀 프로필 추가</h3>
+        <h3 className="font-semibold text-gray-800 mb-4">+ 자녀 프로필 추가</h3>
         <AddChildForm parentId={parent?.id || ''} />
       </div>
     </div>
