@@ -65,7 +65,7 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <img src="/booklool.png" alt="Booklool" className="h-12 w-auto mx-auto" />
-          <p className="mt-2 text-sm font-bold" style={{color: 'var(--green)'}}>책 그림일기 🌱</p>
+          <p className="mt-3 text-xs text-gray-400 leading-relaxed">Every book they read. Every thought they had.<br />Bound into one book, forever.</p>
         </div>
 
         <div className="bg-white rounded-3xl shadow-sm p-8" style={{border: '2px solid var(--green-light)'}}>
