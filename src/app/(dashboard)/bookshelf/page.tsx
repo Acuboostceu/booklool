@@ -71,7 +71,7 @@ export default async function BookshelfPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-6">📚 우리 책장</h1>
+      <h1 className="text-2xl font-black text-gray-800 mb-6">가족 책장</h1>
 
       {profiles.map((profile, idx) => {
         if (!profile) return null
@@ -95,10 +95,9 @@ export default async function BookshelfPage() {
             </div>
 
             {profileBooks.length === 0 ? (
-              <div className="rounded-3xl border-2 border-dashed p-8 text-center" style={{borderColor: color.accent, background: color.bg}}>
-                <p className="text-4xl mb-2">📖</p>
-                <p className="text-gray-500 text-sm">아직 읽은 책이 없어요</p>
-                <Link href="/add" className="inline-block mt-3 font-bold text-sm" style={{color: color.accent}}>
+              <div className="rounded-2xl border-2 border-dashed p-8 text-center" style={{borderColor: color.accent + '60', background: color.bg}}>
+                <p className="text-gray-400 text-sm mb-3">아직 읽은 책이 없어요</p>
+                <Link href="/add" className="inline-block font-bold text-sm" style={{color: color.accent}}>
                   + 첫 번째 책 추가하기
                 </Link>
               </div>
@@ -112,7 +111,7 @@ export default async function BookshelfPage() {
                           <Image src={book.cover_url} alt={book.title} fill className="object-cover" />
                         </div>
                       ) : (
-                        <div className="w-full aspect-[2/3] flex items-center justify-center text-3xl" style={{background: color.bg}}>📖</div>
+                        <div className="w-full aspect-[2/3] flex items-center justify-center text-3xl font-bold text-gray-300" style={{background: color.bg}}>?</div>
                       )}
                       <div className="p-2">
                         <p className="text-xs font-bold text-gray-800 line-clamp-2 leading-tight">{book.title}</p>

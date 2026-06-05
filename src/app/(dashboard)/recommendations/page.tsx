@@ -17,8 +17,8 @@ export default function RecommendationsPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-1">⭐ 추천 도서</h1>
-      <p className="text-sm text-gray-400 mb-6">학년별 한국·미국 추천 책이에요</p>
+      <h1 className="text-2xl font-black text-gray-800 mb-1">추천 도서</h1>
+      <p className="text-sm text-gray-400 mb-6">학년별 추천 책 목록이에요</p>
 
       <div className="space-y-3">
         {grades.map((grade, idx) => {
@@ -35,9 +35,6 @@ export default function RecommendationsPage() {
                 style={{background: isOpen ? color.bg : 'white'}}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">
-                    {idx === 0 ? '🌱' : idx === 1 ? '🌿' : idx === 2 ? '🌲' : idx === 3 ? '🌳' : idx === 4 ? '🏆' : '👑'}
-                  </span>
                   <span className="font-black text-base" style={{color: color.accent}}>{grade}</span>
                   <span className="text-xs text-gray-400 font-medium">{books.length}권</span>
                 </div>
@@ -56,7 +53,6 @@ export default function RecommendationsPage() {
                       className="flex items-center gap-3 bg-white rounded-2xl p-3 border"
                       style={{borderColor: color.bg}}
                     >
-                      <span className="text-2xl flex-shrink-0">{book.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-sm text-gray-800 leading-tight">{book.title}</p>
                         <p className="text-xs text-gray-400 mt-0.5 truncate">{book.author}</p>

@@ -191,7 +191,7 @@ export default function AddBookPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-6">📚 책 추가</h1>
+      <h1 className="text-2xl font-black text-gray-800 mb-6">책 추가</h1>
 
       {/* Child selector */}
       {children.length > 0 && (

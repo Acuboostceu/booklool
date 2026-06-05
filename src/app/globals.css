@@ -4,22 +4,22 @@
   --background: #f9fdf6;
   --foreground: #2a2a2a;
 
-  /* Booklool palette */
-  --green:        #7ec96a;  /* 새싹 초록 */
-  --green-light:  #e8f7e3;
-  --green-dark:   #4e9a3c;
+  /* Booklool palette — muted modern */
+  --green:        #6ab87a;
+  --green-light:  #f0f7f2;
+  --green-dark:   #3d7a50;
 
-  --pink:         #f9a8c9;  /* 파스텔 핑크 */
-  --pink-light:   #fde8f2;
-  --pink-dark:    #d96097;
+  --pink:         #e8a0b4;
+  --pink-light:   #faf0f3;
+  --pink-dark:    #b5607a;
 
-  --purple:       #c4a8e8;  /* 연보라 */
-  --purple-light: #f0e8fb;
-  --purple-dark:  #8a5cc9;
+  --purple:       #a896d4;
+  --purple-light: #f4f1fb;
+  --purple-dark:  #6b50a8;
 
-  --yellow:       #ffe080;  /* 노랑 */
-  --yellow-light: #fff8d6;
-  --yellow-dark:  #c9a000;
+  --yellow:       #e8cc78;
+  --yellow-light: #faf7ec;
+  --yellow-dark:  #9a7c20;
 }
 
 @theme inline {

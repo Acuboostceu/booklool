@@ -61,7 +61,7 @@ export default async function ParentPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-black text-gray-800 mb-2">👨‍👩‍👧 부모 대시보드</h1>
+      <h1 className="text-2xl font-black text-gray-800 mb-2">부모 대시보드</h1>
       <p className="text-sm text-gray-500 mb-6">안녕하세요, {parent?.name}님!</p>
 
       {/* Children overview */}
@@ -123,9 +123,8 @@ export default async function ParentPage() {
           })}
         </div>
       ) : (
-        <div className="bg-white rounded-3xl border border-dashed border-amber-200 p-8 text-center mb-8">
-          <p className="text-4xl mb-2">👧</p>
-          <p className="text-gray-500 text-sm">아직 자녀 프로필이 없어요</p>
+        <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-8 text-center mb-8">
+          <p className="text-gray-400 text-sm">아직 자녀 프로필이 없어요</p>
         </div>
       )}
 
