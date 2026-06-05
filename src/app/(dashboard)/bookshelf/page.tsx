@@ -21,11 +21,11 @@ export default async function BookshelfPage() {
   const { data: children } = parentIds.length > 0
     ? await supabase
         .from('bl_profiles')
-        .select('id, name, grade, grade_system')
+        .select('id, name, grade, grade_system, color')
         .in('parent_id', parentIds)
     : { data: [] }
 
-  const profiles = [parent, partner, ...(children || [])].filter(Boolean) as { id: string; name: string }[]
+  const profiles = [parent, partner, ...(children || [])].filter(Boolean) as { id: string; name: string; color?: string | null }[]
   const allProfileIds = profiles.map(p => p.id)
 
   const { data: books } = await supabase

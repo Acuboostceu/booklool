@@ -7,10 +7,11 @@ import { gradeLabel } from '@/lib/gradeLabel'
 import FamilyConnect from './FamilyConnect'
 import AddChildForm from './AddChildForm'
 import ChildLoginSetup from './ChildLoginSetup'
+import ColorPicker from './ColorPicker'
 
 type Child = {
   id: string; name: string; grade: number | null; grade_system: string | null
-  user_id: string | null; child_username: string | null
+  user_id: string | null; child_username: string | null; color: string | null
 }
 type Book = { id: string; title: string; rating: number | null; profile_id: string; created_at: string }
 type Badge = { id: string; type: string; profile_id: string }
@@ -93,6 +94,7 @@ export default function ParentPageView({
                   </div>
                 ))}
 
+                <ColorPicker childId={child.id} currentColor={child.color} />
                 <ChildLoginSetup
                   childId={child.id}
                   childName={child.name}

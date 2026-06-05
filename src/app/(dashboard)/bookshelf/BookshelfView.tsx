@@ -4,19 +4,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Star, Plus, BookOpen } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/LocaleContext'
+import { getProfileColor } from '@/lib/profileColors'
 
-type Profile = { id: string; name: string }
+type Profile = { id: string; name: string; color?: string | null }
 type Book = {
   id: string; title: string; cover_url: string | null; rating: number | null; profile_id: string
 }
 type Badge = { id: string; badge_type: string; profile_id: string }
 
-const profileColors = [
-  { bg: 'var(--green-light)', accent: 'var(--green-dark)', star: 'var(--green)', dot: '#6ab87a' },
-  { bg: 'var(--pink-light)', accent: 'var(--pink-dark)', star: 'var(--pink)', dot: '#e8a0b4' },
-  { bg: 'var(--purple-light)', accent: 'var(--purple-dark)', star: 'var(--purple)', dot: '#a896d4' },
-  { bg: 'var(--yellow-light)', accent: 'var(--yellow-dark)', star: 'var(--yellow)', dot: '#e8cc78' },
-]
+// fallback colors for parent/partner profiles (no color column)
+const fallbackColors = ['green', 'pink', 'purple', 'yellow']
 
 export default function BookshelfView({
   profiles,
@@ -43,7 +40,8 @@ export default function BookshelfView({
       {profiles.map((profile, idx) => {
         const profileBooks = booksByProfile[profile.id] || []
         const profileBadges = badgesByProfile[profile.id] || []
-        const color = profileColors[idx % profileColors.length]
+        const colorKey = profile.color || fallbackColors[idx % fallbackColors.length]
+        const color = getProfileColor(colorKey)
 
         return (
           <div key={profile.id} className="mb-10">
