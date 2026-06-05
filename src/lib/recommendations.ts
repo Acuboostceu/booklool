@@ -6,7 +6,7 @@ export type RecommendedBook = {
 }
 
 export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
-  '유치원 / Kindergarten': [
+  K: [
     { title: '강아지똥', author: '권정생', lang: 'ko', emoji: '🐶' },
     { title: '100층짜리 집', author: '이와이 도시오', lang: 'ko', emoji: '🏠' },
     { title: '구름빵', author: '백희나', lang: 'ko', emoji: '☁️' },
@@ -28,7 +28,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'Brown Bear, Brown Bear', author: 'Bill Martin Jr.', lang: 'en', emoji: '🐻' },
     { title: 'Chicka Chicka Boom Boom', author: 'Bill Martin Jr.', lang: 'en', emoji: '🌴' },
   ],
-  '1학년 / Grade 1': [
+  '1': [
     { title: '마당을 나온 암탉', author: '황선미', lang: 'ko', emoji: '🐔' },
     { title: '내 이름은 삐삐 롱스타킹', author: '아스트리드 린드그렌', lang: 'ko', emoji: '👧' },
     { title: '손 큰 할머니의 만두 만들기', author: '채인선', lang: 'ko', emoji: '🥟' },
@@ -50,7 +50,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'Elephant and Piggie', author: 'Mo Willems', lang: 'en', emoji: '🐘' },
     { title: 'Little Bear', author: 'Else Holmelund Minarik', lang: 'en', emoji: '🐻' },
   ],
-  '2학년 / Grade 2': [
+  '2': [
     { title: '아낌없이 주는 나무', author: '쉘 실버스타인', lang: 'ko', emoji: '🌲' },
     { title: '어린 왕자', author: '생텍쥐페리', lang: 'ko', emoji: '🌹' },
     { title: '피노키오', author: '카를로 콜로디', lang: 'ko', emoji: '🤥' },
@@ -72,7 +72,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'Freckle Juice', author: 'Judy Blume', lang: 'en', emoji: '🥤' },
     { title: 'The Phantom Tollbooth', author: 'Norton Juster', lang: 'en', emoji: '🔔' },
   ],
-  '3학년 / Grade 3': [
+  '3': [
     { title: '초정리 편지', author: '배유안', lang: 'ko', emoji: '✉️' },
     { title: '나쁜 어린이 표', author: '황선미', lang: 'ko', emoji: '🏷️' },
     { title: '꽃들에게 희망을', author: '트리나 폴러스', lang: 'ko', emoji: '🦋' },
@@ -94,7 +94,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'The Trumpet of the Swan', author: 'E.B. White', lang: 'en', emoji: '🦢' },
     { title: 'Island of the Blue Dolphins', author: "Scott O'Dell", lang: 'en', emoji: '🐬' },
   ],
-  '4학년 / Grade 4': [
+  '4': [
     { title: '봄봄', author: '김유정', lang: 'ko', emoji: '🌸' },
     { title: '소나기', author: '황순원', lang: 'ko', emoji: '🌧️' },
     { title: '별 헤는 밤', author: '윤동주', lang: 'ko', emoji: '⭐' },
@@ -116,7 +116,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'The Call of the Wild', author: 'Jack London', lang: 'en', emoji: '🐺' },
     { title: 'Swiss Family Robinson', author: 'Johann David Wyss', lang: 'en', emoji: '🏕️' },
   ],
-  '5학년 / Grade 5': [
+  '5': [
     { title: '동백꽃', author: '김유정', lang: 'ko', emoji: '🌺' },
     { title: '메밀꽃 필 무렵', author: '이효석', lang: 'ko', emoji: '🌾' },
     { title: '운수 좋은 날', author: '현진건', lang: 'ko', emoji: '🚗' },
@@ -136,9 +136,9 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'Roll of Thunder, Hear My Cry', author: 'Mildred D. Taylor', lang: 'en', emoji: '⛈️' },
     { title: 'Anne of Green Gables', author: 'L.M. Montgomery', lang: 'en', emoji: '🏡' },
     { title: 'The Secret Garden', author: 'Frances Hodgson Burnett', lang: 'en', emoji: '🌹' },
-    { title: 'Harry Potter and the Sorcerer\'s Stone', author: 'J.K. Rowling', lang: 'en', emoji: '🧙' },
+    { title: "Harry Potter and the Sorcerer's Stone", author: 'J.K. Rowling', lang: 'en', emoji: '🧙' },
   ],
-  '6학년 / Grade 6': [
+  '6': [
     { title: '무진기행', author: '김승옥', lang: 'ko', emoji: '🌫️' },
     { title: '난쟁이가 쏘아올린 작은 공', author: '조세희', lang: 'ko', emoji: '⚽' },
     { title: '장마', author: '윤흥길', lang: 'ko', emoji: '🌧️' },
@@ -160,7 +160,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'The Bronze Bow', author: 'Elizabeth George Speare', lang: 'en', emoji: '🏹' },
     { title: 'The Cay', author: 'Theodore Taylor', lang: 'en', emoji: '🏝️' },
   ],
-  '중학교 1학년 / Grade 7': [
+  '7': [
     { title: '완득이', author: '김려령', lang: 'ko', emoji: '🥊' },
     { title: '82년생 김지영', author: '조남주', lang: 'ko', emoji: '👩‍💼' },
     { title: '엄마를 부탁해', author: '신경숙', lang: 'ko', emoji: '👩' },
@@ -182,7 +182,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'My Antonia', author: 'Willa Cather', lang: 'en', emoji: '🌻' },
     { title: 'A Raisin in the Sun', author: 'Lorraine Hansberry', lang: 'en', emoji: '☀️' },
   ],
-  '중학교 2학년 / Grade 8': [
+  '8': [
     { title: '홍길동전', author: '허균', lang: 'ko', emoji: '🦸' },
     { title: '춘향전', author: '작자 미상', lang: 'ko', emoji: '💃' },
     { title: '심청전', author: '작자 미상', lang: 'ko', emoji: '👁️' },
@@ -204,7 +204,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'Their Eyes Were Watching God', author: 'Zora Neale Hurston', lang: 'en', emoji: '👁️' },
     { title: 'Death of a Salesman', author: 'Arthur Miller', lang: 'en', emoji: '💼' },
   ],
-  '중학교 3학년 / Grade 9': [
+  '9': [
     { title: '페스트', author: '알베르 카뮈', lang: 'ko', emoji: '🦠' },
     { title: '이방인', author: '알베르 카뮈', lang: 'ko', emoji: '🌞' },
     { title: '죄와 벌', author: '도스토예프스키', lang: 'ko', emoji: '⚖️' },
@@ -226,7 +226,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'The Sun Also Rises', author: 'Ernest Hemingway', lang: 'en', emoji: '🌅' },
     { title: 'A Farewell to Arms', author: 'Ernest Hemingway', lang: 'en', emoji: '🎖️' },
   ],
-  '고등학교 1학년 / Grade 10': [
+  '10': [
     { title: '허생전', author: '박지원', lang: 'ko', emoji: '💰' },
     { title: '열하일기', author: '박지원', lang: 'ko', emoji: '📖' },
     { title: '목민심서', author: '정약용', lang: 'ko', emoji: '🏛️' },
@@ -243,12 +243,12 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'The Merchant of Venice', author: 'William Shakespeare', lang: 'en', emoji: '⚖️' },
     { title: "A Midsummer Night's Dream", author: 'William Shakespeare', lang: 'en', emoji: '🧚' },
     { title: 'Beowulf', author: 'Anonymous', lang: 'en', emoji: '🐉' },
-    { title: 'Gulliver\'s Travels', author: 'Jonathan Swift', lang: 'en', emoji: '🧭' },
+    { title: "Gulliver's Travels", author: 'Jonathan Swift', lang: 'en', emoji: '🧭' },
     { title: 'Robinson Crusoe', author: 'Daniel Defoe', lang: 'en', emoji: '🏝️' },
     { title: 'Moby-Dick', author: 'Herman Melville', lang: 'en', emoji: '🐋' },
     { title: 'The Sound and the Fury', author: 'William Faulkner', lang: 'en', emoji: '🌊' },
   ],
-  '고등학교 2학년 / Grade 11': [
+  '11': [
     { title: '인간의 굴레에서', author: '서머싯 몸', lang: 'ko', emoji: '⛓️' },
     { title: '닥터 지바고', author: '보리스 파스테르나크', lang: 'ko', emoji: '❄️' },
     { title: '지하생활자의 수기', author: '도스토예프스키', lang: 'ko', emoji: '🕳️' },
@@ -270,7 +270,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'Don Quixote', author: 'Miguel de Cervantes', lang: 'en', emoji: '⚔️' },
     { title: 'Inferno', author: 'Dante Alighieri', lang: 'en', emoji: '🔥' },
   ],
-  '고등학교 3학년 / Grade 12': [
+  '12': [
     { title: '무정', author: '이광수', lang: 'ko', emoji: '💔' },
     { title: '혈의 누', author: '이인직', lang: 'ko', emoji: '🩸' },
     { title: '금수회의록', author: '안국선', lang: 'ko', emoji: '🐾' },
@@ -292,7 +292,7 @@ export const RECOMMENDED_BOOKS: Record<string, RecommendedBook[]> = {
     { title: 'Bleak House', author: 'Charles Dickens', lang: 'en', emoji: '🌫️' },
     { title: 'To the Lighthouse', author: 'Virginia Woolf', lang: 'en', emoji: '🏮' },
   ],
-  '성인 / Adult': [
+  adult: [
     { title: '채식주의자', author: '한강', lang: 'ko', emoji: '🌿' },
     { title: '소년이 온다', author: '한강', lang: 'ko', emoji: '✊' },
     { title: '아몬드', author: '손원평', lang: 'ko', emoji: '🌰' },

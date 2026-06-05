@@ -5,6 +5,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import { RECOMMENDED_BOOKS } from '@/lib/recommendations'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { Locale } from '@/lib/i18n/translations'
+import { gradeLabel } from '@/lib/gradeLabels'
 
 const gradeColors = [
   { bg: 'var(--green-light)', accent: 'var(--green-dark)', border: 'var(--green-light)' },
@@ -16,7 +17,7 @@ const gradeColors = [
 const langLabel: Record<Locale, string> = { ko: '한국어', en: 'EN', es: 'ES' }
 
 export default function RecommendationsPage() {
-  const { t, bookLocales } = useLocale()
+  const { t, locale, bookLocales } = useLocale()
   const grades = Object.keys(RECOMMENDED_BOOKS)
   const [openGrade, setOpenGrade] = useState<string>(grades[0])
 
@@ -41,7 +42,7 @@ export default function RecommendationsPage() {
                 style={{background: isOpen ? color.bg : 'white'}}
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-semibold text-base" style={{color: color.accent}}>{grade}</span>
+                  <span className="font-semibold text-base" style={{color: color.accent}}>{gradeLabel(grade, locale)}</span>
                   <span className="text-xs text-gray-400 font-medium">{t('rec_count', books.length as never)}</span>
                 </div>
                 {isOpen
