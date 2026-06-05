@@ -166,33 +166,6 @@ export default function LandingPage() {
             <p className="text-xs text-gray-400">{t.hero_sub_cta}</p>
           </div>
 
-          {/* Mock UI */}
-          <div className="mt-20 flex justify-center">
-            <div className="w-64 bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 text-left">
-              <div className="px-4 py-3 border-b border-gray-50 flex items-center gap-2">
-                <Image src="/booklool.png" alt="" width={72} height={24} className="h-5 w-auto object-contain" />
-              </div>
-              <div className="p-4 space-y-2.5">
-                {[
-                  { title: 'The Very Hungry Caterpillar', color: 'var(--green-light)', dot: 'var(--green)' },
-                  { title: '강아지똥', color: 'var(--pink-light)', dot: 'var(--pink)' },
-                  { title: "Charlotte's Web", color: 'var(--purple-light)', dot: 'var(--purple)' },
-                ].map((book, i) => (
-                  <div key={i} className="flex items-center gap-3 p-2.5 rounded-2xl" style={{ background: book.color }}>
-                    <div className="w-8 h-11 rounded-lg flex-shrink-0" style={{ background: book.dot, opacity: 0.35 }} />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-gray-800 leading-tight truncate">{book.title}</p>
-                      <div className="flex gap-0.5 mt-1">
-                        {[1,2,3,4,5].map(s => (
-                          <span key={s} className="text-[9px]" style={{ color: 'var(--yellow)' }}>★</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
