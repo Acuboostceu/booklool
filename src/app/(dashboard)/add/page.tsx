@@ -136,17 +136,18 @@ export default function AddBookPage() {
 
     let photoUrl = ''
     if (photoFile) {
-      // 업로드 전 압축
-      const compressed = await compressImage(photoFile, 1200)
-      const blob = await fetch(compressed).then(r => r.blob())
-      const compressedFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' })
-      const formData = new FormData()
-      formData.append('file', compressedFile)
-      formData.append('profileId', selectedChild)
-      const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
-      if (uploadRes.ok) {
-        const { url } = await uploadRes.json()
-        photoUrl = url
+      // Presigned URL 발급 받아서 S3에 직접 업로드 (원본 화질)
+      const presignRes = await fetch(
+        `/api/upload?profileId=${selectedChild}&contentType=${encodeURIComponent(photoFile.type || 'image/jpeg')}`
+      )
+      if (presignRes.ok) {
+        const { presignedUrl, publicUrl } = await presignRes.json()
+        const uploadRes = await fetch(presignedUrl, {
+          method: 'PUT',
+          body: photoFile,
+          headers: { 'Content-Type': photoFile.type || 'image/jpeg' },
+        })
+        if (uploadRes.ok) photoUrl = publicUrl
       }
     }
 

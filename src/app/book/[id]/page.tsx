@@ -46,8 +46,8 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
       {book.photo_url && (
         <div className="mb-4">
           <p className="text-sm font-semibold text-gray-600 mb-2">📸 내가 찍은 사진</p>
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
-            <Image src={book.photo_url} alt="book photo" fill className="object-cover" />
+          <div className="relative w-full rounded-2xl overflow-hidden" style={{aspectRatio: '3/4'}}>
+            <Image src={book.photo_url} alt="book photo" fill className="object-contain bg-gray-50" />
           </div>
         </div>
       )}
