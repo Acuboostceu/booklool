@@ -10,7 +10,7 @@ import { useAuthLocale } from '@/lib/i18n/useAuthLocale'
 export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()
-  const { t } = useAuthLocale()
+  const { t, locale } = useAuthLocale()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -86,6 +86,11 @@ export default function LoginPage() {
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
+            </div>
+            <div className="text-right">
+              <Link href="/forgot-password" className="text-xs text-gray-400 hover:text-gray-600">
+                {locale === 'ko' ? '비밀번호를 잊으셨나요?' : locale === 'es' ? '¿Olvidaste tu contraseña?' : 'Forgot password?'}
+              </Link>
             </div>
             {error && <p className="text-red-500 text-xs">{error}</p>}
             <button

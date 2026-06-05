@@ -27,7 +27,9 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/signup')
 
   const isPublicRoute = request.nextUrl.pathname === '/' ||
-    request.nextUrl.pathname.startsWith('/child-login')
+    request.nextUrl.pathname.startsWith('/child-login') ||
+    request.nextUrl.pathname.startsWith('/forgot-password') ||
+    request.nextUrl.pathname.startsWith('/reset-password')
 
   if (!user && !isAuthRoute && !isPublicRoute) {
     return NextResponse.redirect(new URL('/login', request.url))
