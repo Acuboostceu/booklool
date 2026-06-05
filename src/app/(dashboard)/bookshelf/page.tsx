@@ -103,7 +103,7 @@ export default async function BookshelfPage() {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                 {profileBooks.map(book => (
                   <Link key={book.id} href={`/book/${book.id}`}>
                     <div className="bg-white rounded-2xl overflow-hidden border-2 transition hover:scale-[1.02]" style={{borderColor: color.bg}}>
