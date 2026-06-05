@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
+import { Nunito, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 
 const nunito = Nunito({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-nunito",
+});
+
+const notoSansKR = Noto_Sans_KR({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-noto",
 });
 
 export const metadata: Metadata = {
@@ -19,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${nunito.variable} h-full`}>
+    <html lang="ko" className={`${nunito.variable} ${notoSansKR.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
   );
