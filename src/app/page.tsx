@@ -115,7 +115,7 @@ export default function LandingPage() {
               {t.nav_login}
             </Link>
             <Link
-              href={loggedIn ? '/bookshelf' : '/login'}
+              href={loggedIn ? '/bookshelf' : '/signup'}
               className="text-sm font-bold px-4 py-2 rounded-full text-white transition hover:opacity-90"
               style={{ background: 'var(--green)' }}
             >
@@ -156,7 +156,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link
-              href={loggedIn ? '/bookshelf' : '/login'}
+              href={loggedIn ? '/bookshelf' : '/signup'}
               className="text-white font-bold px-8 py-4 rounded-full text-base shadow-lg transition hover:opacity-90 hover:-translate-y-0.5"
               style={{ background: 'var(--green)' }}
             >
