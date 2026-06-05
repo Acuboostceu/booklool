@@ -56,7 +56,7 @@ export default function AddBookPage() {
 
   useState(() => { loadChildren() })
 
-  async function compressImage(file: File, maxWidth = 800): Promise<string> {
+  async function compressImage(file: File, maxWidth = 600): Promise<string> {
     return new Promise((resolve) => {
       const img = new window.Image()
       const url = URL.createObjectURL(file)
@@ -68,7 +68,7 @@ export default function AddBookPage() {
         const ctx = canvas.getContext('2d')!
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
         URL.revokeObjectURL(url)
-        resolve(canvas.toDataURL('image/jpeg', 0.7))
+        resolve(canvas.toDataURL('image/jpeg', 0.5))
       }
       img.src = url
     })

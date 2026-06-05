@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { BookOpen, PlusCircle, Star, Users, LogOut, Settings } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -60,7 +59,7 @@ export default function DashboardNav() {
         style={{ borderBottom: '1px solid var(--green-light)' }}
       >
         <Link href="/bookshelf">
-          <Image src="/booklool.png" alt="Booklool" width={120} height={40} className="object-contain h-8 w-auto" />
+          <img src="/booklool.png" alt="Booklool" className="object-contain h-8 w-auto" />
         </Link>
         <div className="flex items-center gap-1">
           <Link
@@ -114,7 +113,7 @@ export default function DashboardNav() {
         {/* Logo */}
         <div className="px-5 pt-5 pb-4">
           <Link href="/bookshelf">
-            <Image src="/booklool.png" alt="Booklool" width={130} height={44} className="object-contain h-9 w-auto" />
+            <img src="/booklool.png" alt="Booklool" className="object-contain h-9 w-auto" />
           </Link>
         </div>
 
