@@ -32,6 +32,7 @@ export default async function BookshelfPage() {
         profiles={[childProfile]}
         books={books || []}
         badges={badges || []}
+        partnerIds={[]}
       />
     )
   }
@@ -75,6 +76,7 @@ export default async function BookshelfPage() {
       profiles={profiles}
       books={books || []}
       badges={badges || []}
+      partnerIds={partner ? [partner.id] : []}
     />
   )
 }

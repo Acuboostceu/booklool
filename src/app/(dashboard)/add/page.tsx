@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useRef, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { Camera, Image as ImageIcon, Search, Star, ChevronRight, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -12,6 +12,7 @@ type Step = 'capture' | 'search' | 'confirm' | 'review'
 
 export default function AddBookPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
   const { t } = useLocale()
   const fileRef = useRef<HTMLInputElement>(null)
@@ -35,16 +36,35 @@ export default function AddBookPage() {
   const [children, setChildren] = useState<{ id: string; name: string }[]>([])
   const [selectedChild, setSelectedChild] = useState<string>('')
 
+  const preselectedProfileId = searchParams.get('profileId')
+
   async function loadChildren() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
+
+    // If profileId is in URL, just use that directly
+    if (preselectedProfileId) {
+      setSelectedChild(preselectedProfileId)
+      return
+    }
+
     const { data: parent } = await supabase
       .from('bl_profiles')
       .select('id')
       .eq('user_id', user.id)
       .eq('role', 'parent')
       .single()
-    if (!parent) return
+    if (!parent) {
+      // child account
+      const { data: child } = await supabase
+        .from('bl_profiles')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('role', 'child')
+        .single()
+      if (child) setSelectedChild(child.id)
+      return
+    }
     setProfileId(parent.id)
     const { data: kids } = await supabase
       .from('bl_profiles')
@@ -54,7 +74,7 @@ export default function AddBookPage() {
     setSelectedChild(kids?.[0]?.id || parent.id)
   }
 
-  useState(() => { loadChildren() })
+  useEffect(() => { loadChildren() }, [])
 
   async function compressImage(file: File, maxWidth = 600): Promise<string> {
     return new Promise((resolve) => {
@@ -195,8 +215,8 @@ export default function AddBookPage() {
     <div className="pb-24">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">{t('add_title')}</h1>
 
-      {/* Child selector */}
-      {children.length > 0 && (
+      {/* Child selector — hidden when profileId is in URL */}
+      {!preselectedProfileId && children.length > 0 && (
         <div className="mb-4">
           <label className="text-sm font-semibold text-gray-600 mb-1 block">{t('add_whose')}</label>
           <div className="flex gap-2 flex-wrap">

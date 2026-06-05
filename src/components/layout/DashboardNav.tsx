@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BookOpen, PlusCircle, Star, Users, LogOut, Settings } from 'lucide-react'
+import { BookOpen, Star, Users, LogOut, Settings } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
@@ -47,7 +47,6 @@ export default function DashboardNav() {
 
   const allNavItems = [
     { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf'), childOk: true },
-    { href: '/add', icon: PlusCircle, label: t('nav_add'), childOk: true },
     { href: '/recommendations', icon: Star, label: t('nav_recommendations'), childOk: true },
     { href: '/parent', icon: Users, label: t('nav_family'), childOk: false },
     { href: '/settings', icon: Settings, label: t('settings_title'), childOk: true },

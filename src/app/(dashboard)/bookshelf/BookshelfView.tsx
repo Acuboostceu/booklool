@@ -19,10 +19,12 @@ export default function BookshelfView({
   profiles,
   books,
   badges,
+  partnerIds = [],
 }: {
   profiles: Profile[]
   books: Book[]
   badges: Badge[]
+  partnerIds?: string[]
 }) {
   const { t } = useLocale()
 
@@ -75,13 +77,15 @@ export default function BookshelfView({
                 </div>
                 <div className="text-center">
                   <p className="text-gray-500 text-sm font-medium">{t('bookshelf_empty')}</p>
-                  <Link
-                    href="/add"
-                    className="inline-block mt-2 text-sm font-bold underline underline-offset-2"
-                    style={{ color: color.accent }}
-                  >
-                    {t('bookshelf_add_first')}
-                  </Link>
+                  {!partnerIds.includes(profile.id) && (
+                    <Link
+                      href={`/add?profileId=${profile.id}`}
+                      className="inline-block mt-2 text-sm font-bold underline underline-offset-2"
+                      style={{ color: color.accent }}
+                    >
+                      {t('bookshelf_add_first')}
+                    </Link>
+                  )}
                 </div>
               </div>
             ) : (
@@ -117,29 +121,23 @@ export default function BookshelfView({
                     </div>
                   </Link>
                 ))}
-                {/* Add book tile */}
-                <Link href="/add" className="group">
-                  <div
-                    className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
-                    style={{ borderColor: color.dot + '60' }}
-                  >
-                    <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
-                  </div>
-                </Link>
+                {/* Add book tile — hidden for partner */}
+                {!partnerIds.includes(profile.id) && (
+                  <Link href={`/add?profileId=${profile.id}`} className="group">
+                    <div
+                      className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
+                      style={{ borderColor: color.dot + '60' }}
+                    >
+                      <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
+                    </div>
+                  </Link>
+                )}
               </div>
             )}
           </div>
         )
       })}
 
-      {/* FAB (mobile) */}
-      <Link
-        href="/add"
-        className="md:hidden fixed bottom-20 right-4 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition z-40 hover:scale-110"
-        style={{ background: 'var(--green)' }}
-      >
-        <Plus className="w-7 h-7" />
-      </Link>
     </div>
   )
 }
