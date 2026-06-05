@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Camera, Search, Star, ChevronRight, Loader2 } from 'lucide-react'
+import { Camera, Image as ImageIcon, Search, Star, ChevronRight, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { BookSearchResult } from '@/types'
 
@@ -13,6 +13,7 @@ export default function AddBookPage() {
   const router = useRouter()
   const supabase = createClient()
   const fileRef = useRef<HTMLInputElement>(null)
+  const galleryRef = useRef<HTMLInputElement>(null)
 
   const [step, setStep] = useState<Step>('capture')
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -189,13 +190,24 @@ export default function AddBookPage() {
         <div className="space-y-4">
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full bg-amber-400 hover:bg-amber-500 text-white font-bold rounded-3xl py-8 flex flex-col items-center gap-3 transition"
+            className="w-full text-white font-bold rounded-3xl py-6 flex flex-col items-center gap-3 transition"
+            style={{background: 'var(--green)'}}
           >
             <Camera className="w-10 h-10" />
-            <span className="text-lg">책 표지 사진 찍기</span>
-            <span className="text-sm opacity-80">사진으로 책 제목을 자동으로 인식해요</span>
+            <span className="text-lg">카메라로 찍기</span>
+            <span className="text-sm opacity-80">책 표지를 찍으면 제목을 자동 인식해요</span>
+          </button>
+          <button
+            onClick={() => galleryRef.current?.click()}
+            className="w-full font-bold rounded-3xl py-6 flex flex-col items-center gap-3 transition border-2"
+            style={{background: 'var(--purple-light)', borderColor: 'var(--purple-light)', color: 'var(--purple-dark)'}}
+          >
+            <ImageIcon className="w-10 h-10" />
+            <span className="text-lg">사진첩에서 선택</span>
+            <span className="text-sm opacity-60">저장된 사진에서 골라요</span>
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} className="hidden" />
+          <input ref={galleryRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
 
           <button
             onClick={() => setStep('search')}
