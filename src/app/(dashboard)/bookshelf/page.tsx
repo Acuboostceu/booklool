@@ -95,7 +95,7 @@ export default async function BookshelfPage() {
             </div>
 
             {profileBooks.length === 0 ? (
-              <div className="rounded-2xl border-2 border-dashed p-8 text-center" style={{borderColor: color.accent + '60', background: color.bg}}>
+              <div className="rounded-2xl border p-8 text-center" style={{borderColor: color.accent + '40', background: color.bg}}>
                 <p className="text-gray-400 text-sm mb-3">아직 읽은 책이 없어요</p>
                 <Link href="/add" className="inline-block font-bold text-sm" style={{color: color.accent}}>
                   + 첫 번째 책 추가하기
