@@ -131,8 +131,12 @@ export default function AddBookPage() {
 
     let photoUrl = ''
     if (photoFile) {
+      // 업로드 전 압축
+      const compressed = await compressImage(photoFile, 1200)
+      const blob = await fetch(compressed).then(r => r.blob())
+      const compressedFile = new File([blob], 'photo.jpg', { type: 'image/jpeg' })
       const formData = new FormData()
-      formData.append('file', photoFile)
+      formData.append('file', compressedFile)
       formData.append('profileId', selectedChild)
       const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
       if (uploadRes.ok) {
