@@ -6,12 +6,14 @@ import Image from 'next/image'
 import { Camera, Image as ImageIcon, Search, Star, ChevronRight, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { BookSearchResult } from '@/types'
+import { useLocale } from '@/lib/i18n/LocaleContext'
 
 type Step = 'capture' | 'search' | 'confirm' | 'review'
 
 export default function AddBookPage() {
   const router = useRouter()
   const supabase = createClient()
+  const { t } = useLocale()
   const fileRef = useRef<HTMLInputElement>(null)
   const galleryRef = useRef<HTMLInputElement>(null)
 
@@ -191,12 +193,12 @@ export default function AddBookPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">책 추가</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">{t('add_title')}</h1>
 
       {/* Child selector */}
       {children.length > 0 && (
         <div className="mb-4">
-          <label className="text-sm font-semibold text-gray-600 mb-1 block">누구의 책장에 추가할까요?</label>
+          <label className="text-sm font-semibold text-gray-600 mb-1 block">{t('add_whose')}</label>
           <div className="flex gap-2 flex-wrap">
             {children.map(c => (
               <button
@@ -218,7 +220,7 @@ export default function AddBookPage() {
                   ? {background: 'var(--green-light)', borderColor: 'var(--green)', color: 'var(--green-dark)'}
                   : {background: 'white', borderColor: '#e5e7eb', color: '#6b7280'}}
               >
-                내 책장
+                {t('add_my_shelf')}
               </button>
             )}
           </div>
@@ -234,8 +236,8 @@ export default function AddBookPage() {
             style={{background: 'var(--green-light)', color: 'var(--green-dark)'}}
           >
             <Camera className="w-8 h-8" />
-            <span className="text-base">카메라로 찍기</span>
-            <span className="text-xs opacity-70">책 표지를 찍으면 제목을 자동 인식해요</span>
+            <span className="text-base">{t('add_camera')}</span>
+            <span className="text-xs opacity-70">{t('add_camera_desc')}</span>
           </button>
           <button
             onClick={() => galleryRef.current?.click()}
@@ -243,8 +245,8 @@ export default function AddBookPage() {
             style={{background: 'var(--purple-light)', color: 'var(--purple-dark)'}}
           >
             <ImageIcon className="w-8 h-8" />
-            <span className="text-base">사진첩에서 선택</span>
-            <span className="text-xs opacity-60">저장된 사진에서 골라요</span>
+            <span className="text-base">{t('add_gallery')}</span>
+            <span className="text-xs opacity-60">{t('add_gallery_desc')}</span>
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} className="hidden" />
           <input ref={galleryRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
@@ -255,7 +257,7 @@ export default function AddBookPage() {
             style={{borderColor: 'var(--green-light)', color: 'var(--green-dark)'}}
           >
             <Search className="w-5 h-5" />
-            직접 검색하기
+            {t('add_search')}
           </button>
         </div>
       )}
@@ -271,7 +273,7 @@ export default function AddBookPage() {
           {ocrLoading && (
             <div className="flex items-center gap-2 text-gray-400 text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
-              책 제목 인식 중...
+              {t('add_recognizing')}
             </div>
           )}
           <div className="space-y-2">
@@ -279,7 +281,7 @@ export default function AddBookPage() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSearch()}
-              placeholder="책 제목"
+              placeholder={t('add_title_placeholder')}
               className="w-full border-2 rounded-2xl px-4 py-3 text-sm outline-none transition"
               style={{borderColor: 'var(--green-light)'}}
               onFocus={e => e.target.style.borderColor = 'var(--green)'}
@@ -290,7 +292,7 @@ export default function AddBookPage() {
                 value={authorQuery}
                 onChange={e => setAuthorQuery(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                placeholder="저자 (선택)"
+                placeholder={t('add_author_placeholder')}
                 className="flex-1 border-2 rounded-2xl px-4 py-3 text-sm outline-none transition"
                 style={{borderColor: 'var(--purple-light)'}}
                 onFocus={e => e.target.style.borderColor = 'var(--purple)'}
@@ -349,7 +351,7 @@ export default function AddBookPage() {
 
           {/* Rating */}
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">별점</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">{t('add_rating')}</p>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map(n => (
                 <button key={n} onClick={() => setRating(n)}>
@@ -361,11 +363,11 @@ export default function AddBookPage() {
 
           {/* Comment */}
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">한 줄 감상</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('add_comment')}</p>
             <textarea
               value={comment}
               onChange={e => setComment(e.target.value)}
-              placeholder="이 책을 읽고 어떤 생각이 들었나요?"
+              placeholder={t('add_comment_placeholder')}
               rows={2}
               className="w-full text-sm border border-gray-100 rounded-2xl p-3 outline-none focus:border-gray-300 resize-none"
             />
@@ -374,12 +376,12 @@ export default function AddBookPage() {
           {/* AI Question */}
           {step === 'review' && aiQuestion && (
             <div className="bg-white rounded-2xl p-4 border border-gray-100">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">AI 독후 질문</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('add_ai_question')}</p>
               <p className="font-semibold text-gray-800 mb-3 text-sm">{aiQuestion}</p>
               <textarea
                 value={aiAnswer}
                 onChange={e => setAiAnswer(e.target.value)}
-                placeholder="내 생각을 써봐요..."
+                placeholder={t('add_ai_placeholder')}
                 rows={3}
                 className="w-full text-sm border border-gray-100 rounded-xl p-3 outline-none focus:border-gray-300 resize-none bg-gray-50"
               />
@@ -389,7 +391,7 @@ export default function AddBookPage() {
           {step === 'confirm' && (
             <div className="flex items-center gap-2 text-gray-400 text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
-              AI 질문 생성 중...
+              {t('add_generating')}
             </div>
           )}
 
@@ -399,9 +401,9 @@ export default function AddBookPage() {
             className="w-full font-bold rounded-2xl py-4 transition disabled:opacity-60"
             style={{background: 'var(--green-light)', color: 'var(--green-dark)'}}
           >
-            {saving ? '저장 중...' : '저장하기'}
+            {saving ? t('add_saving') : t('add_save')}
           </button>
-          {rating === 0 && <p className="text-xs text-center text-gray-400">별점을 선택해주세요</p>}
+          {rating === 0 && <p className="text-xs text-center text-gray-400">{t('add_select_rating')}</p>}
         </div>
       )}
     </div>
