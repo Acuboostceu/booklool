@@ -57,7 +57,7 @@ export default async function BookshelfPage() {
         .in('parent_id', parentIds)
     : { data: [] }
 
-  const profiles = [parent, partner, ...(children || [])].filter(Boolean) as { id: string; name: string; color?: string | null }[]
+  const profiles = [...(children || []), parent, partner].filter(Boolean) as { id: string; name: string; color?: string | null }[]
   const allProfileIds = profiles.map(p => p.id)
 
   const { data: books } = await supabase
