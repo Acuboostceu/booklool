@@ -132,9 +132,7 @@ export default function ParentPageView({
   const supabase = createClient()
 
   async function handleDeleteChild(childId: string) {
-    await supabase.from('bl_books').delete().eq('profile_id', childId)
-    await supabase.from('bl_badges').delete().eq('profile_id', childId)
-    await supabase.from('bl_profiles').delete().eq('id', childId)
+    await supabase.rpc('delete_child_profile', { child_profile_id: childId })
     router.refresh()
   }
 
