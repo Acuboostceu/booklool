@@ -4,10 +4,9 @@ import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
-// Use service role to bypass RLS for webhook updates
-const supabaseAdmin = createClient(
+const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
 export async function POST(req: NextRequest) {
@@ -25,14 +24,14 @@ export async function POST(req: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session
     const profileId = session.metadata?.profile_id
     if (profileId) {
-      await supabaseAdmin.from('bl_profiles').update({ plan: 'family' }).eq('id', profileId)
+      await supabase.rpc('set_plan_family', { profile_id_input: profileId })
     }
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object as Stripe.Subscription
     const customerId = sub.customer as string
-    await supabaseAdmin.from('bl_profiles').update({ plan: 'free' }).eq('stripe_customer_id', customerId)
+    await supabase.rpc('cancel_plan_by_customer', { customer_id: customerId })
   }
 
   return NextResponse.json({ received: true })
