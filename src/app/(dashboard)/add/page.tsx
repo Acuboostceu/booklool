@@ -213,7 +213,7 @@ export default function AddBookPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">{t('add_title')}</h1>
+      <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('add_title')}</h1>
 
       {/* Child selector — hidden when profileId is in URL */}
       {!preselectedProfileId && children.length > 0 && (

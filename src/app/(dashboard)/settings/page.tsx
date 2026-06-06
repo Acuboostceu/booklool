@@ -2,7 +2,6 @@
 
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { Locale } from '@/lib/i18n/translations'
-import { Settings } from 'lucide-react'
 import PlanSection from './PlanSection'
 
 const appLocales: { value: Locale; label: string; flag: string }[] = [
@@ -31,10 +30,7 @@ export default function SettingsPage() {
 
   return (
     <div className="pb-24 max-w-md">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-        <Settings className="w-6 h-6" style={{color: 'var(--purple)'}} />
-        {t('settings_title')}
-      </h1>
+      <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('settings_title')}</h1>
 
       {/* Plan */}
       <PlanSection locale={locale} />

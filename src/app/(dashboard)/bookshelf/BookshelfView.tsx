@@ -37,7 +37,7 @@ export default function BookshelfView({
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">{t('bookshelf_title')}</h1>
+      <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('bookshelf_title')}</h1>
 
       {profiles.map((profile, idx) => {
         const profileBooks = booksByProfile[profile.id] || []

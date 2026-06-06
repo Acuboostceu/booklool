@@ -48,7 +48,7 @@ export default function ParentPageView({
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('family_title')}</h1>
+      <h1 className="text-xl font-bold text-gray-800 mb-2 text-center">{t('family_title')}</h1>
       <p className="text-sm text-gray-500 mb-6">{t('family_greeting', parentName as never)}</p>
 
       {children.length > 0 ? (

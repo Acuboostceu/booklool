@@ -23,8 +23,8 @@ export default function RecommendationsPage() {
 
   return (
     <div className="pb-24">
-      <h1 className="text-2xl font-bold text-gray-800 mb-1">{t('rec_title')}</h1>
-      <p className="text-sm text-gray-400 mb-6">{t('rec_subtitle')}</p>
+      <h1 className="text-xl font-bold text-gray-800 mb-1 text-center">{t('rec_title')}</h1>
+      <p className="text-sm text-gray-400 mb-6 text-center">{t('rec_subtitle')}</p>
 
       <div className="space-y-3">
         {grades.map((grade, idx) => {
