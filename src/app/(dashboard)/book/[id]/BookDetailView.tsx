@@ -9,6 +9,7 @@ import BookActions from './BookActions'
 
 type Book = {
   id: string
+  profile_id: string
   title: string
   author: string | null
   publisher: string | null
@@ -30,10 +31,12 @@ export default function BookDetailView({ book }: { book: Book }) {
 
       <BookActions book={{
         id: book.id,
+        profile_id: book.profile_id,
         rating: book.rating,
         comment: book.comment,
         ai_answer: book.ai_answer,
         ai_question: book.ai_question,
+        photo_url: book.photo_url,
       }} />
 
       {/* Cover */}

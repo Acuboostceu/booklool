@@ -1,31 +1,69 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Pencil, Trash2, Star, X, Check } from 'lucide-react'
+import { Pencil, Trash2, Star, X, Check, Camera } from 'lucide-react'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
 export default function BookActions({ book }: { book: {
   id: string
+  profile_id: string
   rating: number | null
   comment: string | null
   ai_answer: string | null
   ai_question: string | null
+  photo_url: string | null
 }}) {
   const router = useRouter()
   const supabase = createClient()
   const { t } = useLocale()
+  const fileRef = useRef<HTMLInputElement>(null)
+
   const [editing, setEditing] = useState(false)
   const [rating, setRating] = useState(book.rating || 0)
   const [comment, setComment] = useState(book.comment || '')
   const [aiAnswer, setAiAnswer] = useState(book.ai_answer || '')
   const [saving, setSaving] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null)
+  const [newPhotoPreview, setNewPhotoPreview] = useState<string>('')
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setNewPhotoFile(file)
+    setNewPhotoPreview(URL.createObjectURL(file))
+  }
 
   async function handleSave() {
     setSaving(true)
-    await supabase.from('bl_books').update({ rating, comment, ai_answer: aiAnswer }).eq('id', book.id)
+
+    let photoUrl = book.photo_url || ''
+
+    if (newPhotoFile) {
+      try {
+        const formData = new FormData()
+        formData.append('file', newPhotoFile)
+        formData.append('profileId', book.profile_id)
+        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+        if (uploadRes.ok) {
+          const { publicUrl } = await uploadRes.json()
+          photoUrl = publicUrl
+        }
+      } catch (err) {
+        console.error('Photo upload failed:', err)
+      }
+    }
+
+    await supabase.from('bl_books').update({
+      rating,
+      comment,
+      ai_answer: aiAnswer,
+      photo_url: photoUrl,
+    }).eq('id', book.id)
+
     setSaving(false)
     setEditing(false)
     router.refresh()
@@ -85,9 +123,43 @@ export default function BookActions({ book }: { book: {
     <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-6 space-y-4">
       <div className="flex items-center justify-between">
         <p className="font-black text-gray-800">{t('book_edit')}</p>
-        <button onClick={() => setEditing(false)}>
+        <button onClick={() => { setEditing(false); setNewPhotoFile(null); setNewPhotoPreview('') }}>
           <X className="w-5 h-5 text-gray-400" />
         </button>
+      </div>
+
+      {/* Photo */}
+      <div>
+        <p className="text-xs font-bold text-gray-500 mb-2">{t('book_photo')}</p>
+        <div className="relative">
+          {(newPhotoPreview || book.photo_url) ? (
+            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-2">
+              <Image
+                src={newPhotoPreview || book.photo_url!}
+                alt="book photo"
+                fill
+                className="object-cover"
+              />
+            </div>
+          ) : null}
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold border-2 transition"
+            style={{ borderColor: 'var(--green-light)', color: 'var(--green-dark)' }}
+          >
+            <Camera className="w-4 h-4" />
+            {book.photo_url || newPhotoPreview ? t('book_photo_change') : t('book_photo_add')}
+          </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={handlePhotoChange}
+            className="hidden"
+          />
+        </div>
       </div>
 
       <div>

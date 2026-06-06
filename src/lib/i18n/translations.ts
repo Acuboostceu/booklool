@@ -77,6 +77,8 @@ export const translations = {
 
     // Book detail
     book_photo: '내가 찍은 사진',
+    book_photo_add: '+ 사진 추가',
+    book_photo_change: '사진 바꾸기',
     book_comment: '한 줄 감상',
     book_ai_question: 'AI 독후 질문',
     book_description: '책 소개',
@@ -180,6 +182,8 @@ export const translations = {
     settings_book_language: 'Recommended Book Languages',
 
     book_photo: 'My Photo',
+    book_photo_add: '+ Add photo',
+    book_photo_change: 'Change photo',
     book_comment: 'Review',
     book_ai_question: 'AI Reading Question',
     book_description: 'About this book',
@@ -283,6 +287,8 @@ export const translations = {
     settings_book_language: 'Idiomas de libros recomendados',
 
     book_photo: 'Mi foto',
+    book_photo_add: '+ Agregar foto',
+    book_photo_change: 'Cambiar foto',
     book_comment: 'Reseña',
     book_ai_question: 'Pregunta IA',
     book_description: 'Sobre este libro',
