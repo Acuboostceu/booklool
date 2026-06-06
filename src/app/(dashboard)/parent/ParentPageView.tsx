@@ -18,12 +18,11 @@ type Badge = { id: string; type: string; profile_id: string }
 
 const badgeEmoji: Record<string, string> = {
   first_book: '🌱', books_5: '🌿', books_10: '🌳', books_20: '🏆', books_50: '👑',
-  streak_7: '🔥', streak_30: '⚡', answered_ai: '🤖',
+  answered_ai: '🤖',
 }
 const badgeName: Record<string, string> = {
   first_book: '첫 책', books_5: '5권 달성', books_10: '10권 달성',
-  books_20: '20권 달성', books_50: '50권 달성', streak_7: '7일 연속',
-  streak_30: '30일 연속', answered_ai: 'AI 답변',
+  books_20: '20권 달성', books_50: '50권 달성', answered_ai: 'AI 답변',
 }
 
 export default function ParentPageView({
