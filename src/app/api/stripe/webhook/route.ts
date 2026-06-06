@@ -23,8 +23,10 @@ export async function POST(req: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
     const profileId = session.metadata?.profile_id
+    console.log('[webhook] checkout completed, profileId:', profileId)
     if (profileId) {
-      await supabase.rpc('set_plan_family', { profile_id_input: profileId })
+      const { error } = await supabase.rpc('set_plan_family', { profile_id_input: profileId })
+      console.log('[webhook] set_plan_family error:', error)
     }
   }
 
