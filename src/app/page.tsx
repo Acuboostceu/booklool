@@ -54,9 +54,9 @@ const copy = {
     how_label: '사용 방법',
     how_title: '세 단계로 평생의 추억을',
     step1_title: '사진을 찍어요',
-    step1_desc: '읽은 책을 들고 뿌듯해하는 그 얼굴을 찍어요. 놓칠 수 없는 순간이죠! AI가 사진 속 책 제목을 보고 찾아줄게요.',
+    step1_desc: '책과 함께 찍은 아이 얼굴 사진 한 장. AI가 책 제목을 자동으로 찾아줘요.',
     step2_title: '함께 기록해요',
-    step2_desc: '아이가 직접 써도 좋고, 부모가 대신 써줘도 좋아요. 함께 이야기 나누며 입력하는 것 자체가 독서 시간이 돼요.',
+    step2_desc: '아이가 직접 써도, 부모가 함께 써줘도 좋아요. 이야기 나누는 그 시간이 기록이 돼요.',
     step3_title: '일년이 한 권에.',
     step3_desc: '모든 사진과 생각, 그리고 기억이 가득한 책 한 권이 선물처럼 배달돼요.',
     pricing_label: '요금제',
@@ -205,7 +205,15 @@ export default function LandingPage() {
                 <div className="text-center">
                   <p className="text-xs font-black text-gray-300 mb-2">0{i + 1}</p>
                   <h3 className="font-black text-xl text-gray-800 mb-2">{step.title}</h3>
+                  {lang === 'ko' ? (
+                  <p className="text-gray-500 text-sm leading-relaxed">
+                    {i === 0 && <>책과 함께 찍은 아이 얼굴 사진 한 장.<br className="sm:hidden" /> AI가 책 제목을 자동으로 찾아줘요.</>}
+                    {i === 1 && <>아이가 직접 써도, 부모가 함께 써줘도 좋아요.<br className="sm:hidden" /> 이야기 나누는 그 시간이 기록이 돼요.</>}
+                    {i === 2 && <>모든 사진과 생각, 그리고 기억이 가득한<br className="sm:hidden" /> 책 한 권이 선물처럼 배달돼요.</>}
+                  </p>
+                ) : (
                   <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+                )}
                 </div>
               </div>
             ))}

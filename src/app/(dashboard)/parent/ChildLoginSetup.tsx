@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { KeyRound, Check } from 'lucide-react'
+import { KeyRound } from 'lucide-react'
+import { useLocale } from '@/lib/i18n/LocaleContext'
 
 export default function ChildLoginSetup({
   childId,
@@ -14,6 +15,7 @@ export default function ChildLoginSetup({
   hasLogin: boolean
   username: string | null
 }) {
+  const { t } = useLocale()
   const [open, setOpen] = useState(false)
   const [newUsername, setNewUsername] = useState(username || '')
   const [password, setPassword] = useState('')
@@ -32,7 +34,7 @@ export default function ChildLoginSetup({
     })
     const data = await res.json()
     if (!res.ok) {
-      setError(data.error || '오류 발생')
+      setError(data.error || t('child_login_error'))
     } else {
       setDone(true)
       setOpen(false)
@@ -50,15 +52,17 @@ export default function ChildLoginSetup({
           style={{ color: 'var(--purple-dark)' }}
         >
           <KeyRound className="w-3.5 h-3.5" />
-          {done || hasLogin ? `로그인 설정됨 (${username || newUsername}) — 변경` : '아이 로그인 설정'}
+          {done || hasLogin
+            ? t('child_login_configured', (username || newUsername) as never)
+            : t('child_login_setup')}
         </button>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-2">
-          <p className="text-xs font-bold text-gray-600">{childName} 로그인 설정</p>
+          <p className="text-xs font-bold text-gray-600">{t('child_login_form_title', childName as never)}</p>
           <input
             value={newUsername}
             onChange={e => setNewUsername(e.target.value)}
-            placeholder="영문+숫자만 (예: elisha01)"
+            placeholder={t('child_login_username_placeholder')}
             required
             disabled={hasLogin}
             className="w-full border-2 rounded-xl px-3 py-2 text-sm outline-none disabled:bg-gray-50"
@@ -68,7 +72,7 @@ export default function ChildLoginSetup({
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            placeholder={hasLogin ? '새 비밀번호 (변경 시)' : '비밀번호 (4자 이상)'}
+            placeholder={hasLogin ? t('child_login_pw_new') : t('child_login_pw_set')}
             required={!hasLogin}
             minLength={4}
             className="w-full border-2 rounded-xl px-3 py-2 text-sm outline-none"
@@ -82,14 +86,14 @@ export default function ChildLoginSetup({
               className="flex-1 text-white font-bold rounded-xl py-2 text-xs transition disabled:opacity-60"
               style={{ background: 'var(--purple)' }}
             >
-              {loading ? '저장 중...' : '저장'}
+              {loading ? t('child_login_saving') : t('child_login_save')}
             </button>
             <button
               type="button"
               onClick={() => setOpen(false)}
               className="px-4 rounded-xl text-xs font-bold text-gray-400 bg-gray-100"
             >
-              취소
+              {t('child_login_cancel')}
             </button>
           </div>
         </form>
