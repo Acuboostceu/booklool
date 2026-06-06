@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
   const { error: link1Err } = await admin.from('bl_profiles').update({ partner_parent_id: targetParent.id }).eq('id', myProfile.id)
   const { error: link2Err } = await admin.from('bl_profiles').update({ partner_parent_id: myProfile.id }).eq('id', targetParent.id)
   console.log('[join] link errors:', link1Err, link2Err)
+  if (link1Err || link2Err) return NextResponse.json({ error: '연결 실패', detail: link1Err?.message ?? link2Err?.message }, { status: 500 })
 
   // If either has family plan, give both family plan
   const { data: myFull } = await admin.from('bl_profiles').select('plan').eq('id', myProfile.id).single()
