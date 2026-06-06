@@ -1,8 +1,6 @@
 'use client'
 
-import { Star } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/LocaleContext'
-import { formatDate } from '@/lib/utils'
 import { gradeLabel } from '@/lib/gradeLabel'
 import FamilyConnect from './FamilyConnect'
 import AddChildForm from './AddChildForm'
@@ -83,17 +81,6 @@ export default function ParentPageView({
                   </div>
                 )}
 
-                {childBooks.slice(0, 3).map(book => (
-                  <div key={book.id} className="flex items-center gap-2 py-2 border-t border-gray-50">
-                    <p className="text-sm flex-1 truncate font-medium text-gray-700">{book.title}</p>
-                    <div className="flex gap-0.5">
-                      {Array.from({ length: book.rating || 0 }).map((_, i) => (
-                        <Star key={i} className="w-3 h-3" style={{fill: 'var(--yellow)', color: 'var(--yellow)'}} />
-                      ))}
-                    </div>
-                    <p className="text-xs text-gray-400 whitespace-nowrap">{formatDate(book.created_at)}</p>
-                  </div>
-                ))}
 
                 <ColorPicker childId={child.id} currentColor={child.color} />
                 <ChildLoginSetup
