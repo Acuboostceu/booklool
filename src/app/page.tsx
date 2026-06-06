@@ -160,7 +160,19 @@ export default function LandingPage() {
           </h1>
           <div className="mb-7" />
           <p className="text-base md:text-lg text-gray-500 max-w-lg mx-auto mb-10 leading-relaxed">
-            {t.hero_sub}
+            {lang === 'en' ? (
+              <>
+                <span className="md:hidden">
+                  Every book they read.<br />
+                  Every thought they had.<br />
+                  Bound into one book, forever.
+                </span>
+                <span className="hidden md:inline">
+                  Every book they read. Every thought they had.<br />
+                  Bound into one book, forever.
+                </span>
+              </>
+            ) : t.hero_sub}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Link
