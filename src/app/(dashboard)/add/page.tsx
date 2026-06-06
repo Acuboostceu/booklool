@@ -158,18 +158,22 @@ export default function AddBookPage() {
 
     let photoUrl = ''
     if (photoFile) {
-      // Presigned URL 발급 받아서 S3에 직접 업로드 (원본 화질)
-      const presignRes = await fetch(
-        `/api/upload?profileId=${selectedChild}&contentType=${encodeURIComponent(photoFile.type || 'image/jpeg')}`
-      )
-      if (presignRes.ok) {
-        const { presignedUrl, publicUrl } = await presignRes.json()
-        const uploadRes = await fetch(presignedUrl, {
-          method: 'PUT',
-          body: photoFile,
-          headers: { 'Content-Type': photoFile.type || 'image/jpeg' },
-        })
-        if (uploadRes.ok) photoUrl = publicUrl
+      try {
+        const presignRes = await fetch(
+          `/api/upload?profileId=${selectedChild}&contentType=${encodeURIComponent(photoFile.type || 'image/jpeg')}`
+        )
+        if (presignRes.ok) {
+          const { presignedUrl, publicUrl } = await presignRes.json()
+          const uploadRes = await fetch(presignedUrl, {
+            method: 'PUT',
+            body: photoFile,
+            headers: { 'Content-Type': photoFile.type || 'image/jpeg' },
+          })
+          if (uploadRes.ok) photoUrl = publicUrl
+        }
+      } catch (err) {
+        console.error('Photo upload failed:', err)
+        // 사진 업로드 실패해도 책 저장은 계속 진행
       }
     }
 
