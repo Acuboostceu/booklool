@@ -109,7 +109,7 @@ export default function BookshelfView({
                         </div>
                       )}
                       <div className="p-2 bg-white">
-                        <p className="text-xs font-semibold text-gray-800 line-clamp-2 leading-tight">{book.title}</p>
+                        <p className="text-xs font-semibold text-gray-800 truncate leading-tight">{book.title}</p>
                         {(book.rating ?? 0) > 0 && (
                           <div className="flex items-center gap-0.5 mt-1">
                             {Array.from({ length: book.rating! }).map((_, i) => (
