@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <LocaleProvider>
       <div className="min-h-screen bg-[#fffbf5] flex flex-col">
         <DashboardNav />
-        <main className="flex-1 md:ml-56 w-full px-4 pt-6 pb-8 max-w-2xl md:max-w-3xl mx-auto md:mx-0 md:px-12 md:pt-8">
+        <main className="flex-1 w-full px-4 pt-6 pb-24 max-w-2xl mx-auto">
           {children}
         </main>
       </div>
