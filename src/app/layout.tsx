@@ -17,6 +17,7 @@ const notoSansKR = Noto_Sans_KR({
 export const metadata: Metadata = {
   title: "Booklool",
   description: "책 그림일기 — 아이와 함께 읽은 책을 기록해요",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
 };
 
 export default function RootLayout({
