@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, ArrowLeft } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import BookActions from './BookActions'
@@ -27,9 +27,6 @@ export default function BookDetailView({ book }: { book: Book }) {
 
   return (
     <div className="pb-24">
-      <Link href="/bookshelf" className="flex items-center gap-1 text-gray-500 text-sm mb-4">
-        <ArrowLeft className="w-4 h-4" /> {t('book_back')}
-      </Link>
 
       <BookActions book={{
         id: book.id,
