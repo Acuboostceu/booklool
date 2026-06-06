@@ -38,18 +38,26 @@ export default function FamilyConnect({
 
   async function handleJoin(e: React.FormEvent) {
     e.preventDefault()
+    console.log('[join] submitting code:', code)
     setLoading(true)
     setError('')
-    const res = await fetch('/api/family/join', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ family_code: code }),
-    })
-    const data = await res.json()
-    if (!res.ok) {
-      setError(data.error || '연결 실패')
-    } else {
-      router.refresh()
+    try {
+      const res = await fetch('/api/family/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ family_code: code }),
+      })
+      console.log('[join] response status:', res.status)
+      const data = await res.json()
+      console.log('[join] response data:', data)
+      if (!res.ok) {
+        setError(data.error || '연결 실패')
+      } else {
+        router.refresh()
+      }
+    } catch (err) {
+      console.error('[join] fetch error:', err)
+      setError('네트워크 오류')
     }
     setLoading(false)
   }
