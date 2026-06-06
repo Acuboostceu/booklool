@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Nunito, Noto_Sans_KR } from "next/font/google";
+import { Comfortaa, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 
-const nunito = Nunito({
+const comfortaa = Comfortaa({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-nunito",
+  variable: "--font-comfortaa",
 });
 
 const notoSansKR = Noto_Sans_KR({
@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${nunito.variable} ${notoSansKR.variable} h-full`}>
+    <html lang="ko" className={`${comfortaa.variable} ${notoSansKR.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
   );
