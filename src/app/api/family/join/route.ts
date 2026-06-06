@@ -10,8 +10,10 @@ export async function POST(req: NextRequest) {
   const { family_code } = await req.json()
   if (!family_code) return NextResponse.json({ error: 'family_code required' }, { status: 400 })
 
-  // Find the parent who owns this family_code
-  const { data: targetParent } = await supabase
+  const admin = createAdminClient()
+
+  // Find the parent who owns this family_code (admin to bypass RLS)
+  const { data: targetParent } = await admin
     .from('bl_profiles')
     .select('id, user_id')
     .eq('family_code', family_code.toUpperCase().trim())
@@ -22,7 +24,7 @@ export async function POST(req: NextRequest) {
   if (targetParent.user_id === user.id) return NextResponse.json({ error: '본인 코드는 사용할 수 없어요' }, { status: 400 })
 
   // Get current user's parent profile
-  const { data: myProfile } = await supabase
+  const { data: myProfile } = await admin
     .from('bl_profiles')
     .select('id, partner_parent_id')
     .eq('user_id', user.id)
