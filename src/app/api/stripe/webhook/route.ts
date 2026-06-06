@@ -25,14 +25,35 @@ export async function POST(req: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session
     const profileId = session.metadata?.profile_id
     if (profileId) {
+      // Update the paying user's plan
       await supabaseAdmin.from('bl_profiles').update({ plan: 'family' }).eq('id', profileId)
+      // Also update partner's plan if connected
+      const { data: profile } = await supabaseAdmin
+        .from('bl_profiles')
+        .select('partner_parent_id')
+        .eq('id', profileId)
+        .single()
+      if (profile?.partner_parent_id) {
+        await supabaseAdmin.from('bl_profiles').update({ plan: 'family' }).eq('id', profile.partner_parent_id)
+      }
     }
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object as Stripe.Subscription
     const customerId = sub.customer as string
-    await supabaseAdmin.from('bl_profiles').update({ plan: 'free' }).eq('stripe_customer_id', customerId)
+    // Update the payer's plan
+    const { data: profile } = await supabaseAdmin
+      .from('bl_profiles')
+      .select('id, partner_parent_id')
+      .eq('stripe_customer_id', customerId)
+      .single()
+    if (profile) {
+      await supabaseAdmin.from('bl_profiles').update({ plan: 'free' }).eq('id', profile.id)
+      if (profile.partner_parent_id) {
+        await supabaseAdmin.from('bl_profiles').update({ plan: 'free' }).eq('id', profile.partner_parent_id)
+      }
+    }
   }
 
   return NextResponse.json({ received: true })
