@@ -24,7 +24,6 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Booklool",
   description: "책 그림일기 — 아이와 함께 읽은 책을 기록해요",
-  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
