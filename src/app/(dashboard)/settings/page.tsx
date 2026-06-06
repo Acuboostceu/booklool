@@ -3,6 +3,7 @@
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { Locale } from '@/lib/i18n/translations'
 import { Settings } from 'lucide-react'
+import PlanSection from './PlanSection'
 
 const appLocales: { value: Locale; label: string; flag: string }[] = [
   { value: 'ko', label: '한국어', flag: '🇰🇷' },
@@ -21,7 +22,7 @@ export default function SettingsPage() {
 
   function toggleBookLocale(l: Locale) {
     if (bookLocales.includes(l)) {
-      if (bookLocales.length === 1) return // keep at least one
+      if (bookLocales.length === 1) return
       setBookLocales(bookLocales.filter(x => x !== l))
     } else {
       setBookLocales([...bookLocales, l])
@@ -34,6 +35,9 @@ export default function SettingsPage() {
         <Settings className="w-6 h-6" style={{color: 'var(--purple)'}} />
         {t('settings_title')}
       </h1>
+
+      {/* Plan */}
+      <PlanSection locale={locale} />
 
       {/* App language */}
       <div className="bg-white rounded-3xl p-5 border border-gray-100 mb-4">

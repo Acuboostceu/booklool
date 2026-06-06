@@ -8,9 +8,11 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 export default function FamilyConnect({
   familyCode,
   partnerName,
+  plan,
 }: {
   familyCode: string
   partnerName: string | null
+  plan: string
 }) {
   const router = useRouter()
   const { t } = useLocale()
@@ -69,7 +71,23 @@ export default function FamilyConnect({
         </div>
       </div>
 
-      {partnerName ? (
+      {plan === 'free' && !partnerName ? (
+        <div className="rounded-2xl p-4 text-center" style={{ background: 'var(--purple-light)' }}>
+          <p className="text-sm font-bold mb-1" style={{ color: 'var(--purple-dark)' }}>👨‍👩‍👧‍👦 Family Plan</p>
+          <p className="text-xs text-gray-500 mb-3">Upgrade to connect your partner and add unlimited children.</p>
+          <button
+            onClick={async () => {
+              const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+              const { url } = await res.json()
+              if (url) window.location.href = url
+            }}
+            className="w-full font-black rounded-2xl py-2.5 text-sm text-white transition"
+            style={{ background: 'var(--purple)' }}
+          >
+            Upgrade — $3/mo
+          </button>
+        </div>
+      ) : partnerName ? (
         <div className="flex items-center gap-3 rounded-2xl px-4 py-3" style={{background: 'var(--green-light)'}}>
           <span className="text-xl">💑</span>
           <div>

@@ -35,7 +35,7 @@ const GRADE_OPTIONS_US = [
   { value: '11', label: 'Grade 8' },
 ]
 
-export default function AddChildForm({ parentId }: { parentId: string }) {
+export default function AddChildForm({ parentId, plan, childCount }: { parentId: string; plan: string; childCount: number }) {
   const router = useRouter()
   const supabase = createClient()
   const [name, setName] = useState('')
@@ -44,6 +44,13 @@ export default function AddChildForm({ parentId }: { parentId: string }) {
   const [loading, setLoading] = useState(false)
 
   const options = gradeSystem === 'korean' ? GRADE_OPTIONS : GRADE_OPTIONS_US
+  const isLocked = plan === 'free' && childCount >= 1
+
+  async function handleUpgrade() {
+    const res = await fetch('/api/stripe/checkout', { method: 'POST' })
+    const { url } = await res.json()
+    if (url) window.location.href = url
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -60,6 +67,22 @@ export default function AddChildForm({ parentId }: { parentId: string }) {
     setGrade('')
     setLoading(false)
     router.refresh()
+  }
+
+  if (isLocked) {
+    return (
+      <div className="rounded-2xl p-4 text-center" style={{ background: 'var(--purple-light)' }}>
+        <p className="text-sm font-bold mb-1" style={{ color: 'var(--purple-dark)' }}>👨‍👩‍👧‍👦 Family Plan</p>
+        <p className="text-xs text-gray-500 mb-3">Upgrade to add unlimited children & connect a partner.</p>
+        <button
+          onClick={handleUpgrade}
+          className="w-full font-black rounded-2xl py-2.5 text-sm text-white transition"
+          style={{ background: 'var(--purple)' }}
+        >
+          Upgrade — $3/mo
+        </button>
+      </div>
+    )
   }
 
   return (
