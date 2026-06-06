@@ -18,8 +18,8 @@ const langLabel: Record<Locale, string> = { ko: '한국어', en: 'EN', es: 'ES' 
 
 export default function RecommendationsPage() {
   const { t, locale, bookLocales } = useLocale()
-  const grades = Object.keys(RECOMMENDED_BOOKS)
-  const [openGrade, setOpenGrade] = useState<string>(grades[0])
+  const grades = ['K', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 'adult'].filter(g => RECOMMENDED_BOOKS[g])
+  const [openGrade, setOpenGrade] = useState<string>('')
 
   return (
     <div className="pb-24">
