@@ -428,6 +428,13 @@ export default function AddBookPage() {
             </div>
           )}
 
+          {/* Rating required hint */}
+          {rating === 0 && (
+            <p className="text-xs font-bold text-center" style={{ color: 'var(--pink-dark)' }}>
+              ★ {t('add_rating_required')}
+            </p>
+          )}
+
           <button
             onClick={handleSave}
             disabled={saving || rating === 0}
@@ -436,7 +443,6 @@ export default function AddBookPage() {
           >
             {saving ? t('add_saving') : t('add_save')}
           </button>
-          {rating === 0 && <p className="text-xs text-center text-gray-400">{t('add_select_rating')}</p>}
         </div>
       )}
     </div>

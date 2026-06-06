@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Copy, Check, Users } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
 export default function FamilyConnect({
@@ -15,16 +16,26 @@ export default function FamilyConnect({
   plan: string
 }) {
   const router = useRouter()
+  const supabase = createClient()
   const { t } = useLocale()
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
+  const [showDisconnect, setShowDisconnect] = useState(false)
 
   async function handleCopy() {
     await navigator.clipboard.writeText(familyCode)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  async function handleDisconnect() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('bl_profiles').update({ partner_id: null }).eq('user_id', user.id)
+    setShowDisconnect(false)
+    router.refresh()
   }
 
   async function handleJoin(e: React.FormEvent) {
@@ -88,12 +99,45 @@ export default function FamilyConnect({
           </button>
         </div>
       ) : partnerName ? (
-        <div className="flex items-center gap-3 rounded-2xl px-4 py-3" style={{background: 'var(--green-light)'}}>
-          <span className="text-xl">💑</span>
-          <div>
-            <p className="text-sm font-bold text-gray-800">{t('family_connected', partnerName as never)}</p>
-            <p className="text-xs text-gray-500">{t('family_connected_desc')}</p>
+        <div>
+          <div className="flex items-center gap-3 rounded-2xl px-4 py-3 mb-2" style={{background: 'var(--green-light)'}}>
+            <span className="text-xl">💑</span>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-gray-800">{t('family_connected', partnerName as never)}</p>
+              <p className="text-xs text-gray-500">{t('family_connected_desc')}</p>
+            </div>
           </div>
+          <button
+            onClick={() => setShowDisconnect(true)}
+            className="w-full text-xs font-bold py-2 rounded-2xl transition"
+            style={{ color: 'var(--pink-dark)', background: 'var(--pink-light)' }}
+          >
+            {t('family_disconnect')}
+          </button>
+
+          {showDisconnect && (
+            <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+              <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
+                <p className="font-black text-gray-800 text-lg mb-2">{t('family_disconnect_confirm')}</p>
+                <p className="text-sm text-gray-500 mb-6">{t('family_disconnect_desc')}</p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowDisconnect(false)}
+                    className="flex-1 py-3 rounded-2xl font-bold text-gray-500 bg-gray-100"
+                  >
+                    {t('book_cancel')}
+                  </button>
+                  <button
+                    onClick={handleDisconnect}
+                    className="flex-1 py-3 rounded-2xl font-bold text-white"
+                    style={{ background: 'var(--pink)' }}
+                  >
+                    {t('family_disconnect')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <form onSubmit={handleJoin} className="space-y-2">

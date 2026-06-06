@@ -1,7 +1,11 @@
 'use client'
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
+import { TranslationKey } from '@/lib/i18n/translations'
 import { gradeLabel } from '@/lib/gradeLabel'
+import { createClient } from '@/lib/supabase/client'
 import FamilyConnect from './FamilyConnect'
 import AddChildForm from './AddChildForm'
 import ChildLoginSetup from './ChildLoginSetup'
@@ -21,6 +25,85 @@ const badgeEmoji: Record<string, string> = {
 const badgeName: Record<string, string> = {
   first_book: '첫 책', books_5: '5권 달성', books_10: '10권 달성',
   books_20: '20권 달성', books_50: '50권 달성', answered_ai: 'AI 답변',
+}
+
+function ChildCard({ child, bookCount, badges, t, onDelete }: {
+  child: Child
+  bookCount: number
+  badges: Badge[]
+  t: (key: TranslationKey, ...args: never[]) => string
+  onDelete: () => void
+}) {
+  const [showConfirm, setShowConfirm] = useState(false)
+
+  return (
+    <div className="bg-white rounded-3xl p-4 border border-gray-100">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h3 className="font-semibold text-gray-800">{child.name}</h3>
+          {child.grade !== null && (
+            <p className="text-xs text-gray-500">{gradeLabel(child.grade, child.grade_system)}</p>
+          )}
+        </div>
+        <div className="text-right">
+          <p className="text-2xl font-bold" style={{color: 'var(--green-dark)'}}>{bookCount}</p>
+          <p className="text-xs text-gray-400">{t('bookshelf_count').replace('{{n}}', String(bookCount))}</p>
+        </div>
+      </div>
+
+      {badges.length > 0 && (
+        <div className="flex flex-wrap gap-1 mb-3">
+          {badges.map(b => (
+            <span key={b.id} className="text-xs px-2 py-1 rounded-full font-medium" style={{background: 'var(--yellow-light)', color: 'var(--yellow-dark)'}}>
+              {badgeEmoji[b.type]} {badgeName[b.type]}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <ColorPicker childId={child.id} currentColor={child.color} />
+      <ChildLoginSetup
+        childId={child.id}
+        childName={child.name}
+        hasLogin={!!child.user_id}
+        username={child.child_username || null}
+      />
+
+      <div className="mt-3 border-t border-gray-50 pt-3">
+        <button
+          onClick={() => setShowConfirm(true)}
+          className="text-xs font-bold transition"
+          style={{ color: 'var(--pink-dark)' }}
+        >
+          🗑 {t('child_delete')}
+        </button>
+      </div>
+
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
+            <p className="font-black text-gray-800 text-lg mb-2">{t('child_delete_confirm')}</p>
+            <p className="text-sm text-gray-500 mb-6">{t('child_delete_desc')}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="flex-1 py-3 rounded-2xl font-bold text-gray-500 bg-gray-100"
+              >
+                {t('book_cancel')}
+              </button>
+              <button
+                onClick={onDelete}
+                className="flex-1 py-3 rounded-2xl font-bold text-white"
+                style={{ background: 'var(--pink)' }}
+              >
+                {t('child_delete')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function ParentPageView({
@@ -43,6 +126,15 @@ export default function ParentPageView({
   plan: string
 }) {
   const { t } = useLocale()
+  const router = useRouter()
+  const supabase = createClient()
+
+  async function handleDeleteChild(childId: string) {
+    await supabase.from('bl_books').delete().eq('profile_id', childId)
+    await supabase.from('bl_badges').delete().eq('profile_id', childId)
+    await supabase.from('bl_profiles').delete().eq('id', childId)
+    router.refresh()
+  }
 
   return (
     <div className="pb-24">
@@ -55,41 +147,14 @@ export default function ParentPageView({
             const childBooks = recentBooks.filter(b => b.profile_id === child.id)
             const childBadges = badges.filter(b => b.profile_id === child.id)
             return (
-              <div key={child.id} className="bg-white rounded-3xl p-4 border border-gray-100">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{child.name}</h3>
-                    {child.grade !== null && (
-                      <p className="text-xs text-gray-500">
-                        {gradeLabel(child.grade, child.grade_system)}
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold" style={{color: 'var(--green-dark)'}}>{childBooks.length}</p>
-                    <p className="text-xs text-gray-400">{t('bookshelf_count', childBooks.length as never)}</p>
-                  </div>
-                </div>
-
-                {childBadges.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {childBadges.map(b => (
-                      <span key={b.id} className="text-xs px-2 py-1 rounded-full font-medium" style={{background: 'var(--yellow-light)', color: 'var(--yellow-dark)'}}>
-                        {badgeEmoji[b.type]} {badgeName[b.type]}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-
-                <ColorPicker childId={child.id} currentColor={child.color} />
-                <ChildLoginSetup
-                  childId={child.id}
-                  childName={child.name}
-                  hasLogin={!!child.user_id}
-                  username={child.child_username || null}
-                />
-              </div>
+              <ChildCard
+                key={child.id}
+                child={child}
+                bookCount={childBooks.length}
+                badges={childBadges}
+                t={t}
+                onDelete={() => handleDeleteChild(child.id)}
+              />
             )
           })}
         </div>
