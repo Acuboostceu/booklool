@@ -34,8 +34,6 @@ export async function POST(req: NextRequest) {
   if (!myProfile) return NextResponse.json({ error: '부모 프로필이 없어요' }, { status: 404 })
   if (myProfile.partner_parent_id) return NextResponse.json({ error: '이미 가족이 연결되어 있어요' }, { status: 400 })
 
-  const admin = createAdminClient()
-
   // Link both directions
   await admin.from('bl_profiles').update({ partner_parent_id: targetParent.id }).eq('id', myProfile.id)
   await admin.from('bl_profiles').update({ partner_parent_id: myProfile.id }).eq('id', targetParent.id)
