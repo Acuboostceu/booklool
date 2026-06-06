@@ -365,12 +365,22 @@ export default function AddBookPage() {
             ) : (
               <div className="w-16 h-24 bg-gray-100 rounded-xl flex-shrink-0" />
             )}
-            <div>
+            <div className="flex-1 min-w-0">
               <p className="font-semibold text-gray-800">{selected.title}</p>
               <p className="text-sm text-gray-500 mt-0.5">{selected.author}</p>
               {selected.publisher && <p className="text-xs text-gray-400 mt-0.5">{selected.publisher}</p>}
             </div>
           </div>
+
+          {/* Photo preview */}
+          {photoPreview && (
+            <div className="bg-white rounded-3xl p-4 border border-gray-100">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_photo')}</p>
+              <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
+                <Image src={photoPreview} alt="my photo" fill className="object-cover" />
+              </div>
+            </div>
+          )}
 
           {/* Rating */}
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
