@@ -60,7 +60,7 @@ export default function DashboardNav() {
       {/* 상단 헤더 — 모든 화면 */}
       <header
         className="px-4 py-3 flex items-center justify-between sticky top-0 z-40"
-        style={{ background: 'var(--background)' }}
+        style={{ background: '#fffbf5' }}
       >
         <Link href="/bookshelf">
           <img src="/booklool.png" alt="Booklool" className="object-contain h-8 w-auto" />
