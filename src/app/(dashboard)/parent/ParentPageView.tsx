@@ -27,12 +27,13 @@ const badgeName: Record<string, string> = {
   books_20: '20권 달성', books_50: '50권 달성', answered_ai: 'AI 답변',
 }
 
-function ChildCard({ child, bookCount, badges, t, onDelete }: {
+function ChildCard({ child, bookCount, badges, t, onDelete, showDelete }: {
   child: Child
   bookCount: number
   badges: Badge[]
   t: (key: TranslationKey, ...args: never[]) => string
   onDelete: () => void
+  showDelete: boolean
 }) {
   const [showConfirm, setShowConfirm] = useState(false)
 
@@ -66,15 +67,17 @@ function ChildCard({ child, bookCount, badges, t, onDelete }: {
         username={child.child_username || null}
       />
 
-      <div className="mt-3 border-t border-gray-50 pt-3">
-        <button
-          onClick={() => setShowConfirm(true)}
-          className="w-full text-xs font-bold py-2 rounded-2xl transition"
-          style={{ color: 'var(--pink-dark)', background: 'var(--pink-light)' }}
-        >
-          {t('child_delete')}
-        </button>
-      </div>
+      {showDelete && (
+        <div className="mt-3 border-t border-gray-50 pt-3">
+          <button
+            onClick={() => setShowConfirm(true)}
+            className="w-full text-xs font-bold py-2 rounded-2xl transition"
+            style={{ color: 'var(--pink-dark)', background: 'var(--pink-light)' }}
+          >
+            {t('child_delete')}
+          </button>
+        </div>
+      )}
 
       {showConfirm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
@@ -112,6 +115,7 @@ export default function ParentPageView({
   recentBooks,
   badges,
   plan,
+  isAdmin,
 }: {
   parentId: string
   parentName: string
@@ -121,6 +125,7 @@ export default function ParentPageView({
   recentBooks: Book[]
   badges: Badge[]
   plan: string
+  isAdmin: boolean
 }) {
   const { t } = useLocale()
   const router = useRouter()
@@ -151,6 +156,7 @@ export default function ParentPageView({
                 badges={childBadges}
                 t={t}
                 onDelete={() => handleDeleteChild(child.id)}
+                showDelete={isAdmin}
               />
             )
           })}
