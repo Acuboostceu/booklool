@@ -41,13 +41,10 @@ function ChildCard({ child, bookCount, badges, t, onDelete }: {
       <div className="flex items-center justify-between mb-3">
         <div>
           <h3 className="font-semibold text-gray-800">{child.name}</h3>
-          {child.grade !== null && (
-            <p className="text-xs text-gray-500">{gradeLabel(child.grade, child.grade_system)}</p>
-          )}
         </div>
         <div className="text-right">
           <p className="text-2xl font-bold" style={{color: 'var(--green-dark)'}}>{bookCount}</p>
-          <p className="text-xs text-gray-400">{t('bookshelf_count').replace('{{n}}', String(bookCount))}</p>
+          <p className="text-xs text-gray-400">{t('bookshelf_count', bookCount as never)}</p>
         </div>
       </div>
 
@@ -72,10 +69,10 @@ function ChildCard({ child, bookCount, badges, t, onDelete }: {
       <div className="mt-3 border-t border-gray-50 pt-3">
         <button
           onClick={() => setShowConfirm(true)}
-          className="text-xs font-bold transition"
-          style={{ color: 'var(--pink-dark)' }}
+          className="w-full text-xs font-bold py-2 rounded-2xl transition"
+          style={{ color: 'var(--pink-dark)', background: 'var(--pink-light)' }}
         >
-          🗑 {t('child_delete')}
+          {t('child_delete')}
         </button>
       </div>
 

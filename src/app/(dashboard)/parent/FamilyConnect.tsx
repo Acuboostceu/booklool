@@ -63,24 +63,26 @@ export default function FamilyConnect({
         {t('family_connect')}
       </h3>
 
-      <div className="mb-4">
-        <p className="text-xs text-gray-500 mb-2">{t('family_code_label')}</p>
-        <div className="flex items-center gap-2">
-          <div className="flex-1 bg-gray-50 rounded-2xl px-4 py-3 font-semibold text-lg tracking-widest text-center" style={{color: 'var(--purple-dark)'}}>
-            {familyCode}
+      {!partnerName && (
+        <div className="mb-4">
+          <p className="text-xs text-gray-500 mb-2">{t('family_code_label')}</p>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 bg-gray-50 rounded-2xl px-4 py-3 font-semibold text-lg tracking-widest text-center" style={{color: 'var(--purple-dark)'}}>
+              {familyCode}
+            </div>
+            <button
+              onClick={handleCopy}
+              className="p-3 rounded-2xl transition flex items-center justify-center"
+              style={{background: copied ? 'var(--green-light)' : 'var(--purple-light)'}}
+            >
+              {copied
+                ? <Check className="w-5 h-5" style={{color: 'var(--green-dark)'}} />
+                : <Copy className="w-5 h-5" style={{color: 'var(--purple-dark)'}} />
+              }
+            </button>
           </div>
-          <button
-            onClick={handleCopy}
-            className="p-3 rounded-2xl transition flex items-center justify-center"
-            style={{background: copied ? 'var(--green-light)' : 'var(--purple-light)'}}
-          >
-            {copied
-              ? <Check className="w-5 h-5" style={{color: 'var(--green-dark)'}} />
-              : <Copy className="w-5 h-5" style={{color: 'var(--purple-dark)'}} />
-            }
-          </button>
         </div>
-      </div>
+      )}
 
       {plan === 'free' && !partnerName ? (
         <div className="rounded-2xl p-4 text-center" style={{ background: 'var(--purple-light)' }}>
