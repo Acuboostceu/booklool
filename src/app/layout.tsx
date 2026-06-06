@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Comfortaa, Noto_Sans_KR } from "next/font/google";
+import { Comfortaa, Poor_Story } from "next/font/google";
 import "./globals.css";
 
 const comfortaa = Comfortaa({
@@ -8,10 +8,10 @@ const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
 });
 
-const notoSansKR = Noto_Sans_KR({
+const poorStory = Poor_Story({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-noto",
+  weight: ["400"],
+  variable: "--font-poor-story",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${comfortaa.variable} ${notoSansKR.variable} h-full`}>
+    <html lang="ko" className={`${comfortaa.variable} ${poorStory.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">{children}</body>
     </html>
   );

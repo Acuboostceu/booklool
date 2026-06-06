@@ -25,7 +25,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-comfortaa), var(--font-noto);
+  --font-sans: var(--font-comfortaa), var(--font-poor-story);
 
   --color-bl-green:         var(--green);
   --color-bl-green-light:   var(--green-light);
@@ -44,5 +44,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-comfortaa), var(--font-noto), sans-serif;
+  font-family: var(--font-comfortaa), var(--font-poor-story), sans-serif;
 }
