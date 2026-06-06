@@ -31,7 +31,9 @@ export async function POST(req: NextRequest) {
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object as Stripe.Subscription
     const customerId = sub.customer as string
-    await supabase.rpc('cancel_plan_by_customer', { customer_id: customerId })
+    console.log('[webhook] cancelling plan for customer:', customerId)
+    const { error } = await supabase.rpc('cancel_plan_by_customer', { customer_id: customerId })
+    console.log('[webhook] cancel error:', error)
   }
 
   return NextResponse.json({ received: true })
