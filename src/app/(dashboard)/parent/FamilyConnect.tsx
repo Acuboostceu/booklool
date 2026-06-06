@@ -31,20 +31,7 @@ export default function FamilyConnect({
   }
 
   async function handleDisconnect() {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-    // Find my profile and partner's profile, clear both sides
-    const { data: myProfile } = await supabase
-      .from('bl_profiles')
-      .select('id, partner_parent_id')
-      .eq('user_id', user.id)
-      .eq('role', 'parent')
-      .single()
-    if (!myProfile) return
-    if (myProfile.partner_parent_id) {
-      await supabase.from('bl_profiles').update({ partner_parent_id: null }).eq('id', myProfile.partner_parent_id)
-    }
-    await supabase.from('bl_profiles').update({ partner_parent_id: null }).eq('id', myProfile.id)
+    await fetch('/api/family/disconnect', { method: 'POST' })
     setShowDisconnect(false)
     router.refresh()
   }
