@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
@@ -31,9 +32,20 @@ export async function POST(req: NextRequest) {
   if (!myProfile) return NextResponse.json({ error: '부모 프로필이 없어요' }, { status: 404 })
   if (myProfile.partner_parent_id) return NextResponse.json({ error: '이미 가족이 연결되어 있어요' }, { status: 400 })
 
+  const admin = createAdminClient()
+
   // Link both directions
-  await supabase.from('bl_profiles').update({ partner_parent_id: targetParent.id }).eq('id', myProfile.id)
-  await supabase.from('bl_profiles').update({ partner_parent_id: myProfile.id }).eq('id', targetParent.id)
+  await admin.from('bl_profiles').update({ partner_parent_id: targetParent.id }).eq('id', myProfile.id)
+  await admin.from('bl_profiles').update({ partner_parent_id: myProfile.id }).eq('id', targetParent.id)
+
+  // If either has family plan, give both family plan
+  const { data: myFull } = await admin.from('bl_profiles').select('plan').eq('id', myProfile.id).single()
+  const { data: targetFull } = await admin.from('bl_profiles').select('plan').eq('id', targetParent.id).single()
+
+  if (myFull?.plan === 'family' || targetFull?.plan === 'family') {
+    await admin.from('bl_profiles').update({ plan: 'family' }).eq('id', myProfile.id)
+    await admin.from('bl_profiles').update({ plan: 'family' }).eq('id', targetParent.id)
+  }
 
   return NextResponse.json({ ok: true })
 }
