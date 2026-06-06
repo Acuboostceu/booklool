@@ -159,17 +159,16 @@ export default function AddBookPage() {
     let photoUrl = ''
     if (photoFile) {
       try {
-        const presignRes = await fetch(
-          `/api/upload?profileId=${selectedChild}&contentType=${encodeURIComponent(photoFile.type || 'image/jpeg')}`
-        )
-        if (presignRes.ok) {
-          const { presignedUrl, publicUrl } = await presignRes.json()
-          const uploadRes = await fetch(presignedUrl, {
-            method: 'PUT',
-            body: photoFile,
-            headers: { 'Content-Type': photoFile.type || 'image/jpeg' },
-          })
-          if (uploadRes.ok) photoUrl = publicUrl
+        const formData = new FormData()
+        formData.append('file', photoFile)
+        formData.append('profileId', selectedChild)
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        })
+        if (uploadRes.ok) {
+          const { publicUrl } = await uploadRes.json()
+          photoUrl = publicUrl
         }
       } catch (err) {
         console.error('Photo upload failed:', err)
