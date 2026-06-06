@@ -11,32 +11,37 @@ export async function POST(req: NextRequest) {
   if (!family_code) return NextResponse.json({ error: 'family_code required' }, { status: 400 })
 
   // Find the parent who owns this family_code (regular client — RLS policy allows SELECT for authenticated)
-  const { data: targetParent } = await supabase
+  const { data: targetParent, error: targetErr } = await supabase
     .from('bl_profiles')
     .select('id, user_id')
     .eq('family_code', family_code.toUpperCase().trim())
     .eq('role', 'parent')
     .single()
 
-  if (!targetParent) return NextResponse.json({ error: '코드를 찾을 수 없어요' }, { status: 404 })
+  console.log('[join] targetParent:', targetParent, 'error:', targetErr)
+
+  if (!targetParent) return NextResponse.json({ error: '코드를 찾을 수 없어요', detail: targetErr?.message }, { status: 404 })
   if (targetParent.user_id === user.id) return NextResponse.json({ error: '본인 코드는 사용할 수 없어요' }, { status: 400 })
 
   const admin = createAdminClient()
 
   // Get current user's parent profile
-  const { data: myProfile } = await supabase
+  const { data: myProfile, error: myErr } = await supabase
     .from('bl_profiles')
     .select('id, partner_parent_id')
     .eq('user_id', user.id)
     .eq('role', 'parent')
     .single()
 
-  if (!myProfile) return NextResponse.json({ error: '부모 프로필이 없어요' }, { status: 404 })
+  console.log('[join] myProfile:', myProfile, 'error:', myErr)
+
+  if (!myProfile) return NextResponse.json({ error: '부모 프로필이 없어요', detail: myErr?.message }, { status: 404 })
   if (myProfile.partner_parent_id) return NextResponse.json({ error: '이미 가족이 연결되어 있어요' }, { status: 400 })
 
   // Link both directions
-  await admin.from('bl_profiles').update({ partner_parent_id: targetParent.id }).eq('id', myProfile.id)
-  await admin.from('bl_profiles').update({ partner_parent_id: myProfile.id }).eq('id', targetParent.id)
+  const { error: link1Err } = await admin.from('bl_profiles').update({ partner_parent_id: targetParent.id }).eq('id', myProfile.id)
+  const { error: link2Err } = await admin.from('bl_profiles').update({ partner_parent_id: myProfile.id }).eq('id', targetParent.id)
+  console.log('[join] link errors:', link1Err, link2Err)
 
   // If either has family plan, give both family plan
   const { data: myFull } = await admin.from('bl_profiles').select('plan').eq('id', myProfile.id).single()
