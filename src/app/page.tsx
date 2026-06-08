@@ -30,7 +30,7 @@ const copy = {
     free_period: 'forever',
     free_features: ['1 child profile', 'Unlimited books', 'AI reading questions', 'Photo journal'],
     family_name: 'Family',
-    family_price: '$3',
+    family_price: '$1.99',
     family_period: '/ month',
     family_badge: 'Most popular',
     family_features: ['Everything in Free', 'Connect with partner', 'Unlimited children', 'Family bookshelf', 'Priority support'],
@@ -39,7 +39,7 @@ const copy = {
     print_period: 'per book',
     print_features: ["Your year in photos", 'All reviews & AI answers', 'Hardcover or softcover', 'Shipped to your door'],
     plan_cta: 'Get started',
-    footer_copy: '© 2025 Booklool · Made with love for reading families.',
+    footer_copy: '© 2026 Booklool · Made with love for reading families.',
   },
   ko: {
     nav_login: '로그인',
@@ -66,7 +66,7 @@ const copy = {
     free_period: '영원히',
     free_features: ['자녀 프로필 1명', '책 무제한 기록', 'AI 독후 질문', '사진 독서 일기'],
     family_name: '패밀리',
-    family_price: '$3',
+    family_price: '$1.99',
     family_period: '/ 월',
     family_badge: '인기',
     family_features: ['무료 플랜 모든 기능', '배우자 계정 연결', '자녀 무제한', '가족 책장 공유', '우선 지원'],
@@ -75,7 +75,7 @@ const copy = {
     print_period: '권당',
     print_features: ['한 해의 사진 전부', '감상 & AI 답변 수록', '하드커버 / 소프트커버', '집으로 배송'],
     plan_cta: '시작하기',
-    footer_copy: '© 2025 Booklool · 독서하는 가족을 위해 만들었어요.',
+    footer_copy: '© 2026 Booklool · 독서하는 가족을 위해 만들었어요.',
   },
 }
 
