@@ -17,7 +17,7 @@ function AddArtworkInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
 
   const fileRef = useRef<HTMLInputElement>(null)
   const galleryRef = useRef<HTMLInputElement>(null)
@@ -90,7 +90,7 @@ function AddArtworkInner() {
       const res = await fetch('/api/artwork/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: artTitle, keywords, profileName }),
+        body: JSON.stringify({ title: artTitle, keywords, profileName, locale }),
       })
       const data = await res.json()
       setCaptions(data)
@@ -104,21 +104,39 @@ function AddArtworkInner() {
     if (!activeImageUrl || !artTitle || !selectedCaption || !captions) return
     setSaving(true)
     try {
-      const res = await fetch('/api/artwork', {
+      // 1. Get presigned URL from server
+      const urlRes = await fetch('/api/artwork/upload-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profileId, contentType: 'image/jpeg' }),
+      })
+      const { uploadUrl, imageUrl } = await urlRes.json()
+
+      // 2. Convert data URL to blob and upload directly to S3
+      const response = await fetch(activeImageUrl)
+      const blob = await response.blob()
+      await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'image/jpeg' },
+        body: blob,
+      })
+
+      // 3. Save metadata to DB (no image payload)
+      const saveRes = await fetch('/api/artwork', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           profileId,
           title: artTitle,
           keywords,
-          imageBase64: activeImageUrl,
+          imageUrl,
           captionCurator: captions.curator,
           captionParent: captions.parent,
           captionChild: captions.child,
           selectedCaption: captions[selectedCaption],
         }),
       })
-      if (res.ok) setStep('done')
+      if (saveRes.ok) setStep('done')
     } finally {
       setSaving(false)
     }
