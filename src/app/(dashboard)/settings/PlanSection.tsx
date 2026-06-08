@@ -45,7 +45,7 @@ const copy = {
     family: 'Familia',
     free_desc: '1 perfil de niño · Sin pareja',
     family_desc: 'Niños ilimitados · Acceso pareja',
-    upgrade: 'Actualizar a Familia — $3/mes',
+    upgrade: 'Toda la familia — solo $1.99/mes',
     upgrading: 'Redirigiendo...',
     current: 'Plan actual',
     cancel: 'Cancelar suscripción',
