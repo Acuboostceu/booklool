@@ -27,11 +27,18 @@ export default async function BookshelfPage() {
       .select('id, badge_type, profile_id')
       .eq('profile_id', childProfile.id)
 
+    const { data: artworks } = await supabase
+      .from('bl_artworks')
+      .select('id, title, image_url, profile_id, created_at')
+      .eq('profile_id', childProfile.id)
+      .order('created_at', { ascending: false })
+
     return (
       <BookshelfView
         profiles={[childProfile]}
         books={books || []}
         badges={badges || []}
+        artworks={artworks || []}
         partnerIds={[]}
       />
     )
@@ -71,11 +78,18 @@ export default async function BookshelfPage() {
     .select('id, badge_type, profile_id')
     .in('profile_id', allProfileIds)
 
+  const { data: artworks } = await supabase
+    .from('bl_artworks')
+    .select('id, title, image_url, profile_id, created_at')
+    .in('profile_id', allProfileIds)
+    .order('created_at', { ascending: false })
+
   return (
     <BookshelfView
       profiles={profiles}
       books={books || []}
       badges={badges || []}
+      artworks={artworks || []}
       partnerIds={partner ? [partner.id] : []}
     />
   )
