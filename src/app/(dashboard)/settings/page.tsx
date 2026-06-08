@@ -88,6 +88,35 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* Add to home screen */}
+      <div className="bg-white rounded-3xl p-5 border border-gray-100 mb-4">
+        <h2 className="font-semibold text-gray-700 mb-3 text-sm">
+          {locale === 'ko' ? '📱 홈 화면에 추가하기' : locale === 'es' ? '📱 Agregar a pantalla de inicio' : '📱 Add to Home Screen'}
+        </h2>
+        <div className="space-y-3">
+          <div className="rounded-2xl p-3 text-xs text-gray-600 space-y-1" style={{ background: 'var(--green-light)' }}>
+            <p className="font-bold text-gray-700">🍎 iPhone / iPad</p>
+            {locale === 'ko' ? (
+              <p>Safari에서 하단 <strong>공유 버튼(□↑)</strong> 탭 → <strong>"홈 화면에 추가"</strong> 선택</p>
+            ) : locale === 'es' ? (
+              <p>En Safari, toca el botón <strong>compartir (□↑)</strong> → selecciona <strong>"Agregar a inicio"</strong></p>
+            ) : (
+              <p>In Safari, tap the <strong>share button (□↑)</strong> → select <strong>"Add to Home Screen"</strong></p>
+            )}
+          </div>
+          <div className="rounded-2xl p-3 text-xs text-gray-600 space-y-1" style={{ background: 'var(--purple-light)' }}>
+            <p className="font-bold text-gray-700">🤖 Android</p>
+            {locale === 'ko' ? (
+              <p>Chrome에서 우측 상단 <strong>메뉴(⋮)</strong> 탭 → <strong>"앱 설치"</strong> 또는 <strong>"홈 화면에 추가"</strong> 선택</p>
+            ) : locale === 'es' ? (
+              <p>En Chrome, toca el <strong>menú (⋮)</strong> → selecciona <strong>"Instalar app"</strong> o <strong>"Agregar a inicio"</strong></p>
+            ) : (
+              <p>In Chrome, tap the <strong>menu (⋮)</strong> → select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong></p>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Book recommendation language */}
       <div className="bg-white rounded-3xl p-5 border border-gray-100">
         <h2 className="font-semibold text-gray-700 mb-1 text-sm">{t('settings_book_language')}</h2>
