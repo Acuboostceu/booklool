@@ -36,6 +36,8 @@ export async function POST(req: NextRequest) {
     console.log('[webhook] cancelling plan for customer:', customerId)
     const { error } = await supabase.rpc('cancel_plan_by_customer', { customer_id: customerId })
     console.log('[webhook] cancel error:', error)
+    // Reset cancel_scheduled flag
+    await supabase.from('bl_profiles').update({ cancel_scheduled: false }).eq('stripe_customer_id', customerId)
   }
 
   return NextResponse.json({ received: true })

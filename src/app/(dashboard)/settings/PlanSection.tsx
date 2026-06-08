@@ -16,7 +16,7 @@ const copy = {
     current: 'Current plan',
     cancel: 'Cancel subscription',
     cancel_confirm: 'Cancel subscription?',
-    cancel_desc: 'Your plan stays active until the end of the billing period, then reverts to Free.',
+    cancel_desc: 'Your plan stays active until the end of the billing period, then reverts to Free. Your partner connection will also be disconnected.',
     cancel_btn: 'Yes, cancel',
     cancel_no: 'Keep plan',
     cancelling: 'Cancelling...',
@@ -33,7 +33,7 @@ const copy = {
     current: '현재 플랜',
     cancel: '구독 취소',
     cancel_confirm: '구독을 취소할까요?',
-    cancel_desc: '현재 결제 기간이 끝날 때까지는 계속 사용할 수 있어요. 이후 무료 플랜으로 전환돼요.',
+    cancel_desc: '현재 결제 기간이 끝날 때까지는 계속 사용할 수 있어요. 이후 무료 플랜으로 전환되고, 파트너 연결도 해제돼요.',
     cancel_btn: '네, 취소할게요',
     cancel_no: '유지하기',
     cancelling: '처리 중...',
@@ -50,7 +50,7 @@ const copy = {
     current: 'Plan actual',
     cancel: 'Cancelar suscripción',
     cancel_confirm: '¿Cancelar suscripción?',
-    cancel_desc: 'Tu plan sigue activo hasta el final del período de facturación, luego vuelve a Gratis.',
+    cancel_desc: 'Tu plan sigue activo hasta el final del período de facturación, luego vuelve a Gratis. La conexión con tu pareja también se desconectará.',
     cancel_btn: 'Sí, cancelar',
     cancel_no: 'Mantener plan',
     cancelling: 'Cancelando...',
@@ -66,17 +66,19 @@ export default function PlanSection({ locale }: { locale: Locale }) {
   const [showCancel, setShowCancel] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [cancelled, setCancelled] = useState(false)
+  const [cancelScheduled, setCancelScheduled] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return
       const { data: profile } = await supabase
         .from('bl_profiles')
-        .select('plan')
+        .select('plan, cancel_scheduled')
         .eq('user_id', data.user.id)
         .eq('role', 'parent')
         .single()
       setPlan(profile?.plan ?? 'free')
+      setCancelScheduled(profile?.cancel_scheduled ?? false)
     })
   }, [supabase])
 
@@ -155,7 +157,7 @@ export default function PlanSection({ locale }: { locale: Locale }) {
 
       {plan === 'family' && (
         <div className="text-center">
-          {cancelled ? (
+          {(cancelled || cancelScheduled) ? (
             <p className="text-xs font-bold" style={{ color: 'var(--pink-dark)' }}>✓ {t.cancelled}</p>
           ) : (
             <button

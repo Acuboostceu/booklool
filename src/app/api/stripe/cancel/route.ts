@@ -32,5 +32,20 @@ export async function POST() {
     cancel_at_period_end: true,
   })
 
+  // Mark cancel_scheduled on payer + partner
+  const { data: fullProfile } = await supabase
+    .from('bl_profiles')
+    .select('id, partner_parent_id')
+    .eq('user_id', user.id)
+    .eq('role', 'parent')
+    .single()
+
+  if (fullProfile) {
+    await supabase.from('bl_profiles').update({ cancel_scheduled: true }).eq('id', fullProfile.id)
+    if (fullProfile.partner_parent_id) {
+      await supabase.from('bl_profiles').update({ cancel_scheduled: true }).eq('id', fullProfile.partner_parent_id)
+    }
+  }
+
   return NextResponse.json({ ok: true })
 }
