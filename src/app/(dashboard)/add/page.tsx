@@ -100,6 +100,7 @@ export default function AddBookPage() {
     setPhotoFile(file)
     setPhotoPreview(URL.createObjectURL(file))
     setOcrLoading(true)
+    setStep('search')
 
     try {
       const compressed = await compressImage(file)
@@ -119,7 +120,6 @@ export default function AddBookPage() {
       // OCR 실패해도 검색 단계로 넘어감
     } finally {
       setOcrLoading(false)
-      setStep('search')
     }
   }
 
