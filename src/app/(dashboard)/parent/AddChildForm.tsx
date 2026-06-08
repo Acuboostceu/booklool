@@ -44,7 +44,7 @@ export default function AddChildForm({ parentId, plan, childCount }: { parentId:
           className="w-full font-black rounded-2xl py-2.5 text-sm text-white transition"
           style={{ background: 'var(--purple)' }}
         >
-          Upgrade — $3/mo
+          Whole family — just $1.99/mo
         </button>
       </div>
     )

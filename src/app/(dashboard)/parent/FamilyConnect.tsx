@@ -146,7 +146,7 @@ export default function FamilyConnect({
               className="w-full font-black rounded-2xl py-2.5 text-sm text-white transition"
               style={{ background: 'var(--purple)' }}
             >
-              Upgrade — $3/mo
+              Whole family — just $1.99/mo
             </button>
           </div>
           <p className="text-xs text-center text-gray-400">— 또는 파트너가 이미 결제했다면 —</p>

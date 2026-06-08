@@ -11,7 +11,7 @@ const copy = {
     family: 'Family',
     free_desc: '1 child profile · No partner',
     family_desc: 'Unlimited children · Partner access',
-    upgrade: 'Upgrade to Family — $3/mo',
+    upgrade: 'Whole family — just $1.99/mo',
     upgrading: 'Redirecting...',
     current: 'Current plan',
     cancel: 'Cancel subscription',
@@ -28,7 +28,7 @@ const copy = {
     family: '가족',
     free_desc: '아이 1명 · 파트너 연결 불가',
     family_desc: '아이 무제한 · 파트너 연결',
-    upgrade: '가족 플랜으로 업그레이드 — $3/월',
+    upgrade: '가족 모두, 단 $1.99/월',
     upgrading: '이동 중...',
     current: '현재 플랜',
     cancel: '구독 취소',
@@ -131,7 +131,7 @@ export default function PlanSection({ locale }: { locale: Locale }) {
           }}
         >
           <p className="font-black text-sm" style={{ color: 'var(--purple-dark)' }}>{t.family}</p>
-          <p className="text-xs text-gray-400 mt-1">$3 / mo</p>
+          <p className="text-xs text-gray-400 mt-1">$1.99 / mo</p>
           <p className="text-xs text-gray-500 mt-1 leading-tight">{t.family_desc}</p>
           {plan === 'family' && (
             <span className="inline-block mt-2 text-xs font-bold px-2 py-0.5 rounded-full"
