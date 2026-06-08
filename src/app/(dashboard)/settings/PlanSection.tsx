@@ -62,6 +62,7 @@ export default function PlanSection({ locale }: { locale: Locale }) {
   const supabase = createClient()
   const t = copy[locale] ?? copy.en
   const [plan, setPlan] = useState<'free' | 'family' | null>(null)
+  const [isPayer, setIsPayer] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showCancel, setShowCancel] = useState(false)
   const [cancelling, setCancelling] = useState(false)
@@ -73,12 +74,13 @@ export default function PlanSection({ locale }: { locale: Locale }) {
       if (!data.user) return
       const { data: profile } = await supabase
         .from('bl_profiles')
-        .select('plan, cancel_scheduled')
+        .select('plan, cancel_scheduled, stripe_customer_id')
         .eq('user_id', data.user.id)
         .eq('role', 'parent')
         .single()
       setPlan(profile?.plan ?? 'free')
       setCancelScheduled(profile?.cancel_scheduled ?? false)
+      setIsPayer(!!profile?.stripe_customer_id)
     })
   }, [supabase])
 
@@ -159,14 +161,14 @@ export default function PlanSection({ locale }: { locale: Locale }) {
         <div className="text-center">
           {(cancelled || cancelScheduled) ? (
             <p className="text-xs font-bold" style={{ color: 'var(--pink-dark)' }}>✓ {t.cancelled}</p>
-          ) : (
+          ) : isPayer ? (
             <button
               onClick={() => setShowCancel(true)}
               className="text-xs text-gray-400 underline underline-offset-2 hover:text-gray-600 transition"
             >
               {t.cancel}
             </button>
-          )}
+          ) : null}
         </div>
       )}
 
