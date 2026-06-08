@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { Locale } from '@/lib/i18n/translations'
 import PlanSection from './PlanSection'
-import ParentColorSection from './ParentColorSection'
 
 const appLocales: { value: Locale; label: string; flag: string }[] = [
   { value: 'ko', label: '한국어', flag: '🇰🇷' },
@@ -66,9 +65,6 @@ export default function SettingsPage() {
 
       {/* Plan */}
       <PlanSection locale={locale} />
-
-      {/* Parent color */}
-      <ParentColorSection />
 
       {/* App language */}
       <div className="bg-white rounded-3xl p-5 border border-gray-100 mb-4">

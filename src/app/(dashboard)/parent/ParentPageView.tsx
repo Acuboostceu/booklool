@@ -116,6 +116,7 @@ export default function ParentPageView({
   badges,
   plan,
   isAdmin,
+  parentColor,
 }: {
   parentId: string
   parentName: string
@@ -126,8 +127,9 @@ export default function ParentPageView({
   badges: Badge[]
   plan: string
   isAdmin: boolean
+  parentColor: string | null
 }) {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const router = useRouter()
   const supabase = createClient()
 
@@ -139,7 +141,13 @@ export default function ParentPageView({
   return (
     <div className="pb-24">
       <h1 className="text-xl font-bold text-gray-800 mb-2 text-center">{t('family_title')}</h1>
-      <p className="text-sm text-gray-500 mb-6">{t('family_greeting', parentName as never)}</p>
+      <p className="text-sm text-gray-500 mb-4">{t('family_greeting', parentName as never)}</p>
+
+      {/* Parent color picker */}
+      <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
+        <p className="text-xs text-gray-400 mb-2">{locale === 'ko' ? '내 컬러' : locale === 'es' ? 'Mi color' : 'My color'}</p>
+        <ColorPicker childId={parentId} currentColor={parentColor} />
+      </div>
 
       {children.length > 0 ? (
         <div className="space-y-4 mb-8">
