@@ -40,13 +40,13 @@ export default async function BookshelfPage() {
   // 부모 계정
   const { data: parent } = await supabase
     .from('bl_profiles')
-    .select('id, name, partner_parent_id')
+    .select('id, name, partner_parent_id, color')
     .eq('user_id', user.id)
     .eq('role', 'parent')
     .single()
 
   const { data: partner } = parent?.partner_parent_id
-    ? await supabase.from('bl_profiles').select('id, name').eq('id', parent.partner_parent_id).single()
+    ? await supabase.from('bl_profiles').select('id, name, color').eq('id', parent.partner_parent_id).single()
     : { data: null }
 
   const parentIds = [parent?.id, partner?.id].filter(Boolean) as string[]
