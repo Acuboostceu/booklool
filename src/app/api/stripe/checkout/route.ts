@@ -31,6 +31,7 @@ export async function POST() {
   }
 
   try {
+    console.log('[checkout] price ID:', process.env.STRIPE_FAMILY_PRICE_ID)
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
