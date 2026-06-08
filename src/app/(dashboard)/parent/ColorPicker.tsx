@@ -28,7 +28,6 @@ export default function ColorPicker({
 
   return (
     <div className="mt-3">
-      <p className="text-xs text-gray-400 mb-2">컬러</p>
       <div className="flex flex-wrap gap-2">
         {COLOR_LIST.map(color => {
           const c = PROFILE_COLORS[color]

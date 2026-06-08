@@ -145,7 +145,6 @@ export default function ParentPageView({
 
       {/* Parent color picker */}
       <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
-        <p className="text-xs text-gray-400 mb-2">{locale === 'ko' ? '내 컬러' : locale === 'es' ? 'Mi color' : 'My color'}</p>
         <ColorPicker childId={parentId} currentColor={parentColor} />
       </div>
 
