@@ -78,37 +78,39 @@ export default function BookDetailView({ book }: { book: Book }) {
         </div>
       </div>
 
-      {/* User photo */}
-      {book.photo_url && (
-        <div className="mb-4">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_photo')}</p>
-          <div className="relative w-full rounded-2xl overflow-hidden" style={{ aspectRatio: '3/4' }}>
-            <Image src={book.photo_url} alt="book photo" fill className="object-contain bg-gray-50" />
-          </div>
-        </div>
-      )}
-
-      {/* Comment */}
-      {book.comment && (
-        <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">{t('book_comment')}</p>
-          <p className="text-gray-800">{book.comment}</p>
-        </div>
-      )}
-
-      {/* AI Q&A */}
-      {book.ai_question && (
-        <div className="rounded-3xl p-4 border mb-4" style={{ background: 'var(--purple-light)', borderColor: 'var(--purple-light)' }}>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_ai_question')}</p>
-          <p className="font-semibold text-gray-800 mb-3">{book.ai_question}</p>
-          {book.ai_answer ? (
-            <div className="bg-white rounded-2xl p-3">
-              <p className="text-sm text-gray-700">{book.ai_answer}</p>
+      {/* User photo / Comment / AI Q&A — hidden while editing (editable in form below) */}
+      {!editing && (
+        <>
+          {book.photo_url && (
+            <div className="mb-4">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_photo')}</p>
+              <div className="relative w-full rounded-2xl overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                <Image src={book.photo_url} alt="book photo" fill className="object-contain bg-gray-50" />
+              </div>
             </div>
-          ) : (
-            <p className="text-sm text-gray-400 italic">—</p>
           )}
-        </div>
+
+          {book.comment && (
+            <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">{t('book_comment')}</p>
+              <p className="text-gray-800">{book.comment}</p>
+            </div>
+          )}
+
+          {book.ai_question && (
+            <div className="rounded-3xl p-4 border mb-4" style={{ background: 'var(--purple-light)', borderColor: 'var(--purple-light)' }}>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_ai_question')}</p>
+              <p className="font-semibold text-gray-800 mb-3">{book.ai_question}</p>
+              {book.ai_answer ? (
+                <div className="bg-white rounded-2xl p-3">
+                  <p className="text-sm text-gray-700">{book.ai_answer}</p>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400 italic">—</p>
+              )}
+            </div>
+          )}
+        </>
       )}
 
       {/* Description */}
@@ -119,8 +121,10 @@ export default function BookDetailView({ book }: { book: Book }) {
         </div>
       )}
 
-      {/* Reading Log */}
-      <ReadingLogSection bookId={book.id} profileId={book.profile_id} totalPages={book.total_pages ?? null} />
+      {/* Reading Log — only for log-mode books (total_pages set) */}
+      {book.total_pages && (
+        <ReadingLogSection bookId={book.id} profileId={book.profile_id} totalPages={book.total_pages} />
+      )}
 
       {/* Edit form — appears below reading log when editing */}
       {editing && (
