@@ -69,7 +69,6 @@ export default function BookshelfView({
             <div className="flex items-center gap-2 mb-3">
               <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color.dot }} />
               <h2 className="font-bold text-base text-gray-800">{profile.name}</h2>
-              <span className="text-xs text-gray-400">{t('bookshelf_count', profileBooks.length as never)}</span>
               {profileBadges.length > 0 && (
                 <span
                   className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full"
@@ -90,6 +89,7 @@ export default function BookshelfView({
                   : { background: color.bg, color: color.accent }}
               >
                 {t('artwork_tab_books')}
+                <span className="ml-1 opacity-70">{profileBooks.length}</span>
               </button>
               <button
                 onClick={() => setTab(profile.id, 'art')}
@@ -99,9 +99,7 @@ export default function BookshelfView({
                   : { background: color.bg, color: color.accent }}
               >
                 {t('artwork_tab_art')}
-                {profileArtworks.length > 0 && (
-                  <span className="ml-1 opacity-70">{profileArtworks.length}</span>
-                )}
+                <span className="ml-1 opacity-70">{profileArtworks.length}</span>
               </button>
             </div>
 

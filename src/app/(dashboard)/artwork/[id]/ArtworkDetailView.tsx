@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { ArrowLeft, Pencil, Check, X } from 'lucide-react'
+import { ArrowLeft, Pencil, Check, X, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
@@ -22,6 +22,8 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
   const [title, setTitle] = useState(artwork.title ?? '')
   const [caption, setCaption] = useState(artwork.selected_caption ?? '')
   const [saving, setSaving] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   const formattedDate = new Date(artwork.created_at).toLocaleDateString('ko-KR', {
     year: 'numeric',
@@ -46,6 +48,12 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
     setEditing(false)
   }
 
+  async function handleDelete() {
+    setDeleting(true)
+    await supabase.rpc('delete_artwork', { p_id: artwork.id })
+    router.back()
+  }
+
   return (
     <div className="min-h-screen pb-24 px-4 py-6 max-w-lg mx-auto">
       {/* Top bar */}
@@ -58,13 +66,23 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
           <span>작품 목록으로</span>
         </button>
         {!editing ? (
-          <button
-            onClick={() => setEditing(true)}
-            className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <Pencil size={14} />
-            수정
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setEditing(true)}
+              className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <Pencil size={14} />
+              수정
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="inline-flex items-center gap-1 text-sm transition-colors"
+              style={{ color: 'var(--pink-dark)' }}
+            >
+              <Trash2 size={14} />
+              삭제
+            </button>
+          </div>
         ) : (
           <div className="flex gap-2">
             <button
@@ -139,6 +157,32 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
           ) : (
             <p className="text-sm text-gray-700 leading-relaxed">{caption}</p>
           )}
+        </div>
+      )}
+
+      {/* Delete confirm modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
+            <p className="font-black text-gray-800 text-lg mb-2">작품을 삭제할까요?</p>
+            <p className="text-sm text-gray-500 mb-6">삭제하면 복구할 수 없어요.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 py-3 rounded-2xl font-bold text-gray-500 bg-gray-100"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-2xl font-bold text-white disabled:opacity-60"
+                style={{ background: 'var(--pink)' }}
+              >
+                {deleting ? '삭제 중...' : '삭제'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
