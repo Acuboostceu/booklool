@@ -84,8 +84,8 @@ function AddArtworkInner() {
       setPlan(resolvedPlan)
 
       if (resolvedPlan !== 'family') {
-        const { count } = await supabase.from('bl_artworks').select('*', { count: 'exact', head: true }).eq('profile_id', resolvedId)
-        setArtworkCount(count ?? 0)
+        const { data: artworks } = await supabase.rpc('get_family_artworks', { profile_ids: [resolvedId] })
+        setArtworkCount(artworks?.length ?? 0)
       }
     }
     loadProfile()
