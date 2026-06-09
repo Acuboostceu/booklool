@@ -320,6 +320,7 @@ function AddArtworkInner() {
                   value={captions[key]}
                   onChange={e => setCaptions({ ...captions, [key]: e.target.value })}
                   onClick={e => e.stopPropagation()}
+                  autoFocus
                   className="w-full text-sm text-gray-700 bg-transparent resize-none outline-none leading-relaxed"
                   rows={4}
                 />
