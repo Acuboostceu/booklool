@@ -6,6 +6,8 @@ import { Trash2, Plus, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
+const supabase = createClient()
+
 type LogEntry = {
   id: string
   page_from: number
@@ -24,7 +26,6 @@ export default function ReadingLogSection({
   totalPages: number | null
 }) {
   const router = useRouter()
-  const supabase = createClient()
   const { t } = useLocale()
 
   const [logs, setLogs] = useState<LogEntry[]>([])
@@ -37,7 +38,7 @@ export default function ReadingLogSection({
   const fetchLogs = useCallback(async () => {
     const { data } = await supabase.rpc('get_reading_logs', { p_book_id: bookId })
     setLogs((data as LogEntry[]) || [])
-  }, [bookId, supabase])
+  }, [bookId])
 
   useEffect(() => {
     fetchLogs()

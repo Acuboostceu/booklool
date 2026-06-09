@@ -19,7 +19,7 @@ type Artwork = {
 export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
   const router = useRouter()
   const supabase = createClient()
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
 
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(artwork.title ?? '')
@@ -79,14 +79,14 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
               style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
             >
-              <Pencil size={14} /> 수정
+              <Pencil size={14} /> {t('artwork_detail_edit')}
             </button>
             <button
               onClick={() => setShowDeleteConfirm(true)}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
               style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
             >
-              <Trash2 size={14} /> 삭제
+              <Trash2 size={14} /> {t('artwork_detail_delete')}
             </button>
           </>
         ) : (
@@ -95,7 +95,7 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
               onClick={handleCancel}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold bg-gray-100 text-gray-500"
             >
-              <X size={14} /> 취소
+              <X size={14} /> {t('artwork_detail_cancel')}
             </button>
             <button
               onClick={handleSave}
@@ -103,7 +103,7 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
               className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition disabled:opacity-60"
               style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
             >
-              <Check size={14} /> {saving ? '저장 중...' : '저장'}
+              <Check size={14} /> {saving ? t('artwork_detail_saving') : t('artwork_detail_save')}
             </button>
           </>
         )}
@@ -118,7 +118,7 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
           >
             <Image
               src={artwork.image_url}
-              alt={title || '작품 이미지'}
+              alt={title || t('artwork_detail_no_title')}
               width={340}
               height={340}
               className="block object-cover"
@@ -139,7 +139,7 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
         />
       ) : (
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-1">
-          {title || '제목 없음'}
+          {title || t('artwork_detail_no_title')}
         </h1>
       )}
 
@@ -158,7 +158,7 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
               onChange={e => setCaption(e.target.value)}
               rows={5}
               className="w-full text-sm text-gray-700 bg-transparent outline-none resize-none leading-relaxed"
-              placeholder="캡션을 입력하세요"
+              placeholder={t('artwork_detail_caption_placeholder')}
             />
           ) : (
             <p className="text-sm text-gray-700 leading-relaxed">{caption}</p>
@@ -170,14 +170,14 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
-            <p className="font-black text-gray-800 text-lg mb-2">작품을 삭제할까요?</p>
-            <p className="text-sm text-gray-500 mb-6">삭제하면 복구할 수 없어요.</p>
+            <p className="font-black text-gray-800 text-lg mb-2">{t('artwork_detail_delete_title')}</p>
+            <p className="text-sm text-gray-500 mb-6">{t('artwork_detail_delete_desc')}</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
                 className="flex-1 py-3 rounded-2xl font-bold text-gray-500 bg-gray-100"
               >
-                취소
+                {t('artwork_detail_cancel')}
               </button>
               <button
                 onClick={handleDelete}
@@ -185,7 +185,7 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
                 className="flex-1 py-3 rounded-2xl font-bold text-white disabled:opacity-60"
                 style={{ background: 'var(--pink)' }}
               >
-                {deleting ? '삭제 중...' : '삭제'}
+                {deleting ? t('artwork_detail_deleting') : t('artwork_detail_delete')}
               </button>
             </div>
           </div>

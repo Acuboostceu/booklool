@@ -128,18 +128,25 @@ export default function AddBookPage() {
   }
 
   async function handleSearch(titleQ?: string, authorQ?: string) {
-    const t = titleQ !== undefined ? titleQ : query
-    const a = authorQ !== undefined ? authorQ : authorQuery
-    if (!t.trim() && !a.trim()) return
+    const titleVal = titleQ !== undefined ? titleQ : query
+    const authorVal = authorQ !== undefined ? authorQ : authorQuery
+    if (!titleVal.trim() && !authorVal.trim()) return
     setSearching(true)
-    const parts = []
-    if (t.trim()) parts.push(`intitle:${t.trim()}`)
-    if (a.trim()) parts.push(`inauthor:${a.trim()}`)
-    const searchQ = parts.join('+')
-    const res = await fetch(`/api/books/search?q=${encodeURIComponent(searchQ)}`)
-    const { results } = await res.json()
-    setSearchResults(results)
-    setSearching(false)
+    try {
+      const parts = []
+      if (titleVal.trim()) parts.push(`intitle:${titleVal.trim()}`)
+      if (authorVal.trim()) parts.push(`inauthor:${authorVal.trim()}`)
+      const searchQ = parts.join('+')
+      const res = await fetch(`/api/books/search?q=${encodeURIComponent(searchQ)}`)
+      if (res.ok) {
+        const { results } = await res.json()
+        setSearchResults(results || [])
+      }
+    } catch {
+      // 검색 실패 시 결과 유지
+    } finally {
+      setSearching(false)
+    }
   }
 
   async function selectBook(book: BookSearchResult) {
@@ -274,7 +281,7 @@ export default function AddBookPage() {
       .eq('profile_id', pid)
 
     const milestones: Record<number, string> = { 1: 'first_book', 5: 'books_5', 10: 'books_10', 20: 'books_20', 50: 'books_50' }
-    const total = (count || 0) + 1
+    const total = count || 0
     if (milestones[total]) {
       await supabase.from('bl_badges').upsert({ profile_id: pid, type: milestones[total] })
     }
