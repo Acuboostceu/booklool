@@ -300,10 +300,10 @@ function AddArtworkInner() {
           <p className="text-sm font-semibold text-gray-600 text-center">{t('artwork_select_caption')}</p>
 
           {(['curator', 'parent', 'child'] as const).map(key => (
-            <button
+            <div
               key={key}
               onClick={() => setSelectedCaption(key)}
-              className="w-full text-left rounded-3xl p-4 border-2 transition space-y-1"
+              className="w-full text-left rounded-3xl p-4 border-2 transition space-y-1 cursor-pointer"
               style={selectedCaption === key
                 ? { borderColor: 'var(--purple)', background: 'var(--purple-light)' }
                 : { borderColor: '#e5e7eb', background: 'white' }}
@@ -315,8 +315,18 @@ function AddArtworkInner() {
                 </span>
                 {selectedCaption === key && <CheckCircle2 className="w-4 h-4" style={{ color: 'var(--purple)' }} />}
               </div>
-              <p className="text-sm text-gray-700">{captions[key]}</p>
-            </button>
+              {selectedCaption === key ? (
+                <textarea
+                  value={captions[key]}
+                  onChange={e => setCaptions({ ...captions, [key]: e.target.value })}
+                  onClick={e => e.stopPropagation()}
+                  className="w-full text-sm text-gray-700 bg-transparent resize-none outline-none leading-relaxed"
+                  rows={4}
+                />
+              ) : (
+                <p className="text-sm text-gray-700">{captions[key]}</p>
+              )}
+            </div>
           ))}
 
           <button
