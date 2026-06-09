@@ -57,49 +57,48 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
   return (
     <div className="min-h-screen pb-24 px-4 py-6 max-w-lg mx-auto">
       {/* Top bar */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex gap-2 mb-8">
         <button
           onClick={() => router.back()}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-2xl text-sm font-bold transition"
+          style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
         >
           <ArrowLeft size={16} />
-          <span>작품 목록으로</span>
         </button>
         {!editing ? (
-          <div className="flex gap-3">
+          <>
             <button
               onClick={() => setEditing(true)}
-              className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
+              style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
             >
-              <Pencil size={14} />
-              수정
+              <Pencil size={14} /> 수정
             </button>
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="inline-flex items-center gap-1 text-sm transition-colors"
-              style={{ color: 'var(--pink-dark)' }}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
+              style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
             >
-              <Trash2 size={14} />
-              삭제
+              <Trash2 size={14} /> 삭제
             </button>
-          </div>
+          </>
         ) : (
-          <div className="flex gap-2">
+          <>
             <button
               onClick={handleCancel}
-              className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-gray-600"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold bg-gray-100 text-gray-500"
             >
               <X size={14} /> 취소
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="inline-flex items-center gap-1 text-sm font-bold"
-              style={{ color: 'var(--green-dark)' }}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition disabled:opacity-60"
+              style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
             >
               <Check size={14} /> {saving ? '저장 중...' : '저장'}
             </button>
-          </div>
+          </>
         )}
       </div>
 

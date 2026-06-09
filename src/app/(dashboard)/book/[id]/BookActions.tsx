@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Pencil, Trash2, Star, X, Check, Camera } from 'lucide-react'
+import { Pencil, Trash2, Star, X, Check, Camera, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
@@ -77,6 +77,13 @@ export default function BookActions({ book }: { book: {
   if (!editing) {
     return (
       <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-2xl text-sm font-bold transition"
+          style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
+        >
+          <ArrowLeft className="w-4 h-4" />
+        </button>
         <button
           onClick={() => setEditing(true)}
           className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
