@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Star, Plus, BookOpen, Palette } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/LocaleContext'
@@ -35,15 +35,12 @@ export default function BookshelfView({
 }) {
   const { t } = useLocale()
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<Record<string, 'books' | 'art'>>({})
-
-  useEffect(() => {
-    const tabParam = searchParams.get('tab')
-    const profileIdParam = searchParams.get('profileId')
-    if (tabParam === 'art' && profileIdParam) {
-      setActiveTab({ [profileIdParam]: 'art' })
-    }
-  }, [searchParams])
+  const [activeTab, setActiveTab] = useState<Record<string, 'books' | 'art'>>(() => {
+    const tab = searchParams.get('tab')
+    const profileId = searchParams.get('profileId')
+    if (tab === 'art' && profileId) return { [profileId]: 'art' }
+    return {}
+  })
 
   const booksByProfile: Record<string, Book[]> = {}
   const badgesByProfile: Record<string, Badge[]> = {}
