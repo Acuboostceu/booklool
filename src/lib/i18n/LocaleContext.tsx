@@ -16,8 +16,8 @@ interface LocaleContextType {
 const LocaleContext = createContext<LocaleContextType | null>(null)
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('ko')
-  const [bookLocales, setBookLocalesState] = useState<Locale[]>(['ko'])
+  const [locale, setLocaleState] = useState<Locale>('en')
+  const [bookLocales, setBookLocalesState] = useState<Locale[]>(['en'])
 
   useEffect(() => {
     const saved = localStorage.getItem('bl_locale') as Locale | null

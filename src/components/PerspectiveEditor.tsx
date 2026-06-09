@@ -7,6 +7,7 @@ type Point = { x: number; y: number }
 interface Props {
   imageUrl: string
   onFlattened: (dataUrl: string) => void
+  locale?: string
 }
 
 // Solve Ax = b via Gaussian elimination; returns x or null
@@ -79,7 +80,7 @@ function dist(a: Point, b: Point) {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
 }
 
-export default function PerspectiveEditor({ imageUrl, onFlattened }: Props) {
+export default function PerspectiveEditor({ imageUrl, onFlattened, locale = 'en' }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const imgRef = useRef<HTMLImageElement | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -287,14 +288,18 @@ export default function PerspectiveEditor({ imageUrl, onFlattened }: Props) {
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
       />
-      <p className="text-xs text-gray-400 text-center">모서리를 드래그해서 작품 영역을 맞추세요</p>
+      <p className="text-xs text-gray-400 text-center">
+        {locale === 'ko' ? '모서리를 드래그해서 작품 영역을 맞추세요' : 'Drag the corners to align with the artwork'}
+      </p>
       <button
         onClick={handleFlatten}
         disabled={flattening || corners.length !== 4}
         className="w-full font-bold rounded-2xl py-3 transition disabled:opacity-50"
         style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
       >
-        {flattening ? '처리 중...' : '📐 평면으로 펴기'}
+        {flattening
+          ? (locale === 'ko' ? '처리 중...' : 'Processing...')
+          : (locale === 'ko' ? '📐 평면으로 펴기' : '📐 Flatten')}
       </button>
     </div>
   )

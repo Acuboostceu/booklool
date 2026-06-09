@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { ArrowLeft, Pencil, Check, X, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useLocale } from '@/lib/i18n/LocaleContext'
 
 type Artwork = {
   id: string
@@ -18,6 +19,7 @@ type Artwork = {
 export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
   const router = useRouter()
   const supabase = createClient()
+  const { locale } = useLocale()
 
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(artwork.title ?? '')
@@ -26,7 +28,8 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  const formattedDate = new Date(artwork.created_at).toLocaleDateString('ko-KR', {
+  const dateLocale = locale === 'ko' ? 'ko-KR' : locale === 'es' ? 'es-ES' : 'en-US'
+  const formattedDate = new Date(artwork.created_at).toLocaleDateString(dateLocale, {
     year: 'numeric',
     month: 'long',
   })

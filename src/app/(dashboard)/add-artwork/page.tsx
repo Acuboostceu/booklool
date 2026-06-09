@@ -42,36 +42,47 @@ function AddArtworkInner() {
     async function loadProfile() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
-      if (preselectedProfileId) {
-        setProfileId(preselectedProfileId)
-        const { data } = await supabase
+
+      let resolvedId = preselectedProfileId
+
+      if (!resolvedId) {
+        // Fallback: use child or parent profile
+        const { data: child } = await supabase
           .from('bl_profiles')
-          .select('name')
-          .eq('id', preselectedProfileId)
+          .select('id, name')
+          .eq('user_id', user.id)
+          .eq('role', 'child')
           .single()
-        if (data) setProfileName(data.name)
-        // Check artwork count and plan
-        const { data: prof } = await supabase.from('bl_profiles').select('plan').eq('id', preselectedProfileId).single()
-        setPlan(prof?.plan ?? 'free')
-        const { count } = await supabase.from('bl_artworks').select('*', { count: 'exact', head: true }).eq('profile_id', preselectedProfileId)
-        setArtworkCount(count ?? 0)
-        return
+        if (child) { resolvedId = child.id; setProfileName(child.name) }
+        else {
+          const { data: parent } = await supabase
+            .from('bl_profiles')
+            .select('id, name')
+            .eq('user_id', user.id)
+            .eq('role', 'parent')
+            .single()
+          if (parent) { resolvedId = parent.id; setProfileName(parent.name) }
+        }
       }
-      // Fallback: use child or parent profile
-      const { data: child } = await supabase
-        .from('bl_profiles')
-        .select('id, name')
-        .eq('user_id', user.id)
-        .eq('role', 'child')
-        .single()
-      if (child) { setProfileId(child.id); setProfileName(child.name); return }
-      const { data: parent } = await supabase
-        .from('bl_profiles')
-        .select('id, name')
-        .eq('user_id', user.id)
-        .eq('role', 'parent')
-        .single()
-      if (parent) { setProfileId(parent.id); setProfileName(parent.name) }
+
+      if (!resolvedId) return
+      setProfileId(resolvedId)
+
+      // Load name if preselected
+      if (preselectedProfileId) {
+        const { data } = await supabase.from('bl_profiles').select('name').eq('id', resolvedId).single()
+        if (data) setProfileName(data.name)
+      }
+
+      // Always load plan + artwork count
+      const { data: prof } = await supabase.from('bl_profiles').select('plan').eq('id', resolvedId).single()
+      const resolvedPlan = prof?.plan ?? 'free'
+      setPlan(resolvedPlan)
+
+      if (resolvedPlan !== 'family') {
+        const { count } = await supabase.from('bl_artworks').select('*', { count: 'exact', head: true }).eq('profile_id', resolvedId)
+        setArtworkCount(count ?? 0)
+      }
     }
     loadProfile()
   }, [preselectedProfileId]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -227,7 +238,7 @@ function AddArtworkInner() {
             <div className="space-y-4">
               {flattenedUrl ? (
                 <div className="space-y-3">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center">교정된 이미지</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center">{locale === 'ko' ? '교정된 이미지' : 'Corrected image'}</p>
                   <div className="relative w-full rounded-2xl overflow-hidden">
                     <Image src={flattenedUrl} alt="flattened artwork" width={600} height={600} className="w-full h-auto object-contain rounded-2xl" unoptimized />
                   </div>
@@ -236,7 +247,7 @@ function AddArtworkInner() {
                       onClick={() => { setRawImageUrl(''); setFlattenedUrl('') }}
                       className="flex-1 font-semibold rounded-2xl py-2 text-sm border border-gray-200 text-gray-500"
                     >
-                      다시 찍기
+                      {locale === 'ko' ? '다시 찍기' : 'Retake'}
                     </button>
                     <button
                       onClick={() => setStep('info')}
@@ -249,21 +260,21 @@ function AddArtworkInner() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center">원근 교정 (선택)</p>
-                  <PerspectiveEditor imageUrl={rawImageUrl} onFlattened={handleFlattened} />
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center">{locale === 'ko' ? '원근 교정 (선택)' : 'Perspective correction (optional)'}</p>
+                  <PerspectiveEditor imageUrl={rawImageUrl} onFlattened={handleFlattened} locale={locale} />
                   <div className="flex gap-2">
                     <button
                       onClick={() => { setRawImageUrl(''); setFlattenedUrl('') }}
                       className="flex-1 font-semibold rounded-2xl py-2 text-sm border border-gray-200 text-gray-500"
                     >
-                      다시 찍기
+                      {locale === 'ko' ? '다시 찍기' : 'Retake'}
                     </button>
                     <button
                       onClick={() => setStep('info')}
                       className="flex-1 font-bold rounded-2xl py-2 text-sm"
                       style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
                     >
-                      교정 없이 진행
+                      {locale === 'ko' ? '교정 없이 진행' : 'Skip correction'}
                     </button>
                   </div>
                 </div>
