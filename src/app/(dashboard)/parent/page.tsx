@@ -22,7 +22,7 @@ export default async function ParentPage() {
   const { data: children } = parentIds.length > 0
     ? await supabase
         .from('bl_profiles')
-        .select('id, name, grade, grade_system, user_id, child_username, color')
+        .select('id, name, user_id, child_username, color')
         .in('parent_id', parentIds)
     : { data: [] }
 

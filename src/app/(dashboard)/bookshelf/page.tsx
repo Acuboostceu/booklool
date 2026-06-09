@@ -60,7 +60,7 @@ export default async function BookshelfPage({ searchParams }: { searchParams: Pr
   const { data: children } = parentIds.length > 0
     ? await supabase
         .from('bl_profiles')
-        .select('id, name, grade, grade_system, color')
+        .select('id, name, color')
         .in('parent_id', parentIds)
     : { data: [] }
 

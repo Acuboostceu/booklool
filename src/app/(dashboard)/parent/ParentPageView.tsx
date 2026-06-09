@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { TranslationKey } from '@/lib/i18n/translations'
-import { gradeLabel } from '@/lib/gradeLabel'
 import { createClient } from '@/lib/supabase/client'
 import FamilyConnect from './FamilyConnect'
 import AddChildForm from './AddChildForm'
@@ -12,7 +11,7 @@ import ChildLoginSetup from './ChildLoginSetup'
 import ColorPicker from './ColorPicker'
 
 type Child = {
-  id: string; name: string; grade: number | null; grade_system: string | null
+  id: string; name: string
   user_id: string | null; child_username: string | null; color: string | null
 }
 type Book = { id: string; title: string; rating: number | null; profile_id: string; created_at: string }

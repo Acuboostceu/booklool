@@ -3,8 +3,6 @@ export type Profile = {
   user_id: string
   role: 'parent' | 'child'
   name: string
-  grade?: number // 1-6 (Korean) or 1-12 (US)
-  grade_system?: 'korean' | 'us'
   avatar_url?: string
   parent_id?: string // for child profiles
   created_at: string
