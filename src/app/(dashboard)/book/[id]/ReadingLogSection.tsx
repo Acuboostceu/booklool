@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Trash2, Plus, X, Star } from 'lucide-react'
+import { Trash2, Plus, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
@@ -148,7 +148,6 @@ export default function ReadingLogSection({
           className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm mb-3 transition"
           style={{ background: 'var(--yellow-light)', color: 'var(--yellow-dark)' }}
         >
-          <Star className="w-4 h-4" />
           {t('log_finished')}
         </button>
       )}
