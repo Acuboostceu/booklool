@@ -32,6 +32,7 @@ const copy = {
 
     art_label: 'ART JOURNAL',
     art_title: "Your child's art, curated.",
+    art_humor: "Your child's stick figures, curated.",
     art_feature1_title: 'Perspective correction',
     art_feature1_desc: 'Snap a photo of any drawing — even at an angle. Adjust the four corners to flatten it perfectly.',
     art_feature2_title: 'Title & AI curation',
@@ -83,6 +84,7 @@ const copy = {
 
     art_label: '아트 저널',
     art_title: '아이의 그림을, 작품으로.',
+    art_humor: '막대기 그림도, 큐레이팅됩니다. 😄',
     art_feature1_title: '원근 교정',
     art_feature1_desc: '비스듬히 찍어도 괜찮아요. 네 귀퉁이를 잡아당겨 그림을 평평하게 펼쳐요.',
     art_feature2_title: '제목과 AI 큐레이션',
@@ -293,7 +295,8 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center mb-16">
             <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--purple)' }}>{t.art_label}</p>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900">{t.art_title}</h2>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">{t.art_title}</h2>
+            <p className="text-sm text-gray-400 italic">{t.art_humor}</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 items-center">
