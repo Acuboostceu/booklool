@@ -349,7 +349,7 @@ function AddArtworkInner() {
           </div>
           <h2 className="text-lg font-bold text-gray-800 text-center">{t('artwork_done_title')}</h2>
           <button
-            onClick={() => router.push('/bookshelf')}
+            onClick={() => router.push(`/bookshelf?profileId=${profileId}&tab=art`)}
             className="font-bold rounded-2xl px-8 py-3"
             style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
           >
