@@ -8,11 +8,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ id: st
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: artwork } = await supabase
-    .from('bl_artworks')
-    .select('id, title, image_url, selected_caption, caption_curator, caption_parent, caption_child, profile_id, created_at')
-    .eq('id', id)
-    .single()
+  const { data: rows } = await supabase
+    .rpc('get_artwork_by_id', { artwork_id: id })
+  const artwork = rows?.[0] ?? null
 
   if (!artwork) notFound()
 
