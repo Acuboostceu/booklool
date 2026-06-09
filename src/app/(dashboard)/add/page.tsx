@@ -10,6 +10,46 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 
 type Step = 'capture' | 'search' | 'mode' | 'confirm' | 'review' | 'log'
 
+function SelectedBookCard({
+  book,
+  coverPhotoPreview,
+  onCoverPhotoClick,
+  size = 'sm',
+}: {
+  book: BookSearchResult
+  coverPhotoPreview: string
+  onCoverPhotoClick: () => void
+  size?: 'sm' | 'lg'
+}) {
+  const { t } = useLocale()
+  const w = size === 'lg' ? 'w-16' : 'w-12'
+  const h = size === 'lg' ? 'h-24' : 'h-16'
+  const iconSize = size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'
+  return (
+    <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100">
+      {(book.cover_url || coverPhotoPreview) ? (
+        <div className={`relative ${w} ${h} flex-shrink-0`}>
+          <Image src={coverPhotoPreview || book.cover_url!} alt={book.title} fill className="rounded-xl object-cover" />
+        </div>
+      ) : (
+        <button
+          onClick={onCoverPhotoClick}
+          className={`${w} ${h} rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed`}
+          style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
+        >
+          <Camera className={iconSize} />
+          <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
+        </button>
+      )}
+      <div className="flex-1 min-w-0">
+        <p className="font-semibold text-gray-800 truncate">{book.title}</p>
+        <p className="text-sm text-gray-500 truncate">{book.author}</p>
+        {size === 'lg' && book.publisher && <p className="text-xs text-gray-400 mt-0.5">{book.publisher}</p>}
+      </div>
+    </div>
+  )
+}
+
 export default function AddBookPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -453,25 +493,8 @@ export default function AddBookPage() {
       {/* Step: mode */}
       {step === 'mode' && selected && (
         <div className="space-y-4">
-          <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100 mb-2">
-            {(selected.cover_url || coverPhotoPreview) ? (
-              <div className="relative w-12 h-16 flex-shrink-0">
-                <Image src={coverPhotoPreview || selected.cover_url!} alt={selected.title} fill className="rounded-xl object-cover" />
-              </div>
-            ) : (
-              <button
-                onClick={() => coverPhotoRef.current?.click()}
-                className="w-12 h-16 rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed"
-                style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
-              >
-                <Camera className="w-4 h-4" />
-                <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
-              </button>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-800 truncate">{selected.title}</p>
-              <p className="text-sm text-gray-500 truncate">{selected.author}</p>
-            </div>
+          <div className="mb-2">
+            <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} onCoverPhotoClick={() => coverPhotoRef.current?.click()} />
           </div>
           <p className="text-center font-bold text-gray-700 text-base">{t('add_mode_title')}</p>
           <div className="grid grid-cols-2 gap-3">
@@ -502,26 +525,7 @@ export default function AddBookPage() {
       {/* Step: log */}
       {step === 'log' && selected && (
         <div className="space-y-4">
-          <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100">
-            {(selected.cover_url || coverPhotoPreview) ? (
-              <div className="relative w-12 h-16 flex-shrink-0">
-                <Image src={coverPhotoPreview || selected.cover_url!} alt={selected.title} fill className="rounded-xl object-cover" />
-              </div>
-            ) : (
-              <button
-                onClick={() => coverPhotoRef.current?.click()}
-                className="w-12 h-16 rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed"
-                style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
-              >
-                <Camera className="w-4 h-4" />
-                <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
-              </button>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-800 truncate">{selected.title}</p>
-              <p className="text-sm text-gray-500 truncate">{selected.author}</p>
-            </div>
-          </div>
+          <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} onCoverPhotoClick={() => coverPhotoRef.current?.click()} />
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('add_log_total_pages')}</p>
             <input
@@ -550,27 +554,7 @@ export default function AddBookPage() {
       {(step === 'confirm' || step === 'review') && selected && (
         <div className="space-y-4">
           {/* Book info */}
-          <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100">
-            {(selected.cover_url || coverPhotoPreview) ? (
-              <div className="relative w-16 h-24 flex-shrink-0">
-                <Image src={coverPhotoPreview || selected.cover_url!} alt={selected.title} fill className="rounded-xl object-cover" />
-              </div>
-            ) : (
-              <button
-                onClick={() => coverPhotoRef.current?.click()}
-                className="w-16 h-24 rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed"
-                style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
-              >
-                <Camera className="w-5 h-5" />
-                <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
-              </button>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-800">{selected.title}</p>
-              <p className="text-sm text-gray-500 mt-0.5">{selected.author}</p>
-              {selected.publisher && <p className="text-xs text-gray-400 mt-0.5">{selected.publisher}</p>}
-            </div>
-          </div>
+          <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} onCoverPhotoClick={() => coverPhotoRef.current?.click()} size="lg" />
 
           {/* Photo preview */}
           {photoPreview && (

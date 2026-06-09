@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { useEffect, useState } from 'react'
 
+const supabase = createClient()
+
 const navColors = [
   'var(--green-dark)',
   'var(--pink-dark)',
@@ -24,22 +26,22 @@ const navBgs = [
 export default function DashboardNav() {
   const pathname = usePathname()
   const router = useRouter()
-  const supabase = createClient()
   const { t } = useLocale()
   const [isChild, setIsChild] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (data.user) {
-        const { data: profile } = await supabase
-          .from('bl_profiles')
-          .select('role')
-          .eq('user_id', data.user.id)
-          .single()
-        setIsChild(profile?.role === 'child')
-      }
-    })
-  }, [supabase])
+    async function loadRole() {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      const { data: profile } = await supabase
+        .from('bl_profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single()
+      setIsChild(profile?.role === 'child')
+    }
+    loadRole()
+  }, [])
 
   const allNavItems = [
     { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf'), childOk: true },
