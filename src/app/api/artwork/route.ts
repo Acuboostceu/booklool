@@ -21,18 +21,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  const { data, error } = await supabase.from('bl_artworks').insert({
-    profile_id: profileId,
-    title,
-    keywords: keywords || null,
-    image_url: imageUrl,
-    caption_curator: captionCurator || null,
-    caption_parent: captionParent || null,
-    caption_child: captionChild || null,
-    selected_caption: selectedCaption || null,
-  }).select('id').single()
+  const { data, error } = await supabase.rpc('insert_artwork', {
+    p_profile_id: profileId,
+    p_title: title,
+    p_keywords: keywords || null,
+    p_image_url: imageUrl,
+    p_caption_curator: captionCurator || null,
+    p_caption_parent: captionParent || null,
+    p_caption_child: captionChild || null,
+    p_selected_caption: selectedCaption || null,
+  })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  return NextResponse.json({ id: data.id, imageUrl })
+  return NextResponse.json({ id: data, imageUrl })
 }
