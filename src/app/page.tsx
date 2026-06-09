@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
 const copy = {
@@ -297,14 +298,16 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 gap-8 items-center">
 
-            {/* Left: screenshot placeholder */}
-            <div
-              className="w-full aspect-[3/4] rounded-3xl flex items-center justify-center border-2 border-dashed"
-              style={{ borderColor: 'var(--purple-light)', background: 'var(--purple-light)' }}
-            >
-              <div className="text-center space-y-2 opacity-40">
-                <div className="text-5xl">🎨</div>
-                <p className="text-xs font-bold text-purple-400">screenshot</p>
+            {/* Left: screenshot */}
+            <div className="w-full flex justify-center">
+              <div className="relative w-[280px] md:w-[320px] drop-shadow-2xl">
+                <Image
+                  src="/Screenshot_art.png"
+                  alt="Art journal screenshot"
+                  width={320}
+                  height={640}
+                  className="rounded-3xl w-full h-auto"
+                />
               </div>
             </div>
 
