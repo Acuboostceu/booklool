@@ -6,6 +6,7 @@ import { Star } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import BookActions from './BookActions'
+import ReadingLogSection from './ReadingLogSection'
 
 type Book = {
   id: string
@@ -21,6 +22,7 @@ type Book = {
   ai_answer: string | null
   description: string | null
   read_at: string | null
+  total_pages: number | null
 }
 
 export default function BookDetailView({ book }: { book: Book }) {
@@ -94,11 +96,14 @@ export default function BookDetailView({ book }: { book: Book }) {
 
       {/* Description */}
       {book.description && (
-        <div className="bg-white rounded-3xl p-4 border border-gray-100">
+        <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
           <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_description')}</p>
           <p className="text-sm text-gray-600 leading-relaxed">{book.description}</p>
         </div>
       )}
+
+      {/* Reading Log */}
+      <ReadingLogSection bookId={book.id} profileId={book.profile_id} totalPages={book.total_pages ?? null} />
     </div>
   )
 }

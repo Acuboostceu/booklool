@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import type { BookSearchResult } from '@/types'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
-type Step = 'capture' | 'search' | 'confirm' | 'review'
+type Step = 'capture' | 'search' | 'mode' | 'confirm' | 'review' | 'log'
 
 export default function AddBookPage() {
   const router = useRouter()
@@ -32,6 +32,7 @@ export default function AddBookPage() {
   const [aiQuestion, setAiQuestion] = useState('')
   const [aiAnswer, setAiAnswer] = useState('')
   const [saving, setSaving] = useState(false)
+  const [totalPages, setTotalPages] = useState('')
   const [profileId, setProfileId] = useState<string | null>(null)
   const [children, setChildren] = useState<{ id: string; name: string }[]>([])
   const [selectedChild, setSelectedChild] = useState<string>('')
@@ -140,16 +141,63 @@ export default function AddBookPage() {
 
   async function selectBook(book: BookSearchResult) {
     setSelected(book)
+    setStep('mode')
+  }
+
+  async function handleModeRate() {
+    if (!selected) return
     setStep('confirm')
     // Generate AI question
     const res = await fetch('/api/ai-question', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: book.title, author: book.author, language: book.language }),
+      body: JSON.stringify({ title: selected.title, author: selected.author, language: selected.language }),
     })
     const { question } = await res.json()
     setAiQuestion(question)
     setStep('review')
+  }
+
+  async function handleSaveLog() {
+    if (!selected || !selectedChild) return
+    setSaving(true)
+
+    let photoUrl = ''
+    if (photoFile) {
+      try {
+        const formData = new FormData()
+        formData.append('file', photoFile)
+        formData.append('profileId', selectedChild)
+        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+        if (uploadRes.ok) {
+          const { publicUrl } = await uploadRes.json()
+          photoUrl = publicUrl
+        }
+      } catch (err) {
+        console.error('Photo upload failed:', err)
+      }
+    }
+
+    const { data: newBook } = await supabase.from('bl_books').insert({
+      profile_id: selectedChild,
+      title: selected.title,
+      author: selected.author,
+      publisher: selected.publisher,
+      cover_url: selected.cover_url,
+      photo_url: photoUrl,
+      description: selected.description,
+      isbn: selected.isbn,
+      language: selected.language,
+      rating: null,
+      total_pages: totalPages ? parseInt(totalPages) : null,
+    }).select('id').single()
+
+    setSaving(false)
+    if (newBook) {
+      router.push(`/book/${newBook.id}`)
+    } else {
+      router.push('/bookshelf')
+    }
   }
 
   async function handleSave() {
@@ -352,6 +400,84 @@ export default function AddBookPage() {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Step: mode */}
+      {step === 'mode' && selected && (
+        <div className="space-y-4">
+          <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100 mb-2">
+            {selected.cover_url ? (
+              <Image src={selected.cover_url} alt={selected.title} width={48} height={68} className="rounded-xl object-cover flex-shrink-0" />
+            ) : (
+              <div className="w-12 h-16 bg-gray-100 rounded-xl flex-shrink-0" />
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-gray-800 truncate">{selected.title}</p>
+              <p className="text-sm text-gray-500 truncate">{selected.author}</p>
+            </div>
+          </div>
+          <p className="text-center font-bold text-gray-700 text-base">{t('add_mode_title')}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={handleModeRate}
+              className="rounded-3xl p-5 flex flex-col items-center gap-2 border-2 transition"
+              style={{background: 'var(--yellow-light)', borderColor: 'var(--yellow)', color: 'var(--yellow-dark)'}}
+            >
+              <span className="text-3xl">⭐</span>
+              <span className="font-black text-base">{t('add_mode_rate')}</span>
+              <span className="text-xs opacity-70">{t('add_mode_rate_desc1')}</span>
+              <span className="text-xs opacity-70">{t('add_mode_rate_desc2')}</span>
+            </button>
+            <button
+              onClick={() => setStep('log')}
+              className="rounded-3xl p-5 flex flex-col items-center gap-2 border-2 transition"
+              style={{background: 'var(--green-light)', borderColor: 'var(--green)', color: 'var(--green-dark)'}}
+            >
+              <span className="text-3xl">📖</span>
+              <span className="font-black text-base">{t('add_mode_log')}</span>
+              <span className="text-xs opacity-70">{t('add_mode_log_desc1')}</span>
+              <span className="text-xs opacity-70">{t('add_mode_log_desc2')}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Step: log */}
+      {step === 'log' && selected && (
+        <div className="space-y-4">
+          <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100">
+            {selected.cover_url ? (
+              <Image src={selected.cover_url} alt={selected.title} width={48} height={68} className="rounded-xl object-cover flex-shrink-0" />
+            ) : (
+              <div className="w-12 h-16 bg-gray-100 rounded-xl flex-shrink-0" />
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-gray-800 truncate">{selected.title}</p>
+              <p className="text-sm text-gray-500 truncate">{selected.author}</p>
+            </div>
+          </div>
+          <div className="bg-white rounded-3xl p-4 border border-gray-100">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('add_log_total_pages')}</p>
+            <input
+              type="number"
+              value={totalPages}
+              onChange={e => setTotalPages(e.target.value)}
+              placeholder={t('add_log_total_pages_placeholder')}
+              className="w-full border-2 rounded-2xl px-4 py-3 text-sm outline-none transition"
+              style={{borderColor: 'var(--green-light)'}}
+              onFocus={e => e.target.style.borderColor = 'var(--green)'}
+              onBlur={e => e.target.style.borderColor = 'var(--green-light)'}
+            />
+          </div>
+          <button
+            onClick={handleSaveLog}
+            disabled={saving}
+            className="w-full font-bold rounded-2xl py-4 transition disabled:opacity-60"
+            style={{background: 'var(--green-light)', color: 'var(--green-dark)'}}
+          >
+            {saving ? t('add_saving') : t('add_log_save')}
+          </button>
         </div>
       )}
 
