@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Pencil, Trash2, Star, X, Check, Camera, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
@@ -17,11 +17,12 @@ export default function BookActions({ book }: { book: {
   photo_url: string | null
 }}) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const supabase = createClient()
   const { t } = useLocale()
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(searchParams.get('edit') === '1')
   const [rating, setRating] = useState(book.rating || 0)
   const [comment, setComment] = useState(book.comment || '')
   const [aiAnswer, setAiAnswer] = useState(book.ai_answer || '')
