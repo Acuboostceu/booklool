@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 
 type Artwork = {
   id: string
+  profile_id: string
   title: string | null
   image_url: string | null
   selected_caption: string | null
@@ -48,10 +49,13 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
     setEditing(false)
   }
 
+  const artTab = `/bookshelf?profileId=${artwork.profile_id}&tab=art`
+
   async function handleDelete() {
     setDeleting(true)
     await supabase.rpc('delete_artwork', { p_id: artwork.id })
-    router.back()
+    router.push(artTab)
+    router.refresh()
   }
 
   return (
@@ -59,7 +63,7 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
       {/* Top bar */}
       <div className="flex gap-2 mb-8">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push(artTab)}
           className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-2xl text-sm font-bold transition"
           style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
         >
