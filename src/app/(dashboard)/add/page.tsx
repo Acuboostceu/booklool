@@ -13,33 +13,25 @@ type Step = 'capture' | 'search' | 'mode' | 'confirm' | 'review' | 'log'
 function SelectedBookCard({
   book,
   coverPhotoPreview,
-  onCoverPhotoClick,
+  photoPreview,
   size = 'sm',
 }: {
   book: BookSearchResult
   coverPhotoPreview: string
-  onCoverPhotoClick: () => void
+  photoPreview: string
   size?: 'sm' | 'lg'
 }) {
-  const { t } = useLocale()
   const w = size === 'lg' ? 'w-16' : 'w-12'
   const h = size === 'lg' ? 'h-24' : 'h-16'
-  const iconSize = size === 'lg' ? 'w-5 h-5' : 'w-4 h-4'
+  const thumb = coverPhotoPreview || book.cover_url || photoPreview
   return (
     <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100">
-      {(book.cover_url || coverPhotoPreview) ? (
+      {thumb ? (
         <div className={`relative ${w} ${h} flex-shrink-0`}>
-          <Image src={coverPhotoPreview || book.cover_url!} alt={book.title} fill className="rounded-xl object-cover" />
+          <Image src={thumb} alt={book.title} fill className="rounded-xl object-cover" />
         </div>
       ) : (
-        <button
-          onClick={onCoverPhotoClick}
-          className={`${w} ${h} rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed`}
-          style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
-        >
-          <Camera className={iconSize} />
-          <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
-        </button>
+        <div className={`${w} ${h} rounded-xl flex-shrink-0 bg-gray-100`} />
       )}
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-gray-800 truncate">{book.title}</p>
@@ -494,7 +486,7 @@ export default function AddBookPage() {
       {step === 'mode' && selected && (
         <div className="space-y-4">
           <div className="mb-2">
-            <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} onCoverPhotoClick={() => coverPhotoRef.current?.click()} />
+            <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} photoPreview={photoPreview} />
           </div>
           <p className="text-center font-bold text-gray-700 text-base">{t('add_mode_title')}</p>
           <div className="grid grid-cols-2 gap-3">
@@ -525,7 +517,7 @@ export default function AddBookPage() {
       {/* Step: log */}
       {step === 'log' && selected && (
         <div className="space-y-4">
-          <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} onCoverPhotoClick={() => coverPhotoRef.current?.click()} />
+          <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} photoPreview={photoPreview} />
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('add_log_total_pages')}</p>
             <input
@@ -554,7 +546,7 @@ export default function AddBookPage() {
       {(step === 'confirm' || step === 'review') && selected && (
         <div className="space-y-4">
           {/* Book info */}
-          <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} onCoverPhotoClick={() => coverPhotoRef.current?.click()} size="lg" />
+          <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} photoPreview={photoPreview} size="lg" />
 
           {/* Photo preview */}
           {photoPreview && (
