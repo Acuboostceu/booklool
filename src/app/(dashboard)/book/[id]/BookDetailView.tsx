@@ -5,8 +5,10 @@ import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 import { useLocale } from '@/lib/i18n/LocaleContext'
-import BookActions from './BookActions'
+import BookActions, { BookEditForm } from './BookActions'
 import ReadingLogSection from './ReadingLogSection'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 type Book = {
   id: string
@@ -27,19 +29,34 @@ type Book = {
 
 export default function BookDetailView({ book }: { book: Book }) {
   const { t } = useLocale()
+  const searchParams = useSearchParams()
+  const [editing, setEditing] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('edit') === '1') {
+      setEditing(true)
+      // Scroll to edit form after it renders
+      setTimeout(() => {
+        document.getElementById('book-edit-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 100)
+    }
+  }, [searchParams])
+
+  const bookData = {
+    id: book.id,
+    profile_id: book.profile_id,
+    rating: book.rating,
+    comment: book.comment,
+    ai_answer: book.ai_answer,
+    ai_question: book.ai_question,
+    photo_url: book.photo_url,
+  }
 
   return (
     <div className="pb-24">
 
-      <BookActions book={{
-        id: book.id,
-        profile_id: book.profile_id,
-        rating: book.rating,
-        comment: book.comment,
-        ai_answer: book.ai_answer,
-        ai_question: book.ai_question,
-        photo_url: book.photo_url,
-      }} />
+      {/* Top action buttons (back / edit / delete) — always visible */}
+      <BookActions book={bookData} editing={editing} setEditing={setEditing} />
 
       {/* Cover */}
       <div className="flex gap-4 mb-6">
@@ -104,6 +121,13 @@ export default function BookDetailView({ book }: { book: Book }) {
 
       {/* Reading Log */}
       <ReadingLogSection bookId={book.id} profileId={book.profile_id} totalPages={book.total_pages ?? null} />
+
+      {/* Edit form — appears below reading log when editing */}
+      {editing && (
+        <div id="book-edit-form">
+          <BookEditForm book={bookData} setEditing={setEditing} />
+        </div>
+      )}
     </div>
   )
 }

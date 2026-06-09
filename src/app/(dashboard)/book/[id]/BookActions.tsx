@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Pencil, Trash2, Star, X, Check, Camera, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
-export default function BookActions({ book }: { book: {
+type BookData = {
   id: string
   profile_id: string
   rating: number | null
@@ -15,23 +15,101 @@ export default function BookActions({ book }: { book: {
   ai_answer: string | null
   ai_question: string | null
   photo_url: string | null
-}}) {
+}
+
+/** Top pill buttons: ← / Edit / Delete */
+export default function BookActions({ book, editing, setEditing }: {
+  book: BookData
+  editing: boolean
+  setEditing: (v: boolean) => void
+}) {
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const { t } = useLocale()
+  const supabase = createClient()
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  async function handleDelete() {
+    await supabase.from('bl_books').delete().eq('id', book.id)
+    router.push('/bookshelf')
+  }
+
+  return (
+    <div className="flex gap-2 mb-6">
+      <button
+        onClick={() => router.back()}
+        className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-2xl text-sm font-bold transition"
+        style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
+      >
+        <ArrowLeft className="w-4 h-4" />
+      </button>
+
+      {editing ? (
+        <button
+          onClick={() => setEditing(false)}
+          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold bg-gray-100 text-gray-500 transition"
+        >
+          <X className="w-4 h-4" /> {t('log_cancel')}
+        </button>
+      ) : (
+        <>
+          <button
+            onClick={() => setEditing(true)}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
+            style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
+          >
+            <Pencil className="w-4 h-4" /> {t('book_edit')}
+          </button>
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
+            style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
+          >
+            <Trash2 className="w-4 h-4" /> {t('book_delete')}
+          </button>
+        </>
+      )}
+
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
+            <p className="font-black text-gray-800 text-lg mb-2">{t('book_delete_confirm')}</p>
+            <p className="text-sm text-gray-500 mb-6">{t('book_delete_desc')}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 py-3 rounded-2xl font-bold text-gray-500 bg-gray-100"
+              >
+                {t('book_cancel')}
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 py-3 rounded-2xl font-bold text-white"
+                style={{ background: 'var(--pink)' }}
+              >
+                {t('book_delete')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+/** Edit form panel — rendered below reading log */
+export function BookEditForm({ book, setEditing }: {
+  book: BookData
+  setEditing: (v: boolean) => void
+}) {
+  const router = useRouter()
   const supabase = createClient()
   const { t } = useLocale()
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const [editing, setEditing] = useState(false)
-
-  useEffect(() => {
-    if (searchParams.get('edit') === '1') setEditing(true)
-  }, [searchParams])
   const [rating, setRating] = useState(book.rating || 0)
   const [comment, setComment] = useState(book.comment || '')
   const [aiAnswer, setAiAnswer] = useState(book.ai_answer || '')
   const [saving, setSaving] = useState(false)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null)
   const [newPhotoPreview, setNewPhotoPreview] = useState<string>('')
 
@@ -44,9 +122,7 @@ export default function BookActions({ book }: { book: {
 
   async function handleSave() {
     setSaving(true)
-
     let photoUrl = book.photo_url || ''
-
     if (newPhotoFile) {
       try {
         const formData = new FormData()
@@ -61,78 +137,19 @@ export default function BookActions({ book }: { book: {
         console.error('Photo upload failed:', err)
       }
     }
-
     await supabase.from('bl_books').update({
       rating,
       comment,
       ai_answer: aiAnswer,
       photo_url: photoUrl,
     }).eq('id', book.id)
-
     setSaving(false)
     setEditing(false)
     router.refresh()
   }
 
-  async function handleDelete() {
-    await supabase.from('bl_books').delete().eq('id', book.id)
-    router.push('/bookshelf')
-  }
-
-  if (!editing) {
-    return (
-      <div className="flex gap-2 mb-6">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-2xl text-sm font-bold transition"
-          style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-        </button>
-        <button
-          onClick={() => setEditing(true)}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
-          style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
-        >
-          <Pencil className="w-4 h-4" /> {t('book_edit')}
-        </button>
-        <button
-          onClick={() => setShowDeleteConfirm(true)}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
-          style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
-        >
-          <Trash2 className="w-4 h-4" /> {t('book_delete')}
-        </button>
-
-        {showDeleteConfirm && (
-          <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
-            <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
-              <p className="font-black text-gray-800 text-lg mb-2">{t('book_delete_confirm')}</p>
-              <p className="text-sm text-gray-500 mb-6">{t('book_delete_desc')}</p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="flex-1 py-3 rounded-2xl font-bold text-gray-500 bg-gray-100"
-                >
-                  {t('book_cancel')}
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="flex-1 py-3 rounded-2xl font-bold text-white"
-                  style={{ background: 'var(--pink)' }}
-                >
-                  {t('book_delete')}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    )
-  }
-
   return (
-    <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-6 space-y-4">
+    <div className="bg-white rounded-3xl p-4 border border-gray-100 mt-4 space-y-4">
       <div className="flex items-center justify-between">
         <p className="font-black text-gray-800">{t('book_edit')}</p>
         <button onClick={() => { setEditing(false); setNewPhotoFile(null); setNewPhotoPreview('') }}>
