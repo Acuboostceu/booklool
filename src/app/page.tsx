@@ -15,14 +15,29 @@ const copy = {
     hero_sub: 'Every book they read. Every thought they had. Bound into one book, forever.',
     hero_cta: 'Start for free',
     hero_sub_cta: 'No credit card required',
+
     how_label: 'HOW IT WORKS',
     how_title: 'Three steps to a lifetime of memories',
     step1_title: 'Snap the moment',
-    step1_desc: "Take a photo of your child holding the book — that goofy proud face is the whole point. Our AI reads the title automatically.",
+    step1_desc: 'Take a photo of your child with the book. Our AI reads the title automatically.',
     step2_title: 'Log & reflect',
-    step2_desc: 'Older kids log in and write their own thoughts. Younger ones talk it through with a parent — you ask, they answer, you type it in together. Either way, it gets saved.',
+    step2_desc: 'Two ways to record — pick what fits your child.',
+    step2_rate_title: '⭐ Review mode',
+    step2_rate_desc: 'Rate the book, write a thought, and answer an AI question. Perfect for younger readers.',
+    step2_log_title: '📖 Reading log',
+    step2_log_desc: 'Log pages read each session. A progress bar tracks the journey. When done, all those impressions add up to their own story of the book.',
     step3_title: 'Your year, bound in one book.',
-    step3_desc: 'Every photo, review, and memory — bound into a beautiful book delivered to your door.',
+    step3_desc: 'Every photo, review, and memory — printed into a beautiful book delivered to your door.',
+
+    art_label: 'ART JOURNAL',
+    art_title: "Your child's art, curated.",
+    art_feature1_title: 'Perspective correction',
+    art_feature1_desc: 'Snap a photo of any drawing — even at an angle. Adjust the four corners to flatten it perfectly.',
+    art_feature2_title: 'Title & AI curation',
+    art_feature2_desc: 'Add a title and keywords. The AI writes a curator-style caption, a parent diary entry, or a child\'s voice — choose the one that fits.',
+    art_feature3_title: 'Printed at year-end',
+    art_feature3_desc: 'All artwork goes into the same year-end book as the reading journal. One book, the whole year.',
+
     pricing_label: 'PRICING',
     pricing_title: 'Simple, family-friendly pricing',
     free_name: 'Free',
@@ -37,7 +52,7 @@ const copy = {
     print_name: 'Print Book',
     print_price: 'From $29',
     print_period: 'per book',
-    print_features: ["Your year in photos", 'All reviews & AI answers', 'Hardcover or softcover', 'Shipped to your door'],
+    print_features: ['Your year in photos', 'All reviews & AI answers', 'Hardcover or softcover', 'Shipped to your door'],
     plan_cta: 'Get started',
     footer_copy: '© 2026 Booklool · Made with love for reading families.',
   },
@@ -51,14 +66,29 @@ const copy = {
     hero_sub: '읽은 책들, 남긴 생각들, 우리 가족의 이야기가 돼요.',
     hero_cta: '무료로 시작하기',
     hero_sub_cta: '신용카드 불필요',
+
     how_label: '사용 방법',
     how_title: '세 단계로 평생의 추억을',
     step1_title: '사진을 찍어요',
-    step1_desc: '책과 함께 찍은 아이 얼굴 사진 한 장. AI가 책 제목을 자동으로 찾아줘요.',
-    step2_title: '함께 기록해요',
-    step2_desc: '아이가 직접 써도, 부모가 함께 써줘도 좋아요. 이야기 나누는 그 시간이 기록이 돼요.',
+    step1_desc: '책과 함께 찍은 아이 사진 한 장. AI가 책 제목을 자동으로 찾아줘요.',
+    step2_title: '기록해요',
+    step2_desc: '아이에게 맞는 방법으로 골라 기록해요.',
+    step2_rate_title: '⭐ 평가 모드',
+    step2_rate_desc: '별점, 감상, AI 독후 질문까지. 어린 독자에게 딱 맞아요.',
+    step2_log_title: '📖 독서 로그',
+    step2_log_desc: '그날 읽은 페이지와 한 줄 감상을 기록해요. 프로그레스 바가 진행 상황을 알려주고, 다 읽으면 쌓인 감상들이 자연스럽게 그 책의 이야기가 돼요.',
     step3_title: '일년이 한 권에.',
-    step3_desc: '모든 사진과 생각, 그리고 기억이 가득한 책 한 권이 선물처럼 배달돼요.',
+    step3_desc: '모든 사진과 생각, 기억이 담긴 책 한 권이 선물처럼 배달돼요.',
+
+    art_label: '아트 저널',
+    art_title: '아이의 그림을, 작품으로.',
+    art_feature1_title: '원근 교정',
+    art_feature1_desc: '비스듬히 찍어도 괜찮아요. 네 귀퉁이를 잡아당겨 그림을 평평하게 펼쳐요.',
+    art_feature2_title: '제목과 AI 큐레이션',
+    art_feature2_desc: '제목과 키워드를 넣으면 AI가 큐레이터 스타일, 부모 일기체, 아이 목소리 세 가지 캡션을 만들어줘요.',
+    art_feature3_title: '연말에 한 권으로',
+    art_feature3_desc: '독서 일기와 함께 연말 책에 실려요. 책 읽은 기억과 그림이 한 권에 담겨요.',
+
     pricing_label: '요금제',
     pricing_title: '가족을 위한 합리적인 가격',
     free_name: '무료',
@@ -99,12 +129,6 @@ export default function LandingPage() {
     localStorage.setItem('bl_locale', next)
   }
 
-  const steps = [
-    { icon: '📸', title: t.step1_title, desc: t.step1_desc, color: 'var(--green-light)' },
-    { icon: '✏️', title: t.step2_title, desc: t.step2_desc, color: 'var(--purple-light)' },
-    { icon: '📖', title: t.step3_title, desc: t.step3_desc, color: 'var(--yellow-light)' },
-  ]
-
   return (
     <div className="min-h-screen bg-white" style={{ fontFamily: 'var(--font-nunito), var(--font-noto), sans-serif' }}>
 
@@ -135,7 +159,6 @@ export default function LandingPage() {
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden" style={{ background: '#fefdf5' }}>
-        {/* Notebook lines */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -144,7 +167,6 @@ export default function LandingPage() {
             opacity: 0.45,
           }}
         />
-        {/* Red margin line — desktop only */}
         <div className="absolute top-0 bottom-0 hidden md:block" style={{ left: '88px', width: '1px', background: '#f4a0a0', opacity: 0.6 }} />
 
         <div className="relative max-w-5xl mx-auto px-6 py-24 md:py-40 text-center">
@@ -184,129 +206,217 @@ export default function LandingPage() {
             </Link>
             <p className="text-xs text-gray-400">{t.hero_sub_cta}</p>
           </div>
-
         </div>
       </section>
 
       {/* ── How it works ── */}
       <section className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--green)' }}>{t.how_label}</p>
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-16">{t.how_title}</h2>
-          <div className="grid md:grid-cols-3 gap-10">
-            {steps.map((step, i) => (
-              <div key={i} className="flex flex-col items-center gap-5">
-                <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl"
-                  style={{ background: step.color }}
-                >
-                  {step.icon}
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--green)' }}>{t.how_label}</p>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900">{t.how_title}</h2>
+          </div>
+
+          <div className="space-y-16">
+
+            {/* Step 01 */}
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3 md:w-24">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{ background: 'var(--green-light)' }}>
+                  📸
                 </div>
-                <div className="text-center">
-                  <p className="text-xs font-black text-gray-300 mb-2">0{i + 1}</p>
-                  <h3 className="font-black text-xl text-gray-800 mb-2">{step.title}</h3>
-                  {lang === 'ko' ? (
-                  <p className="text-gray-500 text-sm leading-relaxed">
-                    {i === 0 && <>책과 함께 찍은 아이 얼굴 사진 한 장.<br className="sm:hidden" /> AI가 책 제목을 자동으로 찾아줘요.</>}
-                    {i === 1 && <>아이가 직접 써도, 부모가 함께 써줘도 좋아요.<br className="sm:hidden" /> 이야기 나누는 그 시간이 기록이 돼요.</>}
-                    {i === 2 && <>모든 사진과 생각, 그리고 기억이 가득한<br className="sm:hidden" /> 책 한 권이 선물처럼 배달돼요.</>}
-                  </p>
-                ) : (
-                  <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
-                )}
+                <p className="text-xs font-black text-gray-300">01</p>
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="font-black text-xl text-gray-800 mb-2">{t.step1_title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed max-w-md">{t.step1_desc}</p>
+              </div>
+            </div>
+
+            {/* Step 02 — two methods */}
+            <div className="flex flex-col md:flex-row items-start gap-8">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3 md:w-24">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{ background: 'var(--purple-light)' }}>
+                  ✏️
+                </div>
+                <p className="text-xs font-black text-gray-300">02</p>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-black text-xl text-gray-800 mb-1 text-center md:text-left">{t.step2_title}</h3>
+                <p className="text-gray-400 text-sm mb-5 text-center md:text-left">{t.step2_desc}</p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {/* Review mode */}
+                  <div className="rounded-2xl p-5 space-y-2" style={{ background: 'var(--yellow-light)' }}>
+                    <p className="font-black text-sm text-gray-800">{t.step2_rate_title}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">{t.step2_rate_desc}</p>
+                  </div>
+                  {/* Reading log */}
+                  <div className="rounded-2xl p-5 space-y-2" style={{ background: 'var(--green-light)' }}>
+                    <p className="font-black text-sm text-gray-800">{t.step2_log_title}</p>
+                    <p className="text-sm text-gray-600 leading-relaxed">{t.step2_log_desc}</p>
+                    {/* Mini progress bar mockup */}
+                    <div className="pt-2">
+                      <div className="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>{lang === 'ko' ? '진행률' : 'Progress'}</span>
+                        <span>73%</span>
+                      </div>
+                      <div className="w-full h-2 bg-white/60 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: '73%', background: 'var(--green)' }} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Step 03 */}
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="flex-shrink-0 flex flex-col items-center gap-3 md:w-24">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{ background: 'var(--yellow-light)' }}>
+                  📖
+                </div>
+                <p className="text-xs font-black text-gray-300">03</p>
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="font-black text-xl text-gray-800 mb-2">{t.step3_title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed max-w-md">{t.step3_desc}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── Art Journal ── */}
+      <section className="py-24" style={{ background: '#fefdf5' }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--purple)' }}>{t.art_label}</p>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900">{t.art_title}</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+
+            {/* Left: screenshot placeholder */}
+            <div
+              className="w-full aspect-[3/4] rounded-3xl flex items-center justify-center border-2 border-dashed"
+              style={{ borderColor: 'var(--purple-light)', background: 'var(--purple-light)' }}
+            >
+              <div className="text-center space-y-2 opacity-40">
+                <div className="text-5xl">🎨</div>
+                <p className="text-xs font-bold text-purple-400">screenshot</p>
+              </div>
+            </div>
+
+            {/* Right: feature list */}
+            <div className="space-y-6">
+              {[
+                { icon: '🔲', title: t.art_feature1_title, desc: t.art_feature1_desc, color: 'var(--purple-light)' },
+                { icon: '✨', title: t.art_feature2_title, desc: t.art_feature2_desc, color: 'var(--yellow-light)' },
+                { icon: '📚', title: t.art_feature3_title, desc: t.art_feature3_desc, color: 'var(--green-light)' },
+              ].map((f, i) => (
+                <div key={i} className="flex gap-4 items-start">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                    style={{ background: f.color }}
+                  >
+                    {f.icon}
+                  </div>
+                  <div>
+                    <p className="font-black text-gray-800 mb-1">{f.title}</p>
+                    <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* ── Pricing ── */}
-      <section className="py-24" style={{ background: '#fefdf5' }}>
-        {/* Subtle notebook lines on pricing too */}
-        <div className="relative overflow-hidden">
-          <div className="max-w-5xl mx-auto px-6 text-center">
-            <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--purple)' }}>{t.pricing_label}</p>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-16">{t.pricing_title}</h2>
+      <section className="py-24 bg-white">
+        <div className="max-w-5xl mx-auto px-6 text-center">
+          <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--purple)' }}>{t.pricing_label}</p>
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-16">{t.pricing_title}</h2>
 
-            <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
 
-              {/* Free */}
-              <div className="bg-white rounded-3xl p-8 border border-gray-100 text-left flex flex-col">
-                <p className="font-black text-xl text-gray-800 mb-2">{t.free_name}</p>
-                <div className="flex items-end gap-1 mb-8">
-                  <span className="text-5xl font-black text-gray-900">{t.free_price}</span>
-                  <span className="text-sm text-gray-400 mb-1.5">{t.free_period}</span>
-                </div>
-                <ul className="space-y-3 flex-1 mb-8">
-                  {t.free_features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
-                      <span className="font-bold" style={{ color: 'var(--green)' }}>✓</span> {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/login"
-                  className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm transition hover:bg-gray-50"
-                  style={{ borderColor: 'var(--green-light)', color: 'var(--green-dark)' }}
-                >
-                  {t.plan_cta}
-                </Link>
+            {/* Free */}
+            <div className="bg-white rounded-3xl p-8 border border-gray-100 text-left flex flex-col">
+              <p className="font-black text-xl text-gray-800 mb-2">{t.free_name}</p>
+              <div className="flex items-end gap-1 mb-8">
+                <span className="text-5xl font-black text-gray-900">{t.free_price}</span>
+                <span className="text-sm text-gray-400 mb-1.5">{t.free_period}</span>
               </div>
-
-              {/* Family — highlighted */}
-              <div className="rounded-3xl p-8 text-left flex flex-col relative shadow-2xl -mt-2 -mb-2" style={{ background: 'var(--green)' }}>
-                <div
-                  className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-black px-4 py-1.5 rounded-full bg-white shadow-sm"
-                  style={{ color: 'var(--green-dark)' }}
-                >
-                  {t.family_badge}
-                </div>
-                <p className="font-black text-xl text-white mb-2">{t.family_name}</p>
-                <div className="flex items-end gap-1 mb-8">
-                  <span className="text-5xl font-black text-white">{t.family_price}</span>
-                  <span className="text-sm text-white/60 mb-1.5">{t.family_period}</span>
-                </div>
-                <ul className="space-y-3 flex-1 mb-8">
-                  {t.family_features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2.5 text-sm text-white/90">
-                      <span className="font-bold text-white">✓</span> {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href="/login"
-                  className="w-full text-center font-black py-3.5 rounded-2xl text-sm transition hover:opacity-90 bg-white"
-                  style={{ color: 'var(--green-dark)' }}
-                >
-                  {t.plan_cta}
-                </Link>
-              </div>
-
-              {/* Print Book */}
-              <div className="bg-white rounded-3xl p-8 border border-gray-100 text-left flex flex-col">
-                <p className="font-black text-xl text-gray-800 mb-2">{t.print_name}</p>
-                <div className="flex items-end gap-1 mb-8">
-                  <span className="text-3xl font-black text-gray-900">{t.print_price}</span>
-                  <span className="text-sm text-gray-400 mb-1.5">{t.print_period}</span>
-                </div>
-                <ul className="space-y-3 flex-1 mb-8">
-                  {t.print_features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
-                      <span className="font-bold" style={{ color: 'var(--yellow-dark)' }}>✓</span> {f}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm opacity-50 cursor-not-allowed"
-                  style={{ borderColor: 'var(--yellow-light)', color: 'var(--yellow-dark)' }}
-                  disabled
-                >
-                  Coming soon
-                </button>
-              </div>
-
+              <ul className="space-y-3 flex-1 mb-8">
+                {t.free_features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
+                    <span className="font-bold" style={{ color: 'var(--green)' }}>✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/login"
+                className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm transition hover:bg-gray-50"
+                style={{ borderColor: 'var(--green-light)', color: 'var(--green-dark)' }}
+              >
+                {t.plan_cta}
+              </Link>
             </div>
+
+            {/* Family */}
+            <div className="rounded-3xl p-8 text-left flex flex-col relative shadow-2xl -mt-2 -mb-2" style={{ background: 'var(--green)' }}>
+              <div
+                className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-black px-4 py-1.5 rounded-full bg-white shadow-sm"
+                style={{ color: 'var(--green-dark)' }}
+              >
+                {t.family_badge}
+              </div>
+              <p className="font-black text-xl text-white mb-2">{t.family_name}</p>
+              <div className="flex items-end gap-1 mb-8">
+                <span className="text-5xl font-black text-white">{t.family_price}</span>
+                <span className="text-sm text-white/60 mb-1.5">{t.family_period}</span>
+              </div>
+              <ul className="space-y-3 flex-1 mb-8">
+                {t.family_features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-sm text-white/90">
+                    <span className="font-bold text-white">✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/login"
+                className="w-full text-center font-black py-3.5 rounded-2xl text-sm transition hover:opacity-90 bg-white"
+                style={{ color: 'var(--green-dark)' }}
+              >
+                {t.plan_cta}
+              </Link>
+            </div>
+
+            {/* Print Book */}
+            <div className="bg-white rounded-3xl p-8 border border-gray-100 text-left flex flex-col">
+              <p className="font-black text-xl text-gray-800 mb-2">{t.print_name}</p>
+              <div className="flex items-end gap-1 mb-8">
+                <span className="text-3xl font-black text-gray-900">{t.print_price}</span>
+                <span className="text-sm text-gray-400 mb-1.5">{t.print_period}</span>
+              </div>
+              <ul className="space-y-3 flex-1 mb-8">
+                {t.print_features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
+                    <span className="font-bold" style={{ color: 'var(--yellow-dark)' }}>✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm opacity-50 cursor-not-allowed"
+                style={{ borderColor: 'var(--yellow-light)', color: 'var(--yellow-dark)' }}
+                disabled
+              >
+                Coming soon
+              </button>
+            </div>
+
           </div>
         </div>
       </section>
