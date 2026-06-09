@@ -74,9 +74,13 @@ function AddArtworkInner() {
         if (data) setProfileName(data.name)
       }
 
-      // Always load plan + artwork count
-      const { data: prof } = await supabase.from('bl_profiles').select('plan').eq('id', resolvedId).single()
-      const resolvedPlan = prof?.plan ?? 'free'
+      // Always load plan — check profile itself, then parent if child profile
+      const { data: prof } = await supabase.from('bl_profiles').select('plan, parent_id, role').eq('id', resolvedId).single()
+      let resolvedPlan = prof?.plan ?? 'free'
+      if (resolvedPlan !== 'family' && prof?.role === 'child' && prof?.parent_id) {
+        const { data: parentProf } = await supabase.from('bl_profiles').select('plan').eq('id', prof.parent_id).single()
+        if (parentProf?.plan === 'family') resolvedPlan = 'family'
+      }
       setPlan(resolvedPlan)
 
       if (resolvedPlan !== 'family') {

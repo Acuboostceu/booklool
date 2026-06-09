@@ -21,14 +21,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
   }
 
-  // Check free plan artwork limit (12)
+  // Check free plan artwork limit (12) — check parent plan if child profile
   const { data: profile } = await supabase
     .from('bl_profiles')
-    .select('plan')
+    .select('plan, parent_id, role')
     .eq('id', profileId)
     .single()
 
-  if (!profile || profile.plan !== 'family') {
+  let effectivePlan = profile?.plan ?? 'free'
+  if (effectivePlan !== 'family' && profile?.role === 'child' && profile?.parent_id) {
+    const { data: parentProfile } = await supabase
+      .from('bl_profiles')
+      .select('plan')
+      .eq('id', profile.parent_id)
+      .single()
+    if (parentProfile?.plan === 'family') effectivePlan = 'family'
+  }
+
+  if (effectivePlan !== 'family') {
     const { count } = await supabase
       .from('bl_artworks')
       .select('*', { count: 'exact', head: true })
