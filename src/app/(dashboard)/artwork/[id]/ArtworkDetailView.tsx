@@ -89,27 +89,19 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
       {/* Framed artwork */}
       {artwork.image_url && (
         <div className="flex justify-center mb-8">
-          {/* Outer wood frame */}
           <div
-            style={{
-              background: 'linear-gradient(145deg, #a0784a, #7a5530)',
-              padding: '14px',
-              borderRadius: '4px',
-              boxShadow: '0 8px 40px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.15)',
-            }}
+            className="rounded-2xl overflow-hidden"
+            style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}
           >
-            {/* Inner mat */}
-            <div style={{ background: '#f7f2ea', padding: '18px' }}>
-              <Image
-                src={artwork.image_url}
-                alt={title || '작품 이미지'}
-                width={300}
-                height={300}
-                className="block object-cover"
-                unoptimized
-                style={{ display: 'block' }}
-              />
-            </div>
+            <Image
+              src={artwork.image_url}
+              alt={title || '작품 이미지'}
+              width={340}
+              height={340}
+              className="block object-cover"
+              unoptimized
+              style={{ display: 'block' }}
+            />
           </div>
         </div>
       )}
