@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic'
 
 const PerspectiveEditor = dynamic(() => import('@/components/PerspectiveEditor'), { ssr: false })
 
-type Step = 'scan' | 'info' | 'generate' | 'done'
+type Step = 'scan' | 'info' | 'done'
 type Captions = { curator: string; parent: string; child: string }
 
 function AddArtworkInner() {
@@ -86,6 +86,7 @@ function AddArtworkInner() {
   async function handleGenerate() {
     if (!artTitle.trim()) return
     setGenerating(true)
+    setSelectedCaption(null)
     try {
       const res = await fetch('/api/artwork/generate', {
         method: 'POST',
@@ -94,7 +95,6 @@ function AddArtworkInner() {
       })
       const data = await res.json()
       setCaptions(data)
-      setStep('generate')
     } finally {
       setGenerating(false)
     }
@@ -142,8 +142,8 @@ function AddArtworkInner() {
     }
   }
 
-  const steps: Step[] = ['scan', 'info', 'generate', 'done']
-  const stepLabels = [t('artwork_step_scan'), t('artwork_step_info'), t('artwork_step_generate'), t('artwork_step_done')]
+  const steps: Step[] = ['scan', 'info', 'done']
+  const stepLabels = [t('artwork_step_scan'), t('artwork_step_info'), t('artwork_step_done')]
 
   return (
     <div className="pb-24">
@@ -242,7 +242,7 @@ function AddArtworkInner() {
         </div>
       )}
 
-      {/* Step: info */}
+      {/* Step: info — title, keywords, generate, caption pick, save (all on one page) */}
       {step === 'info' && (
         <div className="space-y-4">
           {activeImageUrl && (
@@ -276,6 +276,8 @@ function AddArtworkInner() {
               />
             </div>
           </div>
+
+          {/* Generate / Regenerate button */}
           <button
             onClick={handleGenerate}
             disabled={!artTitle.trim() || generating}
@@ -284,60 +286,55 @@ function AddArtworkInner() {
           >
             {generating ? (
               <><Loader2 className="w-5 h-5 animate-spin" />{t('artwork_generating')}</>
-            ) : t('artwork_generate_btn')}
+            ) : captions ? t('artwork_regenerate_btn') : t('artwork_generate_btn')}
           </button>
-        </div>
-      )}
 
-      {/* Step: generate (pick caption) */}
-      {step === 'generate' && captions && (
-        <div className="space-y-4">
-          {activeImageUrl && (
-            <div className="relative w-32 h-32 mx-auto rounded-2xl overflow-hidden border border-gray-100">
-              <Image src={activeImageUrl} alt="artwork preview" fill className="object-cover" unoptimized />
+          {/* Caption selection — shown after generation */}
+          {captions && !generating && (
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-gray-600 text-center">{t('artwork_select_caption')}</p>
+
+              {(['curator', 'parent', 'child'] as const).map(key => (
+                <div
+                  key={key}
+                  onClick={() => setSelectedCaption(key)}
+                  className="w-full text-left rounded-3xl p-4 border-2 transition space-y-1 cursor-pointer"
+                  style={selectedCaption === key
+                    ? { borderColor: 'var(--purple)', background: 'var(--purple-light)' }
+                    : { borderColor: '#e5e7eb', background: 'white' }}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wide"
+                      style={{ color: selectedCaption === key ? 'var(--purple-dark)' : '#9ca3af' }}>
+                      {key === 'curator' ? t('artwork_caption_curator') : key === 'parent' ? t('artwork_caption_parent') : t('artwork_caption_child')}
+                    </span>
+                    {selectedCaption === key && <CheckCircle2 className="w-4 h-4" style={{ color: 'var(--purple)' }} />}
+                  </div>
+                  {selectedCaption === key ? (
+                    <textarea
+                      value={captions[key]}
+                      onChange={e => setCaptions({ ...captions, [key]: e.target.value })}
+                      onClick={e => e.stopPropagation()}
+                      autoFocus
+                      className="w-full text-sm text-gray-700 bg-transparent resize-none outline-none leading-relaxed"
+                      rows={4}
+                    />
+                  ) : (
+                    <p className="text-sm text-gray-700">{captions[key]}</p>
+                  )}
+                </div>
+              ))}
+
+              <button
+                onClick={handleSave}
+                disabled={!selectedCaption || saving}
+                className="w-full font-bold rounded-2xl py-4 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
+              >
+                {saving ? <><Loader2 className="w-5 h-5 animate-spin" />{t('artwork_saving')}</> : t('artwork_save')}
+              </button>
             </div>
           )}
-          <p className="text-sm font-semibold text-gray-600 text-center">{t('artwork_select_caption')}</p>
-
-          {(['curator', 'parent', 'child'] as const).map(key => (
-            <div
-              key={key}
-              onClick={() => setSelectedCaption(key)}
-              className="w-full text-left rounded-3xl p-4 border-2 transition space-y-1 cursor-pointer"
-              style={selectedCaption === key
-                ? { borderColor: 'var(--purple)', background: 'var(--purple-light)' }
-                : { borderColor: '#e5e7eb', background: 'white' }}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wide"
-                  style={{ color: selectedCaption === key ? 'var(--purple-dark)' : '#9ca3af' }}>
-                  {key === 'curator' ? t('artwork_caption_curator') : key === 'parent' ? t('artwork_caption_parent') : t('artwork_caption_child')}
-                </span>
-                {selectedCaption === key && <CheckCircle2 className="w-4 h-4" style={{ color: 'var(--purple)' }} />}
-              </div>
-              {selectedCaption === key ? (
-                <textarea
-                  value={captions[key]}
-                  onChange={e => setCaptions({ ...captions, [key]: e.target.value })}
-                  onClick={e => e.stopPropagation()}
-                  autoFocus
-                  className="w-full text-sm text-gray-700 bg-transparent resize-none outline-none leading-relaxed"
-                  rows={4}
-                />
-              ) : (
-                <p className="text-sm text-gray-700">{captions[key]}</p>
-              )}
-            </div>
-          ))}
-
-          <button
-            onClick={handleSave}
-            disabled={!selectedCaption || saving}
-            className="w-full font-bold rounded-2xl py-4 transition disabled:opacity-50 flex items-center justify-center gap-2"
-            style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}
-          >
-            {saving ? <><Loader2 className="w-5 h-5 animate-spin" />{t('artwork_saving')}</> : t('artwork_save')}
-          </button>
         </div>
       )}
 
