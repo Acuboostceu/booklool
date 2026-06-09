@@ -34,10 +34,10 @@ export default async function ArtworkPage({ params }: { params: Promise<{ id: st
       {/* Framed artwork */}
       <div className="flex justify-center mb-8">
         <div
-          className="rounded-2xl overflow-hidden"
+          className="rounded-sm overflow-hidden"
           style={{
             boxShadow:
-              '0 0 0 8px #f5f0e8, 0 0 0 12px #d4c5a9, 0 0 0 14px #c4b08a, 0 8px 32px rgba(0,0,0,0.18)',
+              '0 0 0 10px #1a1a1a, 0 0 0 18px #2e2e2e, 0 0 0 22px #111, 0 16px 48px rgba(0,0,0,0.45)',
           }}
         >
           <Image
