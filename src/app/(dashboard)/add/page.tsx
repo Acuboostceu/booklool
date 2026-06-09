@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
-import { Camera, Image as ImageIcon, Search, Star, ChevronRight, Loader2 } from 'lucide-react'
+import { Camera, Image as ImageIcon, Search, Star, ChevronRight, Loader2, PenLine } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import type { BookSearchResult } from '@/types'
 import { useLocale } from '@/lib/i18n/LocaleContext'
@@ -33,6 +33,9 @@ export default function AddBookPage() {
   const [aiAnswer, setAiAnswer] = useState('')
   const [saving, setSaving] = useState(false)
   const [totalPages, setTotalPages] = useState('')
+  const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null)
+  const [coverPhotoPreview, setCoverPhotoPreview] = useState<string>('')
+  const coverPhotoRef = useRef<HTMLInputElement>(null)
   const [profileId, setProfileId] = useState<string | null>(null)
   const [children, setChildren] = useState<{ id: string; name: string }[]>([])
   const [selectedChild, setSelectedChild] = useState<string>('')
@@ -141,7 +144,28 @@ export default function AddBookPage() {
 
   async function selectBook(book: BookSearchResult) {
     setSelected(book)
+    setCoverPhotoFile(null)
+    setCoverPhotoPreview('')
     setStep('mode')
+  }
+
+  function handleManualEntry() {
+    if (!query.trim()) return
+    setSelected({
+      title: query.trim(),
+      author: authorQuery.trim() || '',
+      language: 'ko',
+    } as BookSearchResult)
+    setCoverPhotoFile(null)
+    setCoverPhotoPreview('')
+    setStep('mode')
+  }
+
+  function handleCoverPhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setCoverPhotoFile(file)
+    setCoverPhotoPreview(URL.createObjectURL(file))
   }
 
   async function handleModeRate() {
@@ -158,21 +182,28 @@ export default function AddBookPage() {
     setStep('review')
   }
 
+  async function uploadFile(file: File, pid: string): Promise<string> {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('profileId', pid)
+    const res = await fetch('/api/upload', { method: 'POST', body: formData })
+    if (res.ok) {
+      const { publicUrl } = await res.json()
+      return publicUrl
+    }
+    return ''
+  }
+
   async function handleSaveLog() {
     if (!selected || !selectedChild) return
     setSaving(true)
 
+    // Use coverPhotoFile if provided, otherwise fall back to OCR photoFile
+    const fileToUpload = coverPhotoFile || photoFile
     let photoUrl = ''
-    if (photoFile) {
+    if (fileToUpload) {
       try {
-        const formData = new FormData()
-        formData.append('file', photoFile)
-        formData.append('profileId', selectedChild)
-        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
-        if (uploadRes.ok) {
-          const { publicUrl } = await uploadRes.json()
-          photoUrl = publicUrl
-        }
+        photoUrl = await uploadFile(fileToUpload, selectedChild)
       } catch (err) {
         console.error('Photo upload failed:', err)
       }
@@ -204,23 +235,13 @@ export default function AddBookPage() {
     if (!selected || !selectedChild) return
     setSaving(true)
 
+    const fileToUpload = coverPhotoFile || photoFile
     let photoUrl = ''
-    if (photoFile) {
+    if (fileToUpload) {
       try {
-        const formData = new FormData()
-        formData.append('file', photoFile)
-        formData.append('profileId', selectedChild)
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        })
-        if (uploadRes.ok) {
-          const { publicUrl } = await uploadRes.json()
-          photoUrl = publicUrl
-        }
+        photoUrl = await uploadFile(fileToUpload, selectedChild)
       } catch (err) {
         console.error('Photo upload failed:', err)
-        // 사진 업로드 실패해도 책 저장은 계속 진행
       }
     }
 
@@ -321,6 +342,7 @@ export default function AddBookPage() {
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={handlePhoto} className="hidden" />
           <input ref={galleryRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
+          <input ref={coverPhotoRef} type="file" accept="image/*" onChange={handleCoverPhotoChange} className="hidden" />
 
           <button
             onClick={() => setStep('search')}
@@ -399,6 +421,24 @@ export default function AddBookPage() {
                 <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
               </button>
             ))}
+
+            {/* 직접 입력하기 */}
+            {query.trim() && (
+              <button
+                onClick={handleManualEntry}
+                className="w-full border-2 border-dashed rounded-2xl p-3 flex items-center gap-3 transition text-left"
+                style={{ borderColor: 'var(--green-light)', color: 'var(--green-dark)' }}
+              >
+                <div className="w-10 h-14 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'var(--green-light)' }}>
+                  <PenLine className="w-5 h-5" style={{ color: 'var(--green-dark)' }} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm truncate">"{query.trim()}"</p>
+                  <p className="text-xs opacity-60">{t('add_manual_entry')}</p>
+                </div>
+                <ChevronRight className="w-4 h-4 opacity-40 flex-shrink-0" />
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -407,10 +447,19 @@ export default function AddBookPage() {
       {step === 'mode' && selected && (
         <div className="space-y-4">
           <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100 mb-2">
-            {selected.cover_url ? (
-              <Image src={selected.cover_url} alt={selected.title} width={48} height={68} className="rounded-xl object-cover flex-shrink-0" />
+            {(selected.cover_url || coverPhotoPreview) ? (
+              <div className="relative w-12 h-16 flex-shrink-0">
+                <Image src={coverPhotoPreview || selected.cover_url!} alt={selected.title} fill className="rounded-xl object-cover" />
+              </div>
             ) : (
-              <div className="w-12 h-16 bg-gray-100 rounded-xl flex-shrink-0" />
+              <button
+                onClick={() => coverPhotoRef.current?.click()}
+                className="w-12 h-16 rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed"
+                style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
+              >
+                <Camera className="w-4 h-4" />
+                <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
+              </button>
             )}
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-gray-800 truncate">{selected.title}</p>
@@ -447,10 +496,19 @@ export default function AddBookPage() {
       {step === 'log' && selected && (
         <div className="space-y-4">
           <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100">
-            {selected.cover_url ? (
-              <Image src={selected.cover_url} alt={selected.title} width={48} height={68} className="rounded-xl object-cover flex-shrink-0" />
+            {(selected.cover_url || coverPhotoPreview) ? (
+              <div className="relative w-12 h-16 flex-shrink-0">
+                <Image src={coverPhotoPreview || selected.cover_url!} alt={selected.title} fill className="rounded-xl object-cover" />
+              </div>
             ) : (
-              <div className="w-12 h-16 bg-gray-100 rounded-xl flex-shrink-0" />
+              <button
+                onClick={() => coverPhotoRef.current?.click()}
+                className="w-12 h-16 rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed"
+                style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
+              >
+                <Camera className="w-4 h-4" />
+                <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
+              </button>
             )}
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-gray-800 truncate">{selected.title}</p>
@@ -486,10 +544,19 @@ export default function AddBookPage() {
         <div className="space-y-4">
           {/* Book info */}
           <div className="bg-white rounded-3xl p-4 flex gap-4 border border-gray-100">
-            {selected.cover_url ? (
-              <Image src={selected.cover_url} alt={selected.title} width={64} height={90} className="rounded-xl object-cover flex-shrink-0" />
+            {(selected.cover_url || coverPhotoPreview) ? (
+              <div className="relative w-16 h-24 flex-shrink-0">
+                <Image src={coverPhotoPreview || selected.cover_url!} alt={selected.title} fill className="rounded-xl object-cover" />
+              </div>
             ) : (
-              <div className="w-16 h-24 bg-gray-100 rounded-xl flex-shrink-0" />
+              <button
+                onClick={() => coverPhotoRef.current?.click()}
+                className="w-16 h-24 rounded-xl flex-shrink-0 flex flex-col items-center justify-center gap-1 border-2 border-dashed"
+                style={{ borderColor: 'var(--green)', color: 'var(--green-dark)' }}
+              >
+                <Camera className="w-5 h-5" />
+                <span className="text-[10px] font-bold leading-tight text-center">{t('add_cover_photo')}</span>
+              </button>
             )}
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-gray-800">{selected.title}</p>

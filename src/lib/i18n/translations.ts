@@ -35,6 +35,8 @@ export const translations = {
     add_ai_placeholder: '내 생각을 써봐요...',
     add_saving: '저장 중...',
     add_save: '저장하기',
+    add_manual_entry: '직접 입력하기 (검색 결과 없음)',
+    add_cover_photo: '표지\n사진',
     add_select_rating: '별점을 선택해주세요',
     add_generating: 'AI 질문 생성 중...',
 
@@ -204,6 +206,8 @@ export const translations = {
     add_ai_placeholder: 'Write your thoughts...',
     add_saving: 'Saving...',
     add_save: 'Save',
+    add_manual_entry: 'Enter manually (not in database)',
+    add_cover_photo: 'Cover\nPhoto',
     add_select_rating: 'Please select a rating',
     add_generating: 'Generating AI question...',
 
@@ -369,6 +373,8 @@ export const translations = {
     add_ai_placeholder: 'Escribe tus pensamientos...',
     add_saving: 'Guardando...',
     add_save: 'Guardar',
+    add_manual_entry: 'Ingresar manualmente (no en base de datos)',
+    add_cover_photo: 'Foto\nPortada',
     add_select_rating: 'Selecciona una puntuación',
     add_generating: 'Generando pregunta IA...',
 

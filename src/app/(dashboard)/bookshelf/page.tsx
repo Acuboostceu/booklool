@@ -18,7 +18,7 @@ export default async function BookshelfPage() {
   if (childProfile) {
     const { data: books } = await supabase
       .from('bl_books')
-      .select('id, title, cover_url, rating, profile_id')
+      .select('id, title, cover_url, photo_url, rating, profile_id')
       .eq('profile_id', childProfile.id)
       .order('created_at', { ascending: false })
 
@@ -66,7 +66,7 @@ export default async function BookshelfPage() {
 
   const { data: books } = await supabase
     .from('bl_books')
-    .select('id, title, cover_url, rating, profile_id')
+    .select('id, title, cover_url, photo_url, rating, profile_id')
     .in('profile_id', allProfileIds)
     .order('created_at', { ascending: false })
 

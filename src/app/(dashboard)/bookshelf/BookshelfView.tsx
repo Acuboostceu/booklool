@@ -10,7 +10,7 @@ import { getProfileColor } from '@/lib/profileColors'
 
 type Profile = { id: string; name: string; color?: string | null }
 type Book = {
-  id: string; title: string; cover_url: string | null; rating: number | null; profile_id: string
+  id: string; title: string; cover_url: string | null; photo_url: string | null; rating: number | null; profile_id: string
 }
 type Badge = { id: string; badge_type: string; profile_id: string }
 type Artwork = {
@@ -145,9 +145,9 @@ export default function BookshelfView({
                           className="rounded-2xl overflow-hidden border transition group-hover:shadow-md group-hover:scale-[1.02]"
                           style={{ borderColor: color.bg, borderWidth: 2 }}
                         >
-                          {book.cover_url ? (
+                          {(book.cover_url || book.photo_url) ? (
                             <div className="relative w-full aspect-[2/3]">
-                              <Image src={book.cover_url} alt={book.title} fill className="object-cover" />
+                              <Image src={book.cover_url || book.photo_url!} alt={book.title} fill className="object-cover" />
                             </div>
                           ) : (
                             <div
