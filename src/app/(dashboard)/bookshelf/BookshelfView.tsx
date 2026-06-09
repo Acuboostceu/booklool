@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { Star, Plus, BookOpen, Palette } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
@@ -26,19 +25,20 @@ export default function BookshelfView({
   badges,
   artworks = [],
   partnerIds = [],
+  initialTab,
+  initialProfileId,
 }: {
   profiles: Profile[]
   books: Book[]
   badges: Badge[]
   artworks?: Artwork[]
   partnerIds?: string[]
+  initialTab?: string
+  initialProfileId?: string
 }) {
   const { t } = useLocale()
-  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<Record<string, 'books' | 'art'>>(() => {
-    const tab = searchParams.get('tab')
-    const profileId = searchParams.get('profileId')
-    if (tab === 'art' && profileId) return { [profileId]: 'art' }
+    if (initialTab === 'art' && initialProfileId) return { [initialProfileId]: 'art' }
     return {}
   })
 

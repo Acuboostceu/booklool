@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import BookshelfView from './BookshelfView'
 
-export default async function BookshelfPage() {
+export default async function BookshelfPage({ searchParams }: { searchParams: Promise<{ tab?: string; profileId?: string }> }) {
+  const { tab, profileId: initialProfileId } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return null
@@ -37,6 +38,8 @@ export default async function BookshelfPage() {
         badges={badges || []}
         artworks={artworks || []}
         partnerIds={[]}
+        initialTab={tab}
+        initialProfileId={initialProfileId}
       />
     )
   }
@@ -85,6 +88,8 @@ export default async function BookshelfPage() {
       badges={badges || []}
       artworks={artworks || []}
       partnerIds={partner ? [partner.id] : []}
+      initialTab={tab}
+      initialProfileId={initialProfileId}
     />
   )
 }
