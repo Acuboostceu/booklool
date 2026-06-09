@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { ArrowLeft, Pencil, Check, X } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -51,13 +50,13 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
     <div className="min-h-screen pb-24 px-4 py-6 max-w-lg mx-auto">
       {/* Top bar */}
       <div className="flex items-center justify-between mb-8">
-        <Link
-          href="/bookshelf"
+        <button
+          onClick={() => router.back()}
           className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600 transition-colors"
         >
           <ArrowLeft size={16} />
-          <span>책장으로</span>
-        </Link>
+          <span>작품 목록으로</span>
+        </button>
         {!editing ? (
           <button
             onClick={() => setEditing(true)}
