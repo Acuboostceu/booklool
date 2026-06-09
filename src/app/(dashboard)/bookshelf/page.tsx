@@ -28,10 +28,7 @@ export default async function BookshelfPage() {
       .eq('profile_id', childProfile.id)
 
     const { data: artworks } = await supabase
-      .from('bl_artworks')
-      .select('id, title, image_url, profile_id, created_at')
-      .eq('profile_id', childProfile.id)
-      .order('created_at', { ascending: false })
+      .rpc('get_family_artworks', { profile_ids: [childProfile.id] })
 
     return (
       <BookshelfView
@@ -79,10 +76,7 @@ export default async function BookshelfPage() {
     .in('profile_id', allProfileIds)
 
   const { data: artworks } = await supabase
-    .from('bl_artworks')
-    .select('id, title, image_url, profile_id, created_at')
-    .in('profile_id', allProfileIds)
-    .order('created_at', { ascending: false })
+    .rpc('get_family_artworks', { profile_ids: allProfileIds })
 
   return (
     <BookshelfView
