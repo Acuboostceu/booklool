@@ -31,12 +31,11 @@ export async function POST() {
   }
 
   try {
-    const isEarlyAdopter = new Date() < new Date('2026-07-31T23:59:59')
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
       line_items: [{ price: process.env.STRIPE_FAMILY_PRICE_ID!, quantity: 1 }],
-      ...(isEarlyAdopter && { discounts: [{ coupon: 'onemonthfree' }] }),
+      allow_promotion_codes: true,
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?upgraded=1`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
       metadata: { profile_id: profile.id },
