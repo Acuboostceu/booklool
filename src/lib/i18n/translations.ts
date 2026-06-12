@@ -163,6 +163,10 @@ export const translations = {
     artwork_done_go: '책장으로 가기',
     artwork_add_btn: '+ 작품 추가',
     artwork_empty: '아직 작품이 없어요',
+    profile_see_all: (n: number) => `+${n}개 더 보기`,
+    profile_view_title: '책장',
+    profile_no_books_month: '이 달에 읽은 책이 없어요',
+    profile_no_art_month: '이 달에 추가된 작품이 없어요',
 
     // Auth
     auth_login: '로그인',
@@ -341,6 +345,10 @@ export const translations = {
     artwork_done_go: 'Go to bookshelf',
     artwork_add_btn: '+ Add Artwork',
     artwork_empty: 'No artwork yet',
+    profile_see_all: (n: number) => `+${n} more`,
+    profile_view_title: 'Bookshelf',
+    profile_no_books_month: 'No books this month',
+    profile_no_art_month: 'No artwork this month',
 
     // Auth
     auth_login: 'Log in',
@@ -519,6 +527,10 @@ export const translations = {
     artwork_done_go: 'Ir a la biblioteca',
     artwork_add_btn: '+ Agregar obra',
     artwork_empty: 'Aún no hay obras',
+    profile_see_all: (n: number) => `+${n} más`,
+    profile_view_title: 'Biblioteca',
+    profile_no_books_month: 'Sin libros este mes',
+    profile_no_art_month: 'Sin obras este mes',
 
     // Auth
     auth_login: 'Iniciar sesión',

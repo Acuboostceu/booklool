@@ -3,9 +3,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
-import { Star, Plus, BookOpen, Palette } from 'lucide-react'
+import { Star, Plus, BookOpen, Palette, ChevronRight } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
+
+const PREVIEW_COUNT = 3
 
 type Profile = { id: string; name: string; color?: string | null }
 type Book = {
@@ -73,18 +75,19 @@ export default function BookshelfView({
         return (
           <div key={profile.id} className="mb-10">
             {/* Profile header */}
-            <div className="flex items-center gap-2 mb-3">
+            <Link href={`/profile/${profile.id}`} className="flex items-center gap-2 mb-3 group">
               <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color.dot }} />
-              <h2 className="font-bold text-base text-gray-800">{profile.name}</h2>
+              <h2 className="font-bold text-base text-gray-800 group-hover:underline">{profile.name}</h2>
               {profileBadges.length > 0 && (
                 <span
-                  className="ml-auto text-xs font-semibold px-2 py-0.5 rounded-full"
+                  className="text-xs font-semibold px-2 py-0.5 rounded-full"
                   style={{ background: color.bg, color: color.accent }}
                 >
                   {t('bookshelf_badges', profileBadges.length as never)}
                 </span>
               )}
-            </div>
+              <ChevronRight className="w-4 h-4 ml-auto opacity-40" style={{ color: color.accent }} />
+            </Link>
 
             {/* Tabs */}
             <div className="flex gap-2 mb-3">
@@ -138,49 +141,61 @@ export default function BookshelfView({
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                    {!partnerIds.includes(profile.id) && (
-                      <Link href={`/add?profileId=${profile.id}`} className="group">
-                        <div
-                          className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
-                          style={{ borderColor: color.dot + '60' }}
-                        >
-                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
-                        </div>
-                      </Link>
-                    )}
-                    {profileBooks.map(book => (
-                      <Link key={book.id} href={`/book/${book.id}`} className="group">
-                        <div
-                          className="rounded-2xl overflow-hidden border transition group-hover:shadow-md group-hover:scale-[1.02]"
-                          style={{ borderColor: color.bg, borderWidth: 2 }}
-                        >
-                          {(book.cover_url || book.photo_url) ? (
-                            <div className="relative w-full aspect-[2/3]">
-                              <Image src={book.cover_url || book.photo_url!} alt={book.title} fill className="object-cover" />
-                            </div>
-                          ) : (
-                            <div
-                              className="w-full aspect-[2/3] flex items-center justify-center"
-                              style={{ background: color.bg }}
-                            >
-                              <BookOpen className="w-8 h-8 opacity-30" style={{ color: color.accent }} />
-                            </div>
-                          )}
-                          <div className="p-2 bg-white">
-                            <p className="text-xs font-semibold text-gray-800 truncate leading-tight">{book.title}</p>
-                            {(book.rating ?? 0) > 0 && (
-                              <div className="flex items-center gap-0.5 mt-1">
-                                {Array.from({ length: book.rating! }).map((_, i) => (
-                                  <Star key={i} className="w-2.5 h-2.5" style={{ fill: color.star, color: color.star }} />
-                                ))}
+                  <>
+                    <div className="grid grid-cols-3 gap-3">
+                      {!partnerIds.includes(profile.id) && (
+                        <Link href={`/add?profileId=${profile.id}`} className="group">
+                          <div
+                            className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
+                            style={{ borderColor: color.dot + '60' }}
+                          >
+                            <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
+                          </div>
+                        </Link>
+                      )}
+                      {profileBooks.slice(0, PREVIEW_COUNT).map(book => (
+                        <Link key={book.id} href={`/book/${book.id}`} className="group">
+                          <div
+                            className="rounded-2xl overflow-hidden border transition group-hover:shadow-md group-hover:scale-[1.02]"
+                            style={{ borderColor: color.bg, borderWidth: 2 }}
+                          >
+                            {(book.cover_url || book.photo_url) ? (
+                              <div className="relative w-full aspect-[2/3]">
+                                <Image src={book.cover_url || book.photo_url!} alt={book.title} fill className="object-cover" />
+                              </div>
+                            ) : (
+                              <div
+                                className="w-full aspect-[2/3] flex items-center justify-center"
+                                style={{ background: color.bg }}
+                              >
+                                <BookOpen className="w-8 h-8 opacity-30" style={{ color: color.accent }} />
                               </div>
                             )}
+                            <div className="p-2 bg-white">
+                              <p className="text-xs font-semibold text-gray-800 truncate leading-tight">{book.title}</p>
+                              {(book.rating ?? 0) > 0 && (
+                                <div className="flex items-center gap-0.5 mt-1">
+                                  {Array.from({ length: book.rating! }).map((_, i) => (
+                                    <Star key={i} className="w-2.5 h-2.5" style={{ fill: color.star, color: color.star }} />
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
+                        </Link>
+                      ))}
+                    </div>
+                    {profileBooks.length > PREVIEW_COUNT && (
+                      <Link
+                        href={`/profile/${profile.id}?tab=books`}
+                        className="mt-2 flex items-center gap-1 text-xs font-semibold"
+                        style={{ color: color.accent }}
+                      >
+                        {t('profile_see_all', (profileBooks.length - PREVIEW_COUNT) as never)}
+                        <ChevronRight className="w-3 h-3" />
                       </Link>
-                    ))}
-                  </div>
+                    )}
+                  </>
                 )}
               </>
             )}
@@ -211,40 +226,52 @@ export default function BookshelfView({
                     )}
                   </div>
                 ) : (
-                  <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                    {!partnerIds.includes(profile.id) && (
-                      <Link href={`/add-artwork?profileId=${profile.id}`} className="group">
-                        <div
-                          className="rounded-2xl aspect-square border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
-                          style={{ borderColor: color.dot + '60' }}
-                        >
-                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
-                        </div>
+                  <>
+                    <div className="grid grid-cols-3 gap-3">
+                      {!partnerIds.includes(profile.id) && (
+                        <Link href={`/add-artwork?profileId=${profile.id}`} className="group">
+                          <div
+                            className="rounded-2xl aspect-square border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
+                            style={{ borderColor: color.dot + '60' }}
+                          >
+                            <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
+                          </div>
+                        </Link>
+                      )}
+                      {profileArtworks.slice(0, PREVIEW_COUNT).map(art => (
+                        <Link key={art.id} href={`/artwork/${art.id}`} className="group">
+                          <div
+                            className="rounded-2xl overflow-hidden border-2 transition group-hover:shadow-md group-hover:scale-[1.02] aspect-square"
+                            style={{ borderColor: color.bg }}
+                          >
+                            {art.image_url ? (
+                              <div className="relative w-full h-full">
+                                <Image src={art.image_url} alt={art.title} fill className="object-cover" />
+                              </div>
+                            ) : (
+                              <div
+                                className="w-full h-full flex items-center justify-center"
+                                style={{ background: color.bg }}
+                              >
+                                <Palette className="w-6 h-6 opacity-30" style={{ color: color.accent }} />
+                              </div>
+                            )}
+                          </div>
+                          <p className="text-xs font-semibold text-gray-700 truncate mt-1 px-0.5">{art.title}</p>
+                        </Link>
+                      ))}
+                    </div>
+                    {profileArtworks.length > PREVIEW_COUNT && (
+                      <Link
+                        href={`/profile/${profile.id}?tab=art`}
+                        className="mt-2 flex items-center gap-1 text-xs font-semibold"
+                        style={{ color: color.accent }}
+                      >
+                        {t('profile_see_all', (profileArtworks.length - PREVIEW_COUNT) as never)}
+                        <ChevronRight className="w-3 h-3" />
                       </Link>
                     )}
-                    {profileArtworks.map(art => (
-                      <Link key={art.id} href={`/artwork/${art.id}`} className="group">
-                        <div
-                          className="rounded-2xl overflow-hidden border-2 transition group-hover:shadow-md group-hover:scale-[1.02] aspect-square"
-                          style={{ borderColor: color.bg }}
-                        >
-                          {art.image_url ? (
-                            <div className="relative w-full h-full">
-                              <Image src={art.image_url} alt={art.title} fill className="object-cover" />
-                            </div>
-                          ) : (
-                            <div
-                              className="w-full h-full flex items-center justify-center"
-                              style={{ background: color.bg }}
-                            >
-                              <Palette className="w-6 h-6 opacity-30" style={{ color: color.accent }} />
-                            </div>
-                          )}
-                        </div>
-                        <p className="text-xs font-semibold text-gray-700 truncate mt-1 px-0.5">{art.title}</p>
-                      </Link>
-                    ))}
-                  </div>
+                  </>
                 )}
               </>
             )}
