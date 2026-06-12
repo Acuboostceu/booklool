@@ -91,30 +91,30 @@ export default function ProfileView({
       {/* Books by month */}
       {tab === 'books' && (
         <>
-          {books.length === 0 ? (
+          {books.length === 0 && !isPartner ? (
             <div className="rounded-3xl p-8 flex flex-col items-center justify-center gap-3" style={{ background: color.bg }}>
               <BookOpen className="w-8 h-8 opacity-30" style={{ color: color.accent }} />
               <p className="text-gray-500 text-sm font-medium">{t('bookshelf_empty')}</p>
-              {!isPartner && (
-                <Link href={`/add?profileId=${profile.id}`} className="text-sm font-bold underline underline-offset-2" style={{ color: color.accent }}>
-                  {t('bookshelf_add_first')}
-                </Link>
-              )}
+              <Link href={`/add?profileId=${profile.id}`} className="text-sm font-bold underline underline-offset-2" style={{ color: color.accent }}>
+                {t('bookshelf_add_first')}
+              </Link>
             </div>
           ) : (
             <>
-              {!isPartner && (
-                <div className="mb-6">
-                  <Link href={`/add?profileId=${profile.id}`} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: color.bg, color: color.accent }}>
-                    <Plus className="w-4 h-4" />
-                    {t('bookshelf_add_first').replace('+ ', '')}
-                  </Link>
-                </div>
-              )}
-              {bookGroups.map(group => (
+              {bookGroups.map((group, groupIdx) => (
                 <div key={group.label} className="mb-8">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">{group.label}</p>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    {groupIdx === 0 && !isPartner && (
+                      <Link href={`/add?profileId=${profile.id}`} className="group">
+                        <div
+                          className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
+                          style={{ borderColor: color.dot + '60' }}
+                        >
+                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
+                        </div>
+                      </Link>
+                    )}
                     {group.items.map(book => (
                       <Link key={book.id} href={`/book/${book.id}`} className="group">
                         <div
@@ -154,30 +154,30 @@ export default function ProfileView({
       {/* Artworks by month */}
       {tab === 'art' && (
         <>
-          {artworks.length === 0 ? (
+          {artworks.length === 0 && !isPartner ? (
             <div className="rounded-3xl p-8 flex flex-col items-center justify-center gap-3" style={{ background: color.bg }}>
               <Palette className="w-8 h-8 opacity-30" style={{ color: color.accent }} />
               <p className="text-gray-500 text-sm font-medium">{t('artwork_empty')}</p>
-              {!isPartner && (
-                <Link href={`/add-artwork?profileId=${profile.id}`} className="text-sm font-bold underline underline-offset-2" style={{ color: color.accent }}>
-                  {t('artwork_add_btn')}
-                </Link>
-              )}
+              <Link href={`/add-artwork?profileId=${profile.id}`} className="text-sm font-bold underline underline-offset-2" style={{ color: color.accent }}>
+                {t('artwork_add_btn')}
+              </Link>
             </div>
           ) : (
             <>
-              {!isPartner && (
-                <div className="mb-6">
-                  <Link href={`/add-artwork?profileId=${profile.id}`} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold" style={{ background: color.bg, color: color.accent }}>
-                    <Plus className="w-4 h-4" />
-                    {t('artwork_add_btn').replace('+ ', '')}
-                  </Link>
-                </div>
-              )}
-              {artGroups.map(group => (
+              {artGroups.map((group, groupIdx) => (
                 <div key={group.label} className="mb-8">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">{group.label}</p>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    {groupIdx === 0 && !isPartner && (
+                      <Link href={`/add-artwork?profileId=${profile.id}`} className="group">
+                        <div
+                          className="rounded-2xl aspect-square border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
+                          style={{ borderColor: color.dot + '60' }}
+                        >
+                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
+                        </div>
+                      </Link>
+                    )}
                     {group.items.map(art => (
                       <Link key={art.id} href={`/artwork/${art.id}`} className="group">
                         <div
