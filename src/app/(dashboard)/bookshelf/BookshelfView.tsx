@@ -139,6 +139,16 @@ export default function BookshelfView({
                   </div>
                 ) : (
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    {!partnerIds.includes(profile.id) && (
+                      <Link href={`/add?profileId=${profile.id}`} className="group">
+                        <div
+                          className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
+                          style={{ borderColor: color.dot + '60' }}
+                        >
+                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
+                        </div>
+                      </Link>
+                    )}
                     {profileBooks.map(book => (
                       <Link key={book.id} href={`/book/${book.id}`} className="group">
                         <div
@@ -170,16 +180,6 @@ export default function BookshelfView({
                         </div>
                       </Link>
                     ))}
-                    {!partnerIds.includes(profile.id) && (
-                      <Link href={`/add?profileId=${profile.id}`} className="group">
-                        <div
-                          className="rounded-2xl aspect-[2/3] border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
-                          style={{ borderColor: color.dot + '60' }}
-                        >
-                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
-                        </div>
-                      </Link>
-                    )}
                   </div>
                 )}
               </>
@@ -212,6 +212,16 @@ export default function BookshelfView({
                   </div>
                 ) : (
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                    {!partnerIds.includes(profile.id) && (
+                      <Link href={`/add-artwork?profileId=${profile.id}`} className="group">
+                        <div
+                          className="rounded-2xl aspect-square border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
+                          style={{ borderColor: color.dot + '60' }}
+                        >
+                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
+                        </div>
+                      </Link>
+                    )}
                     {profileArtworks.map(art => (
                       <Link key={art.id} href={`/artwork/${art.id}`} className="group">
                         <div
@@ -234,16 +244,6 @@ export default function BookshelfView({
                         <p className="text-xs font-semibold text-gray-700 truncate mt-1 px-0.5">{art.title}</p>
                       </Link>
                     ))}
-                    {!partnerIds.includes(profile.id) && (
-                      <Link href={`/add-artwork?profileId=${profile.id}`} className="group">
-                        <div
-                          className="rounded-2xl aspect-square border-2 border-dashed flex items-center justify-center transition group-hover:border-solid"
-                          style={{ borderColor: color.dot + '60' }}
-                        >
-                          <Plus className="w-6 h-6 opacity-40" style={{ color: color.accent }} />
-                        </div>
-                      </Link>
-                    )}
                   </div>
                 )}
               </>
