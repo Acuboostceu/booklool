@@ -35,12 +35,48 @@ function ChildCard({ child, bookCount, badges, t, onDelete, showDelete }: {
   showDelete: boolean
 }) {
   const [showConfirm, setShowConfirm] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [displayName, setDisplayName] = useState(child.name)
+  const [nameValue, setNameValue] = useState(child.name)
+  const [saving, setSaving] = useState(false)
+  const supabase = createClient()
+
+  async function handleSaveName() {
+    const trimmed = nameValue.trim()
+    if (!trimmed || trimmed === displayName) { setEditingName(false); return }
+    setSaving(true)
+    await supabase.from('bl_profiles').update({ name: trimmed }).eq('id', child.id)
+    setDisplayName(trimmed)
+    setSaving(false)
+    setEditingName(false)
+  }
 
   return (
     <div className="bg-white rounded-3xl p-4 border border-gray-100">
       <div className="flex items-center justify-between mb-3">
         <div>
-          <h3 className="font-semibold text-gray-800">{child.name}</h3>
+          {editingName ? (
+            <div className="flex items-center gap-2">
+              <input
+                autoFocus
+                value={nameValue}
+                onChange={e => setNameValue(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleSaveName(); if (e.key === 'Escape') setEditingName(false) }}
+                className="font-semibold text-gray-800 border-b border-gray-300 outline-none bg-transparent w-28"
+              />
+              <button onClick={handleSaveName} disabled={saving} className="text-xs font-bold px-2 py-1 rounded-xl" style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}>
+                {saving ? '...' : '저장'}
+              </button>
+              <button onClick={() => { setNameValue(displayName); setEditingName(false) }} className="text-xs text-gray-400">취소</button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1">
+              <h3 className="font-semibold text-gray-800">{displayName}</h3>
+              <button onClick={() => setEditingName(true)} className="text-gray-400 hover:text-gray-600 p-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+            </div>
+          )}
         </div>
         <div className="text-right">
           <p className="text-2xl font-bold" style={{color: 'var(--green-dark)'}}>{bookCount}</p>
