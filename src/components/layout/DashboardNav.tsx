@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BookOpen, Star, Users, LogOut, Settings } from 'lucide-react'
+import { BookOpen, Star, Users, LogOut, Settings, BookMarked } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
@@ -15,12 +15,14 @@ const navColors = [
   'var(--pink-dark)',
   'var(--purple-dark)',
   'var(--yellow-dark)',
+  'var(--green-dark)',
 ]
 const navBgs = [
   'var(--green-light)',
   'var(--pink-light)',
   'var(--purple-light)',
   'var(--yellow-light)',
+  'var(--green-light)',
 ]
 
 export default function DashboardNav() {
@@ -47,6 +49,7 @@ export default function DashboardNav() {
     { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf'), childOk: true },
     { href: '/recommendations', icon: Star, label: t('nav_recommendations'), childOk: true },
     { href: '/parent', icon: Users, label: t('nav_family'), childOk: false },
+    { href: '/print', icon: BookMarked, label: '프린트', childOk: false },
     { href: '/settings', icon: Settings, label: t('settings_title'), childOk: true },
   ]
 
