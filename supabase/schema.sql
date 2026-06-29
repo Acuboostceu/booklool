@@ -85,3 +85,18 @@ create policy "Authenticated users upload photos"
 create policy "Public read photos"
   on storage.objects for select
   using (bucket_id = 'book-photos');
+
+-- Print orders
+create table if not exists bl_print_orders (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null,
+  lulu_job_id text not null,
+  status text not null default 'CREATED',
+  title text,
+  shipping_address jsonb,
+  created_at timestamptz default now()
+);
+
+alter table bl_print_orders enable row level security;
+create policy "Users see own orders" on bl_print_orders for all
+  using (user_id = auth.uid());
