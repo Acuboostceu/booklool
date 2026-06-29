@@ -1,10 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { Locale } from '@/lib/i18n/translations'
-import PlanSection from './PlanSection'
 
 const appLocales: { value: Locale; label: string; flag: string }[] = [
   { value: 'ko', label: '한국어', flag: '🇰🇷' },
@@ -20,15 +17,6 @@ const bookLocaleOptions: { value: Locale; label: string; flag: string }[] = [
 
 export default function SettingsPage() {
   const { locale, setLocale, bookLocales, setBookLocales, t } = useLocale()
-  const searchParams = useSearchParams()
-  const [showSuccess, setShowSuccess] = useState(false)
-
-  useEffect(() => {
-    if (searchParams.get('upgraded') === '1') {
-      setShowSuccess(true)
-      setTimeout(() => setShowSuccess(false), 5000)
-    }
-  }, [searchParams])
 
   function toggleBookLocale(l: Locale) {
     if (bookLocales.includes(l)) {
@@ -42,29 +30,6 @@ export default function SettingsPage() {
   return (
     <div className="pb-24">
       <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('settings_title')}</h1>
-
-      {/* Upgrade success banner */}
-      {showSuccess && (
-        <div
-          className="rounded-3xl p-4 mb-4 text-center animate-pulse"
-          style={{ background: 'var(--green-light)' }}
-        >
-          <p className="text-lg mb-1">🎉</p>
-          <p className="font-black text-sm" style={{ color: 'var(--green-dark)' }}>
-            {locale === 'ko' ? '패밀리 플랜으로 업그레이드됐어요!' :
-             locale === 'es' ? '¡Actualizado al Plan Familiar!' :
-             'Welcome to the Family Plan!'}
-          </p>
-          <p className="text-xs mt-1" style={{ color: 'var(--green-dark)', opacity: 0.7 }}>
-            {locale === 'ko' ? '파트너 연결과 자녀 무제한 추가가 가능해요.' :
-             locale === 'es' ? 'Ahora puedes conectar a tu pareja y agregar hijos ilimitados.' :
-             'You can now connect your partner and add unlimited children.'}
-          </p>
-        </div>
-      )}
-
-      {/* Plan */}
-      <PlanSection locale={locale} />
 
       {/* Add to home screen */}
       <div className="bg-white rounded-3xl p-5 border border-gray-100 mb-4">

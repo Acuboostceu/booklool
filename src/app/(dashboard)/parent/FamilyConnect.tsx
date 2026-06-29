@@ -9,11 +9,9 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 export default function FamilyConnect({
   familyCode,
   partnerName,
-  plan,
 }: {
   familyCode: string
   partnerName: string | null
-  plan: string
 }) {
   const router = useRouter()
   const supabase = createClient()
@@ -110,9 +108,8 @@ export default function FamilyConnect({
             </div>
           )}
         </div>
-      ) : plan === 'family' ? (
-        /* 결제한 쪽: 코드 공유만 */
-        <div>
+      ) : (
+        <div className="space-y-3">
           <p className="text-xs text-gray-500 mb-2">{t('family_code_label')}</p>
           <div className="flex items-center gap-2">
             <div className="flex-1 bg-gray-50 rounded-2xl px-4 py-3 font-semibold text-lg tracking-widest text-center" style={{color: 'var(--purple-dark)'}}>
@@ -129,27 +126,7 @@ export default function FamilyConnect({
               }
             </button>
           </div>
-          <p className="text-xs text-gray-400 mt-2 text-center">파트너에게 이 코드를 공유하세요</p>
-        </div>
-      ) : (
-        /* 결제 안 한 쪽: 업그레이드 + 코드 입력 */
-        <div className="space-y-3">
-          <div className="rounded-2xl p-4 text-center" style={{ background: 'var(--purple-light)' }}>
-            <p className="text-sm font-bold mb-1" style={{ color: 'var(--purple-dark)' }}>👨‍👩‍👧‍👦 Family Plan</p>
-            <p className="text-xs text-gray-500 mb-3">Upgrade to connect your partner and add unlimited children.</p>
-            <button
-              onClick={async () => {
-                const res = await fetch('/api/stripe/checkout', { method: 'POST' })
-                const { url } = await res.json()
-                if (url) window.location.href = url
-              }}
-              className="w-full font-black rounded-2xl py-2.5 text-sm text-white transition"
-              style={{ background: 'var(--purple)' }}
-            >
-              Whole family — just $1.99/mo
-            </button>
-          </div>
-          <p className="text-xs text-center text-gray-400">— 또는 파트너가 이미 결제했다면 —</p>
+          <p className="text-xs text-center text-gray-400">— {t('family_connect')} —</p>
           <form onSubmit={handleJoin} className="space-y-2">
             <div className="flex gap-2">
               <input

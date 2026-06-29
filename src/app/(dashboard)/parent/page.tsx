@@ -50,7 +50,6 @@ export default async function ParentPage() {
       children={children || []}
       recentBooks={recentBooks || []}
       badges={badges || []}
-      plan={parent?.plan || 'free'}
       isAdmin={!!parent?.stripe_customer_id}
       parentColor={parent?.color || null}
     />

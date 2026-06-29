@@ -149,7 +149,6 @@ export default function ParentPageView({
   children,
   recentBooks,
   badges,
-  plan,
   isAdmin,
   parentColor,
 }: {
@@ -160,7 +159,6 @@ export default function ParentPageView({
   children: Child[]
   recentBooks: Book[]
   badges: Badge[]
-  plan: string
   isAdmin: boolean
   parentColor: string | null
 }) {
@@ -207,11 +205,11 @@ export default function ParentPageView({
         </div>
       )}
 
-      <FamilyConnect familyCode={familyCode} partnerName={partnerName} plan={plan} />
+      <FamilyConnect familyCode={familyCode} partnerName={partnerName} />
 
       <div className="bg-white rounded-3xl p-4 border border-gray-100">
         <h3 className="font-semibold text-gray-800 mb-4">{t('family_add_child')}</h3>
-        <AddChildForm parentId={parentId} plan={plan} childCount={children.length} />
+        <AddChildForm parentId={parentId} />
       </div>
     </div>
   )

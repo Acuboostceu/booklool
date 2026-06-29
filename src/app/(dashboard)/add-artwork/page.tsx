@@ -33,8 +33,6 @@ function AddArtworkInner() {
   const [saving, setSaving] = useState(false)
   const [profileId, setProfileId] = useState<string>('')
   const [profileName, setProfileName] = useState<string>('')
-  const [artworkCount, setArtworkCount] = useState<number>(0)
-  const [plan, setPlan] = useState<string>('free')
 
   const preselectedProfileId = searchParams.get('profileId')
 
@@ -74,19 +72,6 @@ function AddArtworkInner() {
         if (data) setProfileName(data.name)
       }
 
-      // Always load plan — check profile itself, then parent if child profile
-      const { data: prof } = await supabase.from('bl_profiles').select('plan, parent_id, role').eq('id', resolvedId).single()
-      let resolvedPlan = prof?.plan ?? 'free'
-      if (resolvedPlan !== 'family' && prof?.role === 'child' && prof?.parent_id) {
-        const { data: parentProf } = await supabase.from('bl_profiles').select('plan').eq('id', prof.parent_id).single()
-        if (parentProf?.plan === 'family') resolvedPlan = 'family'
-      }
-      setPlan(resolvedPlan)
-
-      if (resolvedPlan !== 'family') {
-        const { data: artworks } = await supabase.rpc('get_family_artworks', { profile_ids: [resolvedId] })
-        setArtworkCount(artworks?.length ?? 0)
-      }
     }
     loadProfile()
   }, [preselectedProfileId]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -160,13 +145,6 @@ function AddArtworkInner() {
       })
       if (saveRes.ok) {
         setStep('done')
-      } else {
-        const err = await saveRes.json()
-        if (err.error === 'ARTWORK_LIMIT_REACHED') {
-          alert(locale === 'ko'
-            ? '무료 플랜은 작품을 12개까지 저장할 수 있어요. 패밀리 플랜으로 업그레이드하면 무제한으로 저장할 수 있어요!'
-            : 'Free plan allows up to 12 artworks. Upgrade to Family plan for unlimited storage!')
-        }
       }
     } finally {
       setSaving(false)
@@ -202,23 +180,6 @@ function AddArtworkInner() {
       {/* Step: scan */}
       {step === 'scan' && (
         <div className="space-y-4">
-          {/* Free plan limit banner */}
-          {plan !== 'family' && (
-            <div className="rounded-2xl px-4 py-3 flex items-center justify-between text-sm"
-              style={{ background: artworkCount >= 12 ? 'var(--pink-light)' : 'var(--yellow-light)' }}>
-              <span style={{ color: artworkCount >= 12 ? 'var(--pink-dark)' : 'var(--yellow-dark)' }}>
-                {locale === 'ko'
-                  ? `작품 ${artworkCount} / 12`
-                  : `Artworks ${artworkCount} / 12`}
-              </span>
-              {artworkCount >= 12 && (
-                <a href="/settings" className="text-xs font-bold underline" style={{ color: 'var(--pink-dark)' }}>
-                  {locale === 'ko' ? '업그레이드' : 'Upgrade'}
-                </a>
-              )}
-            </div>
-          )}
-
           {!rawImageUrl ? (
             <>
               <button
