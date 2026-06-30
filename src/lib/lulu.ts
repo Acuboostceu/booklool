@@ -44,7 +44,7 @@ export async function luluFetch(path: string, options: RequestInit = {}) {
   return res
 }
 
-// 책 사양 — 8x8 정사각형 컬러 소프트커버
+// 책 사양 — 8.5x8.5 컬러 소프트커버
 export const BOOK_SPEC = {
-  pod_package_id: '0800X0800FCSTDSS060UW444MXX', // 8x8 full color standard softcover
+  pod_package_id: '0850X0850FCSTDPB060UW444MXX',
 }

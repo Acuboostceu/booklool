@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { luluFetch, BOOK_SPEC } from '@/lib/lulu'
 
 export async function POST(req: NextRequest) {
-  const { pageCount, shippingAddress } = await req.json()
+  const { pageCount, shippingAddress, phoneNumber } = await req.json()
 
   if (!pageCount || pageCount < 24) {
     return NextResponse.json({ error: 'Minimum 24 pages required' }, { status: 400 })
   }
 
   try {
-    const res = await luluFetch('/print-jobs/cost-calculations/', {
+    const res = await luluFetch('/print-job-cost-calculations/', {
       method: 'POST',
       body: JSON.stringify({
         line_items: [
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
             quantity: 1,
           },
         ],
-        shipping_address: shippingAddress,
+        shipping_address: { ...shippingAddress, phone_number: phoneNumber },
         shipping_option: 'MAIL',
       }),
     })

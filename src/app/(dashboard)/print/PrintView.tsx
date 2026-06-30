@@ -18,7 +18,7 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [contentType, setContentType] = useState<ContentType>('both')
   const [address, setAddress] = useState({
-    name: '', street1: '', street2: '', city: '', state: '', zip: '', country: 'US',
+    name: '', street1: '', street2: '', city: '', state: '', zip: '', country: 'US', phone: '',
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -38,6 +38,7 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           pageCount: 32,
+          phoneNumber: address.phone,
           shippingAddress: {
             name: address.name,
             street1: address.street1,
@@ -85,6 +86,7 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
             pageCount: pdfData.pageCount,
             title: `${profile.name}'s Book`,
             contactEmail: userEmail,
+            phoneNumber: address.phone,
             shippingAddress: {
               name: address.name,
               street1: address.street1,
@@ -203,6 +205,7 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
                   { key: 'city', placeholder: 'City' },
                   { key: 'state', placeholder: 'State (e.g. CA)' },
                   { key: 'zip', placeholder: 'ZIP code' },
+                  { key: 'phone', placeholder: 'Phone number' },
                 ].map(({ key, placeholder }) => (
                   <input key={key}
                     value={address[key as keyof typeof address]}
@@ -245,7 +248,7 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
           {step !== 'confirm' ? (
             <button
               onClick={handleGetQuote}
-              disabled={loading || selectedIds.length === 0 || !address.name || !address.street1 || !address.city || !address.state || !address.zip}
+              disabled={loading || selectedIds.length === 0 || !address.name || !address.street1 || !address.city || !address.state || !address.zip || !address.phone}
               className="w-full font-black rounded-2xl py-4 text-white transition disabled:opacity-50 flex items-center justify-center gap-2"
               style={{ background: 'var(--green)' }}
             >

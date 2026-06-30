@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { interiorUrl, coverUrl, pageCount, shippingAddress, contactEmail, title } = await req.json()
+  const { interiorUrl, coverUrl, pageCount, shippingAddress, phoneNumber, contactEmail, title } = await req.json()
 
   if (!interiorUrl || !coverUrl || !pageCount || !shippingAddress) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
             quantity: 1,
           },
         ],
-        shipping_address: shippingAddress,
+        shipping_address: { ...shippingAddress, phone_number: phoneNumber },
         shipping_option: 'MAIL',
         production_delay: 60,
       }),
