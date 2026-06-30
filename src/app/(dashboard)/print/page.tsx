@@ -8,12 +8,22 @@ export default async function PrintPage() {
   if (!user) redirect('/login')
 
   const { data: parent } = await supabase
-    .from('bl_profiles').select('id, partner_parent_id').eq('user_id', user.id).eq('role', 'parent').single()
+    .from('bl_profiles').select('id, name, color, partner_parent_id').eq('user_id', user.id).eq('role', 'parent').single()
+
+  const partnerData = parent?.partner_parent_id
+    ? await supabase.from('bl_profiles').select('id, name, color').eq('id', parent.partner_parent_id).single()
+    : null
 
   const parentIds = [parent?.id, parent?.partner_parent_id].filter(Boolean) as string[]
   const { data: children } = parentIds.length > 0
     ? await supabase.from('bl_profiles').select('id, name, color').in('parent_id', parentIds)
     : { data: [] }
 
-  return <PrintView children={children || []} userEmail={user.email || ''} />
+  const allProfiles = [
+    ...(parent ? [{ ...parent, role: 'parent' as const }] : []),
+    ...(partnerData?.data ? [{ ...partnerData.data, role: 'parent' as const }] : []),
+    ...(children || []).map(c => ({ ...c, role: 'child' as const })),
+  ]
+
+  return <PrintView profiles={allProfiles} userEmail={user.email || ''} />
 }
