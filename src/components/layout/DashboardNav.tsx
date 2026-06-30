@@ -49,7 +49,9 @@ export default function DashboardNav() {
     { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf'), childOk: true },
     { href: '/recommendations', icon: Star, label: t('nav_recommendations'), childOk: true },
     { href: '/parent', icon: Users, label: t('nav_family'), childOk: false },
-    { href: '/print', icon: BookMarked, label: '프린트', childOk: false },
+    ...(process.env.NEXT_PUBLIC_PRINT_ENABLED === 'true'
+      ? [{ href: '/print', icon: BookMarked, label: '프린트', childOk: false }]
+      : []),
     { href: '/settings', icon: Settings, label: t('settings_title'), childOk: true },
   ]
 
