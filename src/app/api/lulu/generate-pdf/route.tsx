@@ -1,3 +1,6 @@
+export const runtime = 'nodejs'
+export const maxDuration = 60
+
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { renderToBuffer, Document, Page, View, Text, Image, StyleSheet, Font } from '@react-pdf/renderer'
@@ -148,7 +151,13 @@ export async function POST(req: NextRequest) {
   }
 
   // Generate PDF
-  const pdfBuffer = await buildPdf(profile.name, books, artworks, contentType)
+  let pdfBuffer: Buffer
+  try {
+    pdfBuffer = await buildPdf(profile.name, books, artworks, contentType)
+  } catch (e) {
+    console.error('PDF generation error:', e)
+    return NextResponse.json({ error: `PDF generation failed: ${String(e)}` }, { status: 500 })
+  }
 
   // Upload interior to S3
   const key = `print/${profileId}/${Date.now()}-interior.pdf`
