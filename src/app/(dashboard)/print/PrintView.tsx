@@ -55,8 +55,8 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
       const total = data.total_cost_incl_tax ?? data.total_cost_excl_tax ?? '—'
       setQuote({ total: `$${parseFloat(total).toFixed(2)}` })
       setStep('confirm')
-    } catch {
-      setError('Something went wrong.')
+    } catch (e) {
+      setError(`Error: ${String(e)}`)
     } finally {
       setLoading(false)
     }
@@ -75,7 +75,7 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
           body: JSON.stringify({ profileId, contentType }),
         })
         const pdfData = await pdfRes.json()
-        if (!pdfRes.ok) { setError(pdfData.error || 'PDF generation failed'); return }
+        if (!pdfRes.ok) { setError(`PDF failed: ${JSON.stringify(pdfData.error)}`); return }
 
         const orderRes = await fetch('/api/lulu/print-job', {
           method: 'POST',
@@ -99,11 +99,11 @@ export default function PrintView({ profiles, userEmail }: { profiles: Profile[]
           }),
         })
         const orderData = await orderRes.json()
-        if (!orderRes.ok) { setError(orderData.error || 'Order failed'); return }
+        if (!orderRes.ok) { setError(`Order failed: ${JSON.stringify(orderData.error)}`); return }
       }
       setStep('done')
-    } catch {
-      setError('Something went wrong.')
+    } catch (e) {
+      setError(`Error: ${String(e)}`)
     } finally {
       setLoading(false)
     }
