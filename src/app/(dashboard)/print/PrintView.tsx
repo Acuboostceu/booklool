@@ -47,7 +47,7 @@ export default function PrintView({ children, userEmail }: { children: Child[]; 
         }),
       })
       const data = await res.json()
-      if (!res.ok) { setError('가격 조회 실패. 다시 시도해주세요.'); return }
+      if (!res.ok) { setError(`가격 조회 실패: ${JSON.stringify(data.error)}`); return }
       const total = data.total_cost_incl_tax ?? data.total_cost_excl_tax ?? '—'
       setQuote({ total: `$${parseFloat(total).toFixed(2)}` })
       setStep('confirm')
