@@ -41,21 +41,15 @@ const copy = {
     art_feature3_desc: 'All artwork goes into the same year-end book as the reading journal. One book, the whole year.',
 
     pricing_label: 'PRICING',
-    pricing_title: 'Simple, family-friendly pricing',
+    pricing_title: 'Free. Forever.',
     free_name: 'Free',
     free_price: '$0',
     free_period: 'forever',
-    free_features: ['1 child profile', 'Unlimited books', 'AI reading questions', 'Reading log', 'Art journal (up to 12)'],
-    family_name: 'Family',
-    family_price: '$1.99',
-    family_period: '/ month',
-    family_badge: 'Most popular',
-    family_features: ['Everything in Free', 'Unlimited art journal', 'Connect with partner', 'Unlimited children', 'Family bookshelf'],
+    free_features: ['Unlimited children', 'Unlimited books', 'AI reading questions', 'Reading log', 'Art journal', 'Connect with partner', 'Family bookshelf'],
     print_name: 'Print Book',
-    print_price: 'From $29',
-    print_period: 'per book',
-    print_features: ['Your year in photos', 'All reviews & AI answers', 'Hardcover or softcover', 'Shipped to your door'],
-    plan_cta: 'Get started',
+    print_price: 'Coming soon',
+    print_desc: 'Turn your family\'s year into a beautiful printed book — shipped to your door.',
+    plan_cta: 'Get started free',
     footer_copy: '© 2026 Booklool · Made with love for reading families.',
   },
   ko: {
@@ -93,21 +87,15 @@ const copy = {
     art_feature3_desc: '독서 일기와 함께 연말 책에 실려요. 책 읽은 기억과 그림이 한 권에 담겨요.',
 
     pricing_label: '요금제',
-    pricing_title: '가족을 위한 합리적인 가격',
+    pricing_title: '무료. 영원히.',
     free_name: '무료',
     free_price: '$0',
     free_period: '영원히',
-    free_features: ['자녀 프로필 1명', '책 무제한 기록', 'AI 독후 질문', '독서 로그', '아트 저널 (12개)'],
-    family_name: '패밀리',
-    family_price: '$1.99',
-    family_period: '/ 월',
-    family_badge: '인기',
-    family_features: ['무료 플랜 모든 기능', '아트 저널 무제한', '배우자 계정 연결', '자녀 무제한', '가족 책장 공유'],
+    free_features: ['자녀 무제한', '책 무제한 기록', 'AI 독후 질문', '독서 로그', '아트 저널', '배우자 계정 연결', '가족 책장 공유'],
     print_name: '프린트 북',
-    print_price: '$29부터',
-    print_period: '권당',
-    print_features: ['한 해의 사진 전부', '감상 & AI 답변 수록', '하드커버 / 소프트커버', '집으로 배송'],
-    plan_cta: '시작하기',
+    print_price: '출시 예정',
+    print_desc: '한 해의 기록을 아름다운 책으로 — 집으로 배송해드려요.',
+    plan_cta: '무료로 시작하기',
     footer_copy: '© 2026 Booklool · 독서하는 가족을 위해 만들었어요.',
   },
 }
@@ -346,53 +334,24 @@ export default function LandingPage() {
           <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--purple)' }}>{t.pricing_label}</p>
           <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-16">{t.pricing_title}</h2>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
 
             {/* Free */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 text-left flex flex-col">
-              <p className="font-black text-xl text-gray-800 mb-2">{t.free_name}</p>
+            <div className="rounded-3xl p-8 text-left flex flex-col shadow-2xl" style={{ background: 'var(--green)' }}>
+              <p className="font-black text-xl text-white mb-2">{t.free_name}</p>
               <div className="flex items-end gap-1 mb-8">
-                <span className="text-5xl font-black text-gray-900">{t.free_price}</span>
-                <span className="text-sm text-gray-400 mb-1.5">{t.free_period}</span>
+                <span className="text-5xl font-black text-white">{t.free_price}</span>
+                <span className="text-sm text-white/60 mb-1.5">{t.free_period}</span>
               </div>
               <ul className="space-y-3 flex-1 mb-8">
                 {t.free_features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
-                    <span className="font-bold" style={{ color: 'var(--green)' }}>✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/login"
-                className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm transition hover:bg-gray-50"
-                style={{ borderColor: 'var(--green-light)', color: 'var(--green-dark)' }}
-              >
-                {t.plan_cta}
-              </Link>
-            </div>
-
-            {/* Family */}
-            <div className="rounded-3xl p-8 text-left flex flex-col relative shadow-2xl -mt-2 -mb-2" style={{ background: 'var(--green)' }}>
-              <div
-                className="absolute -top-3.5 left-1/2 -translate-x-1/2 text-xs font-black px-4 py-1.5 rounded-full bg-white shadow-sm"
-                style={{ color: 'var(--green-dark)' }}
-              >
-                {t.family_badge}
-              </div>
-              <p className="font-black text-xl text-white mb-2">{t.family_name}</p>
-              <div className="flex items-end gap-1 mb-8">
-                <span className="text-5xl font-black text-white">{t.family_price}</span>
-                <span className="text-sm text-white/60 mb-1.5">{t.family_period}</span>
-              </div>
-              <ul className="space-y-3 flex-1 mb-8">
-                {t.family_features.map((f, i) => (
                   <li key={i} className="flex items-center gap-2.5 text-sm text-white/90">
                     <span className="font-bold text-white">✓</span> {f}
                   </li>
                 ))}
               </ul>
               <Link
-                href="/login"
+                href={loggedIn ? '/bookshelf' : '/signup'}
                 className="w-full text-center font-black py-3.5 rounded-2xl text-sm transition hover:opacity-90 bg-white"
                 style={{ color: 'var(--green-dark)' }}
               >
@@ -400,26 +359,21 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            {/* Print Book */}
+            {/* Print Book — coming soon */}
             <div className="bg-white rounded-3xl p-8 border border-gray-100 text-left flex flex-col">
-              <p className="font-black text-xl text-gray-800 mb-2">{t.print_name}</p>
-              <div className="flex items-end gap-1 mb-8">
-                <span className="text-3xl font-black text-gray-900">{t.print_price}</span>
-                <span className="text-sm text-gray-400 mb-1.5">{t.print_period}</span>
+              <p className="font-black text-xl text-gray-800 mb-2">📖 {t.print_name}</p>
+              <div className="mb-8">
+                <span className="inline-block text-sm font-black px-3 py-1 rounded-full" style={{ background: 'var(--yellow-light)', color: 'var(--yellow-dark)' }}>
+                  {t.print_price}
+                </span>
               </div>
-              <ul className="space-y-3 flex-1 mb-8">
-                {t.print_features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-sm text-gray-600">
-                    <span className="font-bold" style={{ color: 'var(--yellow-dark)' }}>✓</span> {f}
-                  </li>
-                ))}
-              </ul>
+              <p className="text-sm text-gray-500 leading-relaxed flex-1 mb-8">{t.print_desc}</p>
               <button
-                className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm opacity-50 cursor-not-allowed"
+                className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm opacity-40 cursor-not-allowed"
                 style={{ borderColor: 'var(--yellow-light)', color: 'var(--yellow-dark)' }}
                 disabled
               >
-                Coming soon
+                {t.print_price}
               </button>
             </div>
 
