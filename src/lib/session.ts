@@ -5,6 +5,7 @@ export type SessionProfile = {
   profileId: string
   role: 'parent' | 'child'
   partnerParentId: string | null
+  parentId: string | null
 }
 
 // 현재 로그인 세션의 프로필(부모/아이)을 반환. 미로그인 시 null.
@@ -14,7 +15,7 @@ export async function getSessionProfile(supabase: SupabaseClient): Promise<Sessi
 
   const { data: profile } = await supabase
     .from('bl_profiles')
-    .select('id, role, partner_parent_id')
+    .select('id, role, partner_parent_id, parent_id')
     .eq('user_id', user.id)
     .single()
   if (!profile) return null
@@ -24,5 +25,6 @@ export async function getSessionProfile(supabase: SupabaseClient): Promise<Sessi
     profileId: profile.id,
     role: profile.role,
     partnerParentId: profile.partner_parent_id ?? null,
+    parentId: profile.parent_id ?? null,
   }
 }

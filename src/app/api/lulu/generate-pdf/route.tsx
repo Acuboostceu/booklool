@@ -4,7 +4,8 @@ export const maxDuration = 60
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { renderToBuffer, Document, Page, View, Text, Image, StyleSheet, Font } from '@react-pdf/renderer'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -32,6 +33,17 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: 12 },
   stars: { fontSize: 11, color: '#f59e0b', marginBottom: 6 },
 })
+
+const S3_HOST_RE = /^https:\/\/booklool\.s3[.-][a-z0-9-]+\.amazonaws\.com\//
+
+// S3 URL → presigned GET (버킷 비공개 전환 후에도 PDF 렌더러/Lulu가 접근 가능)
+async function presignS3Url(url: string | null, expiresIn: number): Promise<string | null> {
+  if (!url) return null
+  const m = url.match(S3_HOST_RE)
+  if (!m) return url
+  const key = decodeURIComponent(url.slice(m[0].length).split('?')[0])
+  return getSignedUrl(s3, new GetObjectCommand({ Bucket: process.env.AWS_S3_BUCKET!, Key: key }), { expiresIn })
+}
 
 function starRating(rating: number | null) {
   if (!rating) return ''
@@ -151,6 +163,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No content found' }, { status: 400 })
   }
 
+  // PDF에 들어갈 S3 이미지는 presigned URL로 (렌더 중에만 유효하면 됨)
+  for (const art of artworks) {
+    art.image_url = await presignS3Url(art.image_url, 15 * 60)
+  }
+  for (const book of books) {
+    book.cover_url = await presignS3Url(book.cover_url, 15 * 60)
+  }
+
   // Generate PDF
   let pdfBuffer: Buffer
   try {
@@ -167,10 +187,11 @@ export async function POST(req: NextRequest) {
     Key: key,
     Body: pdfBuffer,
     ContentType: 'application/pdf',
-    ACL: 'public-read',
   }))
 
-  const interiorUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
+  // Lulu가 인쇄 시점에 가져갈 수 있도록 24시간 presigned URL
+  const interiorUrl = await getSignedUrl(
+    s3, new GetObjectCommand({ Bucket: process.env.AWS_S3_BUCKET!, Key: key }), { expiresIn: 24 * 3600 })
 
   // Generate simple cover PDF
   const coverBuffer = await renderToBuffer(
@@ -187,10 +208,10 @@ export async function POST(req: NextRequest) {
     Key: coverKey,
     Body: coverBuffer,
     ContentType: 'application/pdf',
-    ACL: 'public-read',
   }))
 
-  const coverUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${coverKey}`
+  const coverUrl = await getSignedUrl(
+    s3, new GetObjectCommand({ Bucket: process.env.AWS_S3_BUCKET!, Key: coverKey }), { expiresIn: 24 * 3600 })
 
   return NextResponse.json({
     interiorUrl,

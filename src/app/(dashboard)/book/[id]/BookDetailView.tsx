@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import BookActions, { BookEditForm } from './BookActions'
 import ReadingLogSection from './ReadingLogSection'
@@ -61,7 +62,7 @@ export default function BookDetailView({ book, canDelete = true }: { book: Book;
       {/* Cover */}
       <div className="flex gap-4 mb-6">
         {book.cover_url ? (
-          <Image src={book.cover_url} alt={book.title} width={90} height={128} className="rounded-2xl object-cover flex-shrink-0 shadow-md" />
+          <Image src={toImgSrc(book.cover_url)!} alt={book.title} width={90} height={128} className="rounded-2xl object-cover flex-shrink-0 shadow-md" unoptimized />
         ) : (
           <div className="w-24 h-32 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-300 font-bold text-2xl flex-shrink-0">?</div>
         )}
@@ -85,7 +86,7 @@ export default function BookDetailView({ book, canDelete = true }: { book: Book;
             <div className="mb-4">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_photo')}</p>
               <div className="relative w-full rounded-2xl overflow-hidden" style={{ aspectRatio: '3/4' }}>
-                <Image src={book.photo_url} alt="book photo" fill className="object-contain bg-gray-50" />
+                <Image src={toImgSrc(book.photo_url)!} alt="book photo" fill className="object-contain bg-gray-50" unoptimized />
               </div>
             </div>
           )}

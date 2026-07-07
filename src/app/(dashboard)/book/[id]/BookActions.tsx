@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Pencil, Trash2, Star, X, Check, Camera, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
+import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
 type BookData = {
@@ -178,10 +179,11 @@ export function BookEditForm({ book, setEditing }: {
           {(newPhotoPreview || book.photo_url) ? (
             <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-2">
               <Image
-                src={newPhotoPreview || book.photo_url!}
+                src={newPhotoPreview || toImgSrc(book.photo_url)!}
                 alt="book photo"
                 fill
                 className="object-cover"
+                unoptimized
               />
             </div>
           ) : null}

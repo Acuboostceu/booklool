@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { Star, BookOpen, Palette, ChevronRight } from 'lucide-react'
+import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
 import { useSwipeTab } from '@/lib/useSwipeTab'
@@ -128,7 +129,7 @@ function ProfileSection({
                       >
                         {(book.cover_url || book.photo_url) ? (
                           <div className="relative w-full aspect-[2/3]">
-                            <Image src={book.cover_url || book.photo_url!} alt={book.title} fill className="object-cover" />
+                            <Image src={toImgSrc(book.cover_url || book.photo_url)!} alt={book.title} fill className="object-cover" unoptimized />
                           </div>
                         ) : (
                           <div className="w-full aspect-[2/3] flex items-center justify-center" style={{ background: color.bg }}>
@@ -200,7 +201,7 @@ function ProfileSection({
                       >
                         {art.image_url ? (
                           <div className="relative w-full h-full">
-                            <Image src={art.image_url} alt={art.title} fill className="object-cover" />
+                            <Image src={toImgSrc(art.image_url)!} alt={art.title} fill className="object-cover" unoptimized />
                           </div>
                         ) : (
                           <div className="w-full h-full flex items-center justify-center" style={{ background: color.bg }}>

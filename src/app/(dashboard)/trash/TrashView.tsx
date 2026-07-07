@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Undo2, Trash2 } from 'lucide-react'
+import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
 type TrashBook = {
@@ -57,7 +58,7 @@ export default function TrashView({ books, artworks }: { books: TrashBook[]; art
             <div key={b.id} className="bg-white rounded-3xl p-4 border border-gray-100 flex items-center gap-3">
               {(b.cover_url || b.photo_url) ? (
                 <div className="relative w-12 h-16 flex-shrink-0">
-                  <Image src={b.cover_url || b.photo_url!} alt={b.title} fill className="rounded-xl object-cover" unoptimized />
+                  <Image src={toImgSrc(b.cover_url || b.photo_url)!} alt={b.title} fill className="rounded-xl object-cover" unoptimized />
                 </div>
               ) : (
                 <div className="w-12 h-16 rounded-xl bg-gray-100 flex-shrink-0 flex items-center justify-center text-lg">📕</div>
@@ -81,7 +82,7 @@ export default function TrashView({ books, artworks }: { books: TrashBook[]; art
             <div key={a.id} className="bg-white rounded-3xl p-4 border border-gray-100 flex items-center gap-3">
               {a.image_url ? (
                 <div className="relative w-12 h-12 flex-shrink-0">
-                  <Image src={a.image_url} alt={a.title || ''} fill className="rounded-xl object-cover" unoptimized />
+                  <Image src={toImgSrc(a.image_url)!} alt={a.title || ''} fill className="rounded-xl object-cover" unoptimized />
                 </div>
               ) : (
                 <div className="w-12 h-12 rounded-xl bg-gray-100 flex-shrink-0 flex items-center justify-center text-lg">🎨</div>

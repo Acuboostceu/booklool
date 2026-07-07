@@ -3,6 +3,9 @@ export const runtime = 'nodejs'
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { getSessionProfile } from '@/lib/session'
+import { getFamilyProfileIds } from '@/lib/recordAccess'
 import sharp from 'sharp'
 
 const s3 = new S3Client({
@@ -20,14 +23,20 @@ const S3_BASE = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGIO
 // 원본은 무손실 보존(인쇄용), 썸네일(1200px q80)은 화면용
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const session = await getSessionProfile(supabase)
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const formData = await req.formData()
   const file = formData.get('file') as File
   const profileId = formData.get('profileId') as string
 
   if (!file || !profileId) return NextResponse.json({ error: 'Missing file or profileId' }, { status: 400 })
+
+  // 요청자 가족 소속 프로필에만 업로드 허용
+  const familyIds = await getFamilyProfileIds(createAdminClient(), session)
+  if (!familyIds.includes(profileId)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
 
   const contentType = file.type || 'image/jpeg'
   const ext = contentType.split('/')[1] || 'jpg'

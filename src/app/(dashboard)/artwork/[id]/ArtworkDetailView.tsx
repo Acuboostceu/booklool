@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { ArrowLeft, Pencil, Check, X, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 
 type Artwork = {
@@ -128,7 +129,7 @@ export default function ArtworkDetailView({ artwork, canDelete = true }: { artwo
             style={{ boxShadow: '0 4px 24px rgba(0,0,0,0.12)' }}
           >
             <Image
-              src={artwork.image_url}
+              src={toImgSrc(artwork.image_url)!}
               alt={title || t('artwork_detail_no_title')}
               width={340}
               height={340}
