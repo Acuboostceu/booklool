@@ -22,13 +22,14 @@ const s3 = new S3Client({
 const BUCKET = process.env.AWS_S3_BUCKET!
 const S3_BASE = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com`
 
-// Node의 내부 Buffer 풀이 이 런타임에서 SharedArrayBuffer로 동작해 AWS SDK의
-// isArrayBuffer 검사를 통과 못하는 경우가 있음. allocUnsafeSlow로 풀을 우회해
-// 항상 전용(non-shared) ArrayBuffer에 바이트를 복사한다.
+// 이 런타임에서는 Buffer(allocUnsafeSlow 포함)의 내부 ArrayBuffer 자체가
+// SharedArrayBuffer로 동작해, AWS SDK의 SigV4 서명 단계(체크섬 설정과 무관하게
+// 항상 실행됨)가 isArrayBuffer 검사에서 거부한다. new ArrayBuffer()는 절대
+// SharedArrayBuffer가 될 수 없으므로, 여기에 직접 바이트를 복사해 Buffer로 감싼다.
 function toSafeBuffer(view: Uint8Array): Buffer {
-  const out = Buffer.allocUnsafeSlow(view.byteLength)
-  out.set(view)
-  return out
+  const ab = new ArrayBuffer(view.byteLength)
+  new Uint8Array(ab).set(view)
+  return Buffer.from(ab)
 }
 
 // POST: 서버에서 S3에 직접 업로드 (CORS 문제 없음)
