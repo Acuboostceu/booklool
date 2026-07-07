@@ -307,6 +307,7 @@ function AddArtworkInner() {
             </div>
             <div>
               <label className="text-xs font-bold text-gray-400 uppercase tracking-wide block mb-1">{t('artwork_keywords_label')}</label>
+              <p className="text-xs text-gray-400 mb-1.5 leading-snug">{t('artwork_keywords_hint')}</p>
               <input
                 value={keywords}
                 onChange={e => setKeywords(e.target.value)}
