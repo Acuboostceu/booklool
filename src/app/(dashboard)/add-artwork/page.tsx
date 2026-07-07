@@ -23,6 +23,7 @@ function AddArtworkInner() {
   const galleryRef = useRef<HTMLInputElement>(null)
 
   const [step, setStep] = useState<Step>('scan')
+  const [rawFile, setRawFile] = useState<File | null>(null)
   const [rawImageUrl, setRawImageUrl] = useState<string>('')
   const [flattenedUrl, setFlattenedUrl] = useState<string>('')
   const [artTitle, setArtTitle] = useState('')
@@ -80,8 +81,26 @@ function AddArtworkInner() {
     const file = e.target.files?.[0]
     if (!file) return
     const url = URL.createObjectURL(file)
+    setRawFile(file)
     setRawImageUrl(url)
     setFlattenedUrl('')
+  }
+
+  // 화면용 썸네일 — 긴 변 1200px, JPEG q80
+  async function makeThumbBlob(srcUrl: string): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ratio = Math.min(1200 / Math.max(img.width, img.height), 1)
+        canvas.width = img.width * ratio
+        canvas.height = img.height * ratio
+        canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height)
+        canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/jpeg', 0.8)
+      }
+      img.onerror = reject
+      img.src = srcUrl
+    })
   }
 
   function handleFlattened(dataUrl: string) {
@@ -111,22 +130,35 @@ function AddArtworkInner() {
     if (!activeImageUrl || !artTitle || !selectedCaption || !captions) return
     setSaving(true)
     try {
-      // 1. Get presigned URL from server
+      // 1. Get presigned URLs (original + thumb) from server
       const urlRes = await fetch('/api/artwork/upload-url', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profileId, contentType: 'image/jpeg' }),
+        body: JSON.stringify({
+          profileId,
+          contentType: 'image/jpeg',
+          originalContentType: rawFile?.type || 'image/jpeg',
+        }),
       })
-      const { uploadUrl, imageUrl } = await urlRes.json()
+      const { originalUploadUrl, thumbUploadUrl, originalUrl, thumbUrl } = await urlRes.json()
 
-      // 2. Convert data URL to blob and upload directly to S3
-      const response = await fetch(activeImageUrl)
-      const blob = await response.blob()
-      await fetch(uploadUrl, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'image/jpeg' },
-        body: blob,
-      })
+      // 2. Upload original (uncompressed, for print) and thumb (screen) to S3
+      const thumbBlob = await makeThumbBlob(activeImageUrl)
+      const uploads = [
+        fetch(thumbUploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'image/jpeg' },
+          body: thumbBlob,
+        }),
+      ]
+      if (rawFile) {
+        uploads.push(fetch(originalUploadUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': rawFile.type || 'image/jpeg' },
+          body: rawFile,
+        }))
+      }
+      await Promise.all(uploads)
 
       // 3. Save metadata to DB (no image payload)
       const saveRes = await fetch('/api/artwork', {
@@ -136,7 +168,8 @@ function AddArtworkInner() {
           profileId,
           title: artTitle,
           keywords,
-          imageUrl,
+          imageUrl: thumbUrl,
+          originalUrl: rawFile ? originalUrl : null,
           captionCurator: captions.curator,
           captionParent: captions.parent,
           captionChild: captions.child,
@@ -209,7 +242,7 @@ function AddArtworkInner() {
                   </div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => { setRawImageUrl(''); setFlattenedUrl('') }}
+                      onClick={() => { setRawFile(null); setRawImageUrl(''); setFlattenedUrl('') }}
                       className="flex-1 font-semibold rounded-2xl py-2 text-sm border border-gray-200 text-gray-500"
                     >
                       {locale === 'ko' ? '다시 찍기' : 'Retake'}
@@ -229,7 +262,7 @@ function AddArtworkInner() {
                   <PerspectiveEditor imageUrl={rawImageUrl} onFlattened={handleFlattened} locale={locale} />
                   <div className="flex gap-2">
                     <button
-                      onClick={() => { setRawImageUrl(''); setFlattenedUrl('') }}
+                      onClick={() => { setRawFile(null); setRawImageUrl(''); setFlattenedUrl('') }}
                       className="flex-1 font-semibold rounded-2xl py-2 text-sm border border-gray-200 text-gray-500"
                     >
                       {locale === 'ko' ? '다시 찍기' : 'Retake'}

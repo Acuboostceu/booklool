@@ -123,6 +123,7 @@ export function BookEditForm({ book, setEditing }: {
   async function handleSave() {
     setSaving(true)
     let photoUrl = book.photo_url || ''
+    let originalUrl: string | null = null
     if (newPhotoFile) {
       try {
         const formData = new FormData()
@@ -130,8 +131,9 @@ export function BookEditForm({ book, setEditing }: {
         formData.append('profileId', book.profile_id)
         const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
         if (uploadRes.ok) {
-          const { publicUrl } = await uploadRes.json()
-          photoUrl = publicUrl
+          const { publicUrl, thumbUrl, originalUrl: origUrl } = await uploadRes.json()
+          photoUrl = thumbUrl || publicUrl
+          originalUrl = origUrl || null
         }
       } catch (err) {
         console.error('Photo upload failed:', err)
@@ -142,6 +144,7 @@ export function BookEditForm({ book, setEditing }: {
       comment,
       ai_answer: aiAnswer,
       photo_url: photoUrl,
+      ...(originalUrl ? { original_url: originalUrl, has_original: true } : {}),
     }).eq('id', book.id)
     setSaving(false)
     setEditing(false)

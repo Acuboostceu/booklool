@@ -221,16 +221,16 @@ export default function AddBookPage() {
     setStep('review')
   }
 
-  async function uploadFile(file: File, pid: string): Promise<string> {
+  async function uploadFile(file: File, pid: string): Promise<{ thumbUrl: string; originalUrl: string }> {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('profileId', pid)
     const res = await fetch('/api/upload', { method: 'POST', body: formData })
     if (res.ok) {
-      const { publicUrl } = await res.json()
-      return publicUrl
+      const { publicUrl, thumbUrl, originalUrl } = await res.json()
+      return { thumbUrl: thumbUrl || publicUrl, originalUrl: originalUrl || '' }
     }
-    return ''
+    return { thumbUrl: '', originalUrl: '' }
   }
 
   async function handleSaveLog() {
@@ -240,9 +240,12 @@ export default function AddBookPage() {
     // Use coverPhotoFile if provided, otherwise fall back to OCR photoFile
     const fileToUpload = coverPhotoFile || photoFile
     let photoUrl = ''
+    let originalUrl = ''
     if (fileToUpload) {
       try {
-        photoUrl = await uploadFile(fileToUpload, selectedChild)
+        const uploaded = await uploadFile(fileToUpload, selectedChild)
+        photoUrl = uploaded.thumbUrl
+        originalUrl = uploaded.originalUrl
       } catch (err) {
         console.error('Photo upload failed:', err)
       }
@@ -255,6 +258,8 @@ export default function AddBookPage() {
       publisher: selected.publisher,
       cover_url: selected.cover_url,
       photo_url: photoUrl,
+      original_url: originalUrl || null,
+      has_original: !!originalUrl,
       description: selected.description,
       isbn: selected.isbn,
       language: selected.language,
@@ -276,9 +281,12 @@ export default function AddBookPage() {
 
     const fileToUpload = coverPhotoFile || photoFile
     let photoUrl = ''
+    let originalUrl = ''
     if (fileToUpload) {
       try {
-        photoUrl = await uploadFile(fileToUpload, selectedChild)
+        const uploaded = await uploadFile(fileToUpload, selectedChild)
+        photoUrl = uploaded.thumbUrl
+        originalUrl = uploaded.originalUrl
       } catch (err) {
         console.error('Photo upload failed:', err)
       }
@@ -291,6 +299,8 @@ export default function AddBookPage() {
       publisher: selected.publisher,
       cover_url: selected.cover_url,
       photo_url: photoUrl,
+      original_url: originalUrl || null,
+      has_original: !!originalUrl,
       description: selected.description,
       isbn: selected.isbn,
       language: selected.language,

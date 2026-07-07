@@ -1,6 +1,9 @@
+export const runtime = 'nodejs'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { createClient } from '@/lib/supabase/server'
+import sharp from 'sharp'
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION!,
@@ -10,7 +13,11 @@ const s3 = new S3Client({
   },
 })
 
+const BUCKET = process.env.AWS_S3_BUCKET!
+const S3_BASE = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com`
+
 // POST: 서버에서 S3에 직접 업로드 (CORS 문제 없음)
+// 원본은 무손실 보존(인쇄용), 썸네일(1200px q80)은 화면용
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -24,18 +31,42 @@ export async function POST(req: NextRequest) {
 
   const contentType = file.type || 'image/jpeg'
   const ext = contentType.split('/')[1] || 'jpg'
-  const key = `books/${profileId}/${Date.now()}.${ext}`
+  const recordKey = `books/${profileId}/${Date.now()}`
 
   const arrayBuffer = await file.arrayBuffer()
   const buffer = Buffer.from(arrayBuffer)
 
+  // 썸네일 생성 — 긴 변 1200px, JPEG q80. 실패해도 원본 업로드는 진행
+  let thumbBuffer: Buffer | null = null
+  try {
+    thumbBuffer = await sharp(buffer)
+      .rotate() // EXIF 회전 반영
+      .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
+      .jpeg({ quality: 80 })
+      .toBuffer()
+  } catch (e) {
+    console.error('Thumbnail generation failed:', e)
+  }
+
   await s3.send(new PutObjectCommand({
-    Bucket: process.env.AWS_S3_BUCKET!,
-    Key: key,
+    Bucket: BUCKET,
+    Key: `${recordKey}/original.${ext}`,
     Body: buffer,
     ContentType: contentType,
   }))
 
-  const publicUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
-  return NextResponse.json({ publicUrl })
+  if (thumbBuffer) {
+    await s3.send(new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `${recordKey}/thumb.jpg`,
+      Body: thumbBuffer,
+      ContentType: 'image/jpeg',
+    }))
+  }
+
+  const originalUrl = `${S3_BASE}/${recordKey}/original.${ext}`
+  const thumbUrl = thumbBuffer ? `${S3_BASE}/${recordKey}/thumb.jpg` : originalUrl
+
+  // publicUrl은 기존 호출부 호환용 (화면용 썸네일)
+  return NextResponse.json({ publicUrl: thumbUrl, thumbUrl, originalUrl })
 }

@@ -100,3 +100,9 @@ create table if not exists bl_print_orders (
 alter table bl_print_orders enable row level security;
 create policy "Users see own orders" on bl_print_orders for all
   using (user_id = auth.uid());
+
+-- Print-quality original images (new uploads only; legacy rows have has_original = false)
+alter table bl_books add column if not exists original_url text;
+alter table bl_books add column if not exists has_original boolean not null default false;
+alter table bl_artworks add column if not exists original_url text;
+alter table bl_artworks add column if not exists has_original boolean not null default false;

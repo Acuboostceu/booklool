@@ -11,24 +11,43 @@ const s3 = new S3Client({
   },
 })
 
+const BUCKET = process.env.AWS_S3_BUCKET!
+const S3_BASE = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com`
+
+// 원본(인쇄용) + 썸네일(화면용) presigned URL 쌍 발급
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { profileId, contentType = 'image/jpeg' } = await req.json()
+  const { profileId, contentType = 'image/jpeg', originalContentType } = await req.json()
   if (!profileId) return NextResponse.json({ error: 'Missing profileId' }, { status: 400 })
 
-  const key = `artworks/${profileId}/${Date.now()}.jpg`
+  const recordKey = `artworks/${profileId}/${Date.now()}`
 
-  const command = new PutObjectCommand({
-    Bucket: process.env.AWS_S3_BUCKET!,
-    Key: key,
-    ContentType: contentType,
+  const origType = originalContentType || contentType
+  const origExt = (origType.split('/')[1] || 'jpg').replace('jpeg', 'jpg')
+
+  const [originalUploadUrl, thumbUploadUrl] = await Promise.all([
+    getSignedUrl(s3, new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `${recordKey}/original.${origExt}`,
+      ContentType: origType,
+    }), { expiresIn: 300 }),
+    getSignedUrl(s3, new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: `${recordKey}/thumb.jpg`,
+      ContentType: 'image/jpeg',
+    }), { expiresIn: 300 }),
+  ])
+
+  return NextResponse.json({
+    originalUploadUrl,
+    thumbUploadUrl,
+    originalUrl: `${S3_BASE}/${recordKey}/original.${origExt}`,
+    thumbUrl: `${S3_BASE}/${recordKey}/thumb.jpg`,
+    // 기존 호출부 호환용
+    uploadUrl: thumbUploadUrl,
+    imageUrl: `${S3_BASE}/${recordKey}/thumb.jpg`,
   })
-
-  const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 })
-  const imageUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`
-
-  return NextResponse.json({ uploadUrl, imageUrl })
 }
