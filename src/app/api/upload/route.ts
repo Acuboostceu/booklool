@@ -48,11 +48,13 @@ export async function POST(req: NextRequest) {
   // 썸네일 생성 — 긴 변 1200px, JPEG q80. 실패해도 원본 업로드는 진행
   let thumbBuffer: Buffer | null = null
   try {
-    thumbBuffer = await sharp(buffer)
+    const raw = await sharp(buffer)
       .rotate() // EXIF 회전 반영
       .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 80 })
       .toBuffer()
+    // Vercel에서 sharp 출력이 SharedArrayBuffer 기반이라 AWS SDK가 거부 — 일반 버퍼로 복사
+    thumbBuffer = Buffer.from(raw)
   } catch (e) {
     console.error('Thumbnail generation failed:', e)
   }
