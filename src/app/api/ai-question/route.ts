@@ -1,30 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
+const langMap: Record<string, string> = {
+  ko: 'Korean',
+  en: 'English',
+  es: 'Spanish',
+}
+
+// birthYear/birthMonth만으로 만 나이 계산 (일자 정보 없음)
+function calcAge(birthYear?: number | null, birthMonth?: number | null): number | null {
+  if (!birthYear || !birthMonth) return null
+  const now = new Date()
+  let age = now.getFullYear() - birthYear
+  if (now.getMonth() + 1 < birthMonth) age -= 1
+  return age
+}
+
+function ageTierGuidance(age: number | null): string {
+  if (age === null) {
+    return 'The child\'s exact age is unknown. Ask a simple, open-ended question about their favorite part or character.'
+  }
+  if (age <= 6) {
+    return 'The child is 4-6 years old. Ask ONE simple, concrete question about a favorite scene or character. Use easy, everyday words a young child understands.'
+  }
+  if (age <= 9) {
+    return 'The child is 7-9 years old. Ask about feelings, or a "why do you think that happened?" style question about the story.'
+  }
+  return 'The child is 10 or older. Ask about a character\'s motivation, a choice they made, or connect the story to the child\'s own life.'
+}
+
 export async function POST(req: NextRequest) {
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-  const { title, author, language } = await req.json()
+  const { title, author, language, birthYear, birthMonth } = await req.json()
 
-  const isKorean = language === 'ko'
+  const appLanguage = langMap[language] ?? 'Korean'
+  const age = calcAge(birthYear, birthMonth)
 
-  const prompt = isKorean
-    ? `책 제목: "${title}"${author ? `, 저자: ${author}` : ''}
-이 책을 읽은 아이에게 독후 질문 하나를 만들어주세요.
-- 짧고 쉬운 한국어로 (한 문장)
-- 아이가 자신의 생각을 말할 수 있는 열린 질문
-- 물음표로 끝내기
-질문만 출력하세요.`
-    : `Book: "${title}"${author ? ` by ${author}` : ''}
-Create one reading comprehension question for a young reader.
-- Short and simple (one sentence)
-- Open-ended question that encourages personal reflection
-- End with a question mark
-Output only the question.`
+  const systemPrompt = `You write one reading-comprehension question for a child who just finished a book.
+${ageTierGuidance(age)}
+
+Rules:
+- Output ONLY the question, nothing else (no preamble, no quotes).
+- Exactly one sentence, ending with a question mark.
+- Respond in ${appLanguage}, regardless of the language of the book title/author below.`
+
+  const userPrompt = `Book: "${title}"${author ? ` by ${author}` : ''}`
 
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     max_tokens: 100,
-    messages: [{ role: 'user', content: prompt }],
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt },
+    ],
   })
 
   const question = completion.choices[0].message.content?.trim() || ''

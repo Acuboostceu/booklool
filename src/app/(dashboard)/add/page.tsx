@@ -46,7 +46,7 @@ export default function AddBookPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const supabase = createClient()
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const fileRef = useRef<HTMLInputElement>(null)
   const galleryRef = useRef<HTMLInputElement>(null)
 
@@ -210,11 +210,31 @@ export default function AddBookPage() {
   async function handleModeRate() {
     if (!selected) return
     setStep('confirm')
+
+    // 아이의 생년월(있으면)을 조회해 질문 난이도에 반영
+    let birthYear: number | null = null
+    let birthMonth: number | null = null
+    if (selectedChild) {
+      const { data: childProfile } = await supabase
+        .from('bl_profiles')
+        .select('birth_year, birth_month')
+        .eq('id', selectedChild)
+        .single()
+      birthYear = childProfile?.birth_year ?? null
+      birthMonth = childProfile?.birth_month ?? null
+    }
+
     // Generate AI question
     const res = await fetch('/api/ai-question', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: selected.title, author: selected.author, language: selected.language }),
+      body: JSON.stringify({
+        title: selected.title,
+        author: selected.author,
+        language: locale,
+        birthYear,
+        birthMonth,
+      }),
     })
     const { question } = await res.json()
     setAiQuestion(question)

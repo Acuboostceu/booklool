@@ -144,3 +144,7 @@ BEGIN
   ORDER BY a.created_at DESC;
 END;
 $function$;
+
+-- Birth year/month (no day) for age-aware AI question difficulty
+alter table bl_profiles add column if not exists birth_year int;
+alter table bl_profiles add column if not exists birth_month int check (birth_month between 1 and 12);
