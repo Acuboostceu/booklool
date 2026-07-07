@@ -13,6 +13,7 @@ import ColorPicker from './ColorPicker'
 type Child = {
   id: string; name: string
   user_id: string | null; child_username: string | null; color: string | null
+  birth_year: number | null; birth_month: number | null
 }
 type Book = { id: string; title: string; rating: number | null; profile_id: string; created_at: string }
 type Badge = { id: string; type: string; profile_id: string }
@@ -77,6 +78,84 @@ function NameEditor({ profileId, name, onSaved, size = 'md' }: {
   )
 }
 
+const currentYear = new Date().getFullYear()
+const birthYears = Array.from({ length: 19 }, (_, i) => currentYear - i)
+const birthMonths = Array.from({ length: 12 }, (_, i) => i + 1)
+
+function BirthEditor({ profileId, birthYear, birthMonth, t }: {
+  profileId: string
+  birthYear: number | null
+  birthMonth: number | null
+  t: (key: TranslationKey, ...args: never[]) => string
+}) {
+  const [editing, setEditing] = useState(false)
+  const [year, setYear] = useState(birthYear?.toString() ?? '')
+  const [month, setMonth] = useState(birthMonth?.toString() ?? '')
+  const [displayYear, setDisplayYear] = useState(birthYear)
+  const [displayMonth, setDisplayMonth] = useState(birthMonth)
+  const [saving, setSaving] = useState(false)
+  const supabase = createClient()
+
+  async function handleSave() {
+    setSaving(true)
+    await supabase.from('bl_profiles').update({
+      birth_year: year ? parseInt(year) : null,
+      birth_month: month ? parseInt(month) : null,
+    }).eq('id', profileId)
+    setDisplayYear(year ? parseInt(year) : null)
+    setDisplayMonth(month ? parseInt(month) : null)
+    setSaving(false)
+    setEditing(false)
+  }
+
+  if (editing) {
+    return (
+      <div className="mt-3 pt-3 border-t border-gray-50">
+        <p className="text-xs text-gray-400 mb-2">{t('child_birth_label')}</p>
+        <div className="flex gap-2 mb-2">
+          <select
+            value={year}
+            onChange={e => setYear(e.target.value)}
+            className="flex-1 border-2 rounded-2xl px-3 py-2 text-sm outline-none bg-white"
+            style={{ borderColor: 'var(--green-light)' }}
+          >
+            <option value="">{t('child_birth_year')}</option>
+            {birthYears.map(y => <option key={y} value={y}>{y}</option>)}
+          </select>
+          <select
+            value={month}
+            onChange={e => setMonth(e.target.value)}
+            className="flex-1 border-2 rounded-2xl px-3 py-2 text-sm outline-none bg-white"
+            style={{ borderColor: 'var(--green-light)' }}
+          >
+            <option value="">{t('child_birth_month')}</option>
+            {birthMonths.map(m => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={handleSave} disabled={saving} className="text-xs font-bold px-3 py-1.5 rounded-xl" style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}>
+            {saving ? '...' : '저장'}
+          </button>
+          <button onClick={() => { setYear(displayYear?.toString() ?? ''); setMonth(displayMonth?.toString() ?? ''); setEditing(false) }} className="text-xs text-gray-400">취소</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="mt-3 pt-3 border-t border-gray-50 flex items-center justify-between">
+      <p className="text-xs text-gray-400">
+        {displayYear && displayMonth
+          ? `${displayYear}.${String(displayMonth).padStart(2, '0')}`
+          : t('child_birth_label')}
+      </p>
+      <button onClick={() => setEditing(true)} className="text-xs font-bold underline underline-offset-2" style={{ color: 'var(--green-dark)' }}>
+        {displayYear && displayMonth ? '수정' : '입력'}
+      </button>
+    </div>
+  )
+}
+
 function ChildCard({ child, bookCount, badges, t, onDelete, showDelete }: {
   child: Child
   bookCount: number
@@ -110,6 +189,7 @@ function ChildCard({ child, bookCount, badges, t, onDelete, showDelete }: {
       )}
 
       <ColorPicker childId={child.id} currentColor={child.color} />
+      <BirthEditor profileId={child.id} birthYear={child.birth_year} birthMonth={child.birth_month} t={t} />
       <ChildLoginSetup
         childId={child.id}
         childName={child.name}

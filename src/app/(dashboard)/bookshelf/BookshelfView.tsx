@@ -124,14 +124,14 @@ function ProfileSection({
                   {!isPartner && (
                     <Link href={`/add?profileId=${profile.id}`} className="group">
                       <div
-                        className="rounded-2xl overflow-hidden border-2 border-dashed transition group-hover:shadow-md group-hover:scale-[1.02] aspect-[2/3] flex items-center justify-center"
+                        className="rounded-2xl overflow-hidden border-2 border-dashed transition group-hover:shadow-md group-hover:scale-[1.02] aspect-[2/3] flex flex-col items-center justify-center gap-1 px-1"
                         style={{ borderColor: color.bg, background: color.bg + '55' }}
                       >
                         <Plus className="w-7 h-7" style={{ color: color.accent }} />
+                        <span className="text-xs font-semibold text-center leading-tight" style={{ color: color.accent }}>
+                          {t('book_add_btn')}
+                        </span>
                       </div>
-                      <p className="text-xs font-semibold truncate mt-1 px-0.5 text-center" style={{ color: color.accent }}>
-                        {t('book_add_btn')}
-                      </p>
                     </Link>
                   )}
                   {books.slice(0, PREVIEW_COUNT).map(book => (
@@ -209,14 +209,14 @@ function ProfileSection({
                   {!isPartner && (
                     <Link href={`/add-artwork?profileId=${profile.id}`} className="group">
                       <div
-                        className="rounded-2xl overflow-hidden border-2 border-dashed transition group-hover:shadow-md group-hover:scale-[1.02] aspect-square flex items-center justify-center"
+                        className="rounded-2xl overflow-hidden border-2 border-dashed transition group-hover:shadow-md group-hover:scale-[1.02] aspect-square flex flex-col items-center justify-center gap-1 px-1"
                         style={{ borderColor: color.bg, background: color.bg + '55' }}
                       >
                         <Plus className="w-7 h-7" style={{ color: color.accent }} />
+                        <span className="text-xs font-semibold text-center leading-tight" style={{ color: color.accent }}>
+                          {t('artwork_add_btn')}
+                        </span>
                       </div>
-                      <p className="text-xs font-semibold truncate mt-1 px-0.5 text-center" style={{ color: color.accent }}>
-                        {t('artwork_add_btn')}
-                      </p>
                     </Link>
                   )}
                   {artworks.slice(0, PREVIEW_COUNT).map(art => (

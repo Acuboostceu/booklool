@@ -128,8 +128,8 @@ export const translations = {
     book_saving: '저장 중...',
 
     // Artwork
-    artwork_tab_books: '📚 책',
-    artwork_tab_art: '🎨 작품',
+    artwork_tab_books: '책',
+    artwork_tab_art: '작품',
     artwork_title: '작품 추가',
     artwork_step_scan: '사진 찍기',
     artwork_step_info: '정보 입력',
@@ -313,8 +313,8 @@ export const translations = {
     book_saving: 'Saving...',
 
     // Artwork
-    artwork_tab_books: '📚 Books',
-    artwork_tab_art: '🎨 Artwork',
+    artwork_tab_books: 'Books',
+    artwork_tab_art: 'Artwork',
     artwork_title: 'Add Artwork',
     artwork_step_scan: 'Scan',
     artwork_step_info: 'Info',
@@ -497,8 +497,8 @@ export const translations = {
     book_saving: 'Guardando...',
 
     // Artwork
-    artwork_tab_books: '📚 Libros',
-    artwork_tab_art: '🎨 Arte',
+    artwork_tab_books: 'Libros',
+    artwork_tab_art: 'Arte',
     artwork_title: 'Agregar obra',
     artwork_step_scan: 'Escanear',
     artwork_step_info: 'Info',
