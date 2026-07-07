@@ -134,6 +134,7 @@ export async function POST(req: NextRequest) {
       .from('bl_books')
       .select('id, title, author, cover_url, rating, comment, read_at, ai_answer')
       .eq('profile_id', profileId)
+      .is('deleted_at', null)
       .order('read_at', { ascending: true })
     books.push(...(data || []))
   }
@@ -143,7 +144,7 @@ export async function POST(req: NextRequest) {
   if (contentType === 'artwork' || contentType === 'both') {
     const { data } = await supabase
       .rpc('get_family_artworks', { profile_ids: [profileId] })
-    artworks.push(...(data || []))
+    artworks.push(...(data || []).filter((a: { deleted_at?: string | null }) => !a.deleted_at))
   }
 
   if (books.length + artworks.length === 0) {

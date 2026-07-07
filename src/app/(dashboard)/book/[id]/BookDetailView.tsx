@@ -27,7 +27,7 @@ type Book = {
   total_pages: number | null
 }
 
-export default function BookDetailView({ book }: { book: Book }) {
+export default function BookDetailView({ book, canDelete = true }: { book: Book; canDelete?: boolean }) {
   const { t } = useLocale()
   const searchParams = useSearchParams()
   const [editing, setEditing] = useState(false)
@@ -56,7 +56,7 @@ export default function BookDetailView({ book }: { book: Book }) {
     <div className="pb-24">
 
       {/* Top action buttons (back / edit / delete) — always visible */}
-      <BookActions book={bookData} editing={editing} setEditing={setEditing} />
+      <BookActions book={bookData} editing={editing} setEditing={setEditing} canDelete={canDelete} />
 
       {/* Cover */}
       <div className="flex gap-4 mb-6">

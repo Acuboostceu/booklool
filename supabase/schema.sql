@@ -106,3 +106,7 @@ alter table bl_books add column if not exists original_url text;
 alter table bl_books add column if not exists has_original boolean not null default false;
 alter table bl_artworks add column if not exists original_url text;
 alter table bl_artworks add column if not exists has_original boolean not null default false;
+
+-- Soft delete (30-day retention; purged lazily by /api/record/delete)
+alter table bl_books add column if not exists deleted_at timestamptz;
+alter table bl_artworks add column if not exists deleted_at timestamptz;

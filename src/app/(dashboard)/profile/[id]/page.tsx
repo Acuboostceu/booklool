@@ -27,6 +27,7 @@ export default async function ProfilePage({
     .from('bl_books')
     .select('id, title, cover_url, photo_url, rating, profile_id, created_at')
     .eq('profile_id', id)
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   const { data: artworks } = await supabase
@@ -46,7 +47,7 @@ export default async function ProfilePage({
     <ProfileView
       profile={profile}
       books={books || []}
-      artworks={artworks || []}
+      artworks={(artworks || []).filter((a: { deleted_at?: string | null }) => !a.deleted_at)}
       isPartner={isPartner}
       initialTab={tab}
     />

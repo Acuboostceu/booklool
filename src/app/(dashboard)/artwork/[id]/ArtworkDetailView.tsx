@@ -16,7 +16,7 @@ type Artwork = {
   created_at: string
 }
 
-export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
+export default function ArtworkDetailView({ artwork, canDelete = true }: { artwork: Artwork; canDelete?: boolean }) {
   const router = useRouter()
   const supabase = createClient()
   const { locale, t } = useLocale()
@@ -56,9 +56,18 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
 
   async function handleDelete() {
     setDeleting(true)
-    await supabase.rpc('delete_artwork', { p_id: artwork.id })
-    router.push(artTab)
-    router.refresh()
+    const res = await fetch('/api/record/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'artwork', id: artwork.id }),
+    })
+    setDeleting(false)
+    if (res.ok) {
+      router.push(artTab)
+      router.refresh()
+    } else {
+      setShowDeleteConfirm(false)
+    }
   }
 
   return (
@@ -81,13 +90,15 @@ export default function ArtworkDetailView({ artwork }: { artwork: Artwork }) {
             >
               <Pencil size={14} /> {t('artwork_detail_edit')}
             </button>
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
-              style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
-            >
-              <Trash2 size={14} /> {t('artwork_detail_delete')}
-            </button>
+            {canDelete && (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
+                style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
+              >
+                <Trash2 size={14} /> {t('artwork_detail_delete')}
+              </button>
+            )}
           </>
         ) : (
           <>

@@ -18,19 +18,27 @@ type BookData = {
 }
 
 /** Top pill buttons: ← / Edit / Delete */
-export default function BookActions({ book, editing, setEditing }: {
+export default function BookActions({ book, editing, setEditing, canDelete = true }: {
   book: BookData
   editing: boolean
   setEditing: (v: boolean) => void
+  canDelete?: boolean
 }) {
   const router = useRouter()
   const { t } = useLocale()
-  const supabase = createClient()
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   async function handleDelete() {
-    await supabase.from('bl_books').delete().eq('id', book.id)
-    router.push('/bookshelf')
+    setDeleting(true)
+    const res = await fetch('/api/record/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'book', id: book.id }),
+    })
+    setDeleting(false)
+    if (res.ok) router.push('/bookshelf')
+    else setShowDeleteConfirm(false)
   }
 
   return (
@@ -59,13 +67,15 @@ export default function BookActions({ book, editing, setEditing }: {
           >
             <Pencil className="w-4 h-4" /> {t('book_edit')}
           </button>
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
-            style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
-          >
-            <Trash2 className="w-4 h-4" /> {t('book_delete')}
-          </button>
+          {canDelete && (
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl text-sm font-bold transition"
+              style={{ background: 'var(--pink-light)', color: 'var(--pink-dark)' }}
+            >
+              <Trash2 className="w-4 h-4" /> {t('book_delete')}
+            </button>
+          )}
         </>
       )}
 
@@ -83,7 +93,8 @@ export default function BookActions({ book, editing, setEditing }: {
               </button>
               <button
                 onClick={handleDelete}
-                className="flex-1 py-3 rounded-2xl font-bold text-white"
+                disabled={deleting}
+                className="flex-1 py-3 rounded-2xl font-bold text-white disabled:opacity-60"
                 style={{ background: 'var(--pink)' }}
               >
                 {t('book_delete')}

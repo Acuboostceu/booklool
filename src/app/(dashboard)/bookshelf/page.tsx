@@ -21,6 +21,7 @@ export default async function BookshelfPage({ searchParams }: { searchParams: Pr
       .from('bl_books')
       .select('id, title, cover_url, photo_url, rating, profile_id')
       .eq('profile_id', childProfile.id)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false })
 
     const { data: badges } = await supabase
@@ -36,7 +37,7 @@ export default async function BookshelfPage({ searchParams }: { searchParams: Pr
         profiles={[childProfile]}
         books={books || []}
         badges={badges || []}
-        artworks={artworks || []}
+        artworks={(artworks || []).filter((a: { deleted_at?: string | null }) => !a.deleted_at)}
         partnerIds={[]}
         initialTab={tab}
         initialProfileId={initialProfileId}
@@ -71,6 +72,7 @@ export default async function BookshelfPage({ searchParams }: { searchParams: Pr
     .from('bl_books')
     .select('id, title, cover_url, photo_url, rating, profile_id')
     .in('profile_id', allProfileIds)
+    .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
   const { data: badges } = await supabase
@@ -86,7 +88,7 @@ export default async function BookshelfPage({ searchParams }: { searchParams: Pr
       profiles={profiles}
       books={books || []}
       badges={badges || []}
-      artworks={artworks || []}
+      artworks={(artworks || []).filter((a: { deleted_at?: string | null }) => !a.deleted_at)}
       partnerIds={partner ? [partner.id] : []}
       initialTab={tab}
       initialProfileId={initialProfileId}

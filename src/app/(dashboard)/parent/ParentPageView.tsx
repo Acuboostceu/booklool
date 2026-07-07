@@ -35,6 +35,7 @@ function ChildCard({ child, bookCount, badges, t, onDelete, showDelete }: {
   showDelete: boolean
 }) {
   const [showConfirm, setShowConfirm] = useState(false)
+  const [confirmName, setConfirmName] = useState('')
   const [editingName, setEditingName] = useState(false)
   const [displayName, setDisplayName] = useState(child.name)
   const [nameValue, setNameValue] = useState(child.name)
@@ -118,17 +119,29 @@ function ChildCard({ child, bookCount, badges, t, onDelete, showDelete }: {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
             <p className="font-black text-gray-800 text-lg mb-2">{t('child_delete_confirm')}</p>
-            <p className="text-sm text-gray-500 mb-6">{t('child_delete_desc')}</p>
+            <p className="text-sm text-gray-500 mb-2">{t('child_delete_desc')}</p>
+            <p className="text-sm font-bold mb-4" style={{ color: 'var(--pink-dark)' }}>
+              {t('child_delete_warning')}
+            </p>
+            <p className="text-xs text-gray-400 mb-2">{t('child_delete_type_name', displayName as never)}</p>
+            <input
+              value={confirmName}
+              onChange={e => setConfirmName(e.target.value)}
+              placeholder={displayName}
+              className="w-full border-2 rounded-2xl px-4 py-3 text-sm outline-none mb-4"
+              style={{ borderColor: 'var(--pink-light)' }}
+            />
             <div className="flex gap-3">
               <button
-                onClick={() => setShowConfirm(false)}
+                onClick={() => { setShowConfirm(false); setConfirmName('') }}
                 className="flex-1 py-3 rounded-2xl font-bold text-gray-500 bg-gray-100"
               >
                 {t('book_cancel')}
               </button>
               <button
                 onClick={onDelete}
-                className="flex-1 py-3 rounded-2xl font-bold text-white"
+                disabled={confirmName.trim() !== displayName}
+                className="flex-1 py-3 rounded-2xl font-bold text-white disabled:opacity-40"
                 style={{ background: 'var(--pink)' }}
               >
                 {t('child_delete')}

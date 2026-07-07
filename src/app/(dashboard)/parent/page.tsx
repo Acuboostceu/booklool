@@ -33,6 +33,7 @@ export default async function ParentPage() {
         .from('bl_books')
         .select('id, title, rating, profile_id, created_at')
         .in('profile_id', childIds)
+        .is('deleted_at', null)
         .order('created_at', { ascending: false })
         .limit(10)
     : { data: [] }
