@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { BookOpen, Star, Users, LogOut, Settings, BookMarked } from 'lucide-react'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { BookOpen, Palette, Users, LogOut, Settings, BookMarked } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
@@ -27,6 +27,7 @@ const navBgs = [
 
 export default function DashboardNav() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const router = useRouter()
   const { t } = useLocale()
   const [isChild, setIsChild] = useState(false)
@@ -45,14 +46,16 @@ export default function DashboardNav() {
     loadRole()
   }, [])
 
+  const isArtTab = pathname === '/bookshelf' && searchParams.get('tab') === 'art'
+
   const allNavItems = [
-    { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf'), childOk: true },
-    { href: '/recommendations', icon: Star, label: t('nav_recommendations'), childOk: true },
-    { href: '/parent', icon: Users, label: t('nav_family'), childOk: false },
+    { href: '/bookshelf', icon: BookOpen, label: t('nav_bookshelf'), childOk: true, active: pathname === '/bookshelf' && !isArtTab },
+    { href: '/bookshelf?tab=art', icon: Palette, label: t('artwork_tab_art'), childOk: true, active: isArtTab },
+    { href: '/parent', icon: Users, label: t('nav_family'), childOk: false, active: pathname === '/parent' },
     ...(process.env.NEXT_PUBLIC_PRINT_ENABLED === 'true'
-      ? [{ href: '/print', icon: BookMarked, label: 'Print', childOk: false }]
+      ? [{ href: '/print', icon: BookMarked, label: 'Print', childOk: false, active: pathname === '/print' }]
       : []),
-    { href: '/settings', icon: Settings, label: t('settings_title'), childOk: true },
+    { href: '/settings', icon: Settings, label: t('settings_title'), childOk: true, active: pathname === '/settings' },
   ]
 
   const navItems = allNavItems.filter(item => !isChild || item.childOk)
@@ -82,29 +85,26 @@ export default function DashboardNav() {
         className="fixed bottom-0 left-0 right-0 bg-white flex z-50"
         style={{ borderTop: '1px solid var(--green-light)' }}
       >
-        {navItems.map(({ href, icon: Icon, label }, i) => {
-          const active = pathname === href
-          return (
-            <Link
-              key={href}
-              href={href}
-              className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition"
-              style={{ color: active ? navColors[i] : '#bbb' }}
-            >
-              {active ? (
-                <div
-                  className="w-8 h-8 rounded-xl flex items-center justify-center mb-0.5"
-                  style={{ background: navBgs[i] }}
-                >
-                  <Icon className="w-4 h-4" />
-                </div>
-              ) : (
-                <Icon className="w-5 h-5 mb-0.5" />
-              )}
-              {label}
-            </Link>
-          )
-        })}
+        {navItems.map(({ href, icon: Icon, label, active }, i) => (
+          <Link
+            key={href}
+            href={href}
+            className="flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-semibold transition"
+            style={{ color: active ? navColors[i] : '#bbb' }}
+          >
+            {active ? (
+              <div
+                className="w-8 h-8 rounded-xl flex items-center justify-center mb-0.5"
+                style={{ background: navBgs[i] }}
+              >
+                <Icon className="w-4 h-4" />
+              </div>
+            ) : (
+              <Icon className="w-5 h-5 mb-0.5" />
+            )}
+            {label}
+          </Link>
+        ))}
       </nav>
     </>
   )

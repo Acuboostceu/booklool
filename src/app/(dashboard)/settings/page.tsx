@@ -1,5 +1,9 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { Trash2, ChevronRight } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { Locale } from '@/lib/i18n/translations'
 
@@ -17,6 +21,20 @@ const bookLocaleOptions: { value: Locale; label: string; flag: string }[] = [
 
 export default function SettingsPage() {
   const { locale, setLocale, bookLocales, setBookLocales, t } = useLocale()
+  const [isParent, setIsParent] = useState(false)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      const { data: profile } = await supabase
+        .from('bl_profiles')
+        .select('role')
+        .eq('user_id', data.user.id)
+        .single()
+      setIsParent(profile?.role === 'parent')
+    })
+  }, [])
 
   function toggleBookLocale(l: Locale) {
     if (bookLocales.includes(l)) {
@@ -30,6 +48,23 @@ export default function SettingsPage() {
   return (
     <div className="pb-24">
       <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('settings_title')}</h1>
+
+      {/* Trash — parents only */}
+      {isParent && (
+        <Link
+          href="/trash"
+          className="bg-white rounded-3xl p-5 border border-gray-100 mb-4 flex items-center gap-3 hover:bg-gray-50 transition"
+        >
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--pink-light)' }}>
+            <Trash2 className="w-5 h-5" style={{ color: 'var(--pink-dark)' }} />
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-gray-700 text-sm">{t('trash_title')}</p>
+            <p className="text-xs text-gray-400">{t('trash_desc')}</p>
+          </div>
+          <ChevronRight className="w-4 h-4 text-gray-300" />
+        </Link>
+      )}
 
       {/* Add to home screen */}
       <div className="bg-white rounded-3xl p-5 border border-gray-100 mb-4">

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Star, BookOpen, Palette, ChevronRight } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
@@ -40,6 +40,10 @@ function ProfileSection({
 }) {
   const { t } = useLocale()
   const [tab, setTab] = useState<'books' | 'art'>(initialTab ?? 'books')
+  // 네비 탭으로 books ↔ art 전환 시 (같은 페이지 재렌더) 상태 동기화
+  useEffect(() => {
+    setTab(initialTab ?? 'books')
+  }, [initialTab])
   const color = getProfileColor(colorKey)
   const swipe = useSwipeTab(tab, setTab)
 
@@ -261,7 +265,8 @@ export default function BookshelfView({
 
       {profiles.map((profile, idx) => {
         const colorKey = profile.color || fallbackColors[idx % fallbackColors.length]
-        const initTab = initialProfileId === profile.id && initialTab === 'art' ? 'art' : undefined
+        // profileId 지정 시 해당 섹션만, 없으면 (네비 Art 탭) 전체 섹션에 적용
+        const initTab = (initialProfileId ? initialProfileId === profile.id : true) && initialTab === 'art' ? 'art' : undefined
         return (
           <ProfileSection
             key={profile.id}
