@@ -40,16 +40,17 @@ const copy = {
     art_feature3_title: 'Printed at year-end',
     art_feature3_desc: 'All artwork goes into the same year-end book as the reading journal. One book, the whole year.',
 
-    pricing_label: 'PRICING',
-    pricing_title: 'Free. Forever.',
-    free_name: 'Free',
-    free_price: '$0',
-    free_period: 'forever',
-    free_features: ['Unlimited children', 'Unlimited books', 'AI reading questions', 'Reading log', 'Art journal', 'Connect with partner', 'Family bookshelf'],
-    print_name: 'Print Book',
-    print_price: 'Coming soon',
-    print_desc: 'Turn your family\'s year into a beautiful printed book — shipped to your door.',
-    plan_cta: 'Get started free',
+    trust_label: 'PRIVACY & SAFETY',
+    trust_title: "Your child's data is treated like family.",
+    trust_sub: "Free, forever. No credit card, no data games — just careful handling of what matters most.",
+    trust1_title: 'No face photos sent to AI',
+    trust1_desc: "When we scan a book cover, only the extracted text goes to AI — never the photo of your child. Their face never leaves our infrastructure to reach a third party.",
+    trust2_title: 'Private storage, family-only access',
+    trust2_desc: 'Every photo lives in access-controlled storage. No public links, no strangers — only your family can ever see them.',
+    trust3_title: '30-day recovery on delete',
+    trust3_desc: "Accidents happen. Deleted books and art go to a trash bin for 30 days before they're gone for good, so a wrong tap never means a lost memory.",
+    trust4_title: 'Built with COPPA in mind',
+    trust4_desc: "We follow children's privacy best practices as a baseline, not an afterthought — minimal data, clear purpose, no surprises.",
     footer_copy: '© 2026 Booklool · Made with love for reading families.',
   },
   ko: {
@@ -86,16 +87,17 @@ const copy = {
     art_feature3_title: '연말에 한 권으로',
     art_feature3_desc: '독서 일기와 함께 연말 책에 실려요. 책 읽은 기억과 그림이 한 권에 담겨요.',
 
-    pricing_label: '요금제',
-    pricing_title: '무료. 영원히.',
-    free_name: '무료',
-    free_price: '$0',
-    free_period: '영원히',
-    free_features: ['자녀 무제한', '책 무제한 기록', 'AI 독후 질문', '독서 로그', '아트 저널', '배우자 계정 연결', '가족 책장 공유'],
-    print_name: '프린트 북',
-    print_price: '출시 예정',
-    print_desc: '한 해의 기록을 아름다운 책으로 — 집으로 배송해드려요.',
-    plan_cta: '무료로 시작하기',
+    trust_label: '개인정보 & 안전',
+    trust_title: '아이의 정보를, 가족처럼 다룹니다.',
+    trust_sub: '영원히 무료예요. 신용카드도, 숨겨진 조건도 없이 — 가장 소중한 것을 조심스럽게 다룰 뿐이에요.',
+    trust1_title: '아이 얼굴 사진은 AI로 보내지 않아요',
+    trust1_desc: '책 표지를 인식할 때도 추출된 텍스트만 AI로 전송해요. 아이 사진 자체는 절대 외부로 나가지 않아요.',
+    trust2_title: '비공개 저장, 가족만 접근 가능',
+    trust2_desc: '모든 사진은 접근이 통제된 저장소에 보관돼요. 공개 링크도, 낯선 사람의 접근도 없어요 — 오직 우리 가족만 볼 수 있어요.',
+    trust3_title: '삭제해도 30일간 복구 가능',
+    trust3_desc: '실수는 누구나 해요. 삭제한 책과 그림은 30일 동안 휴지통에 보관되어, 잘못 누른 한 번이 소중한 기억을 영영 잃게 만들지 않아요.',
+    trust4_title: 'COPPA를 염두에 두고 설계했어요',
+    trust4_desc: '아이 개인정보 보호 원칙을 나중에 덧붙인 게 아니라 처음부터 기준으로 삼았어요 — 최소한의 정보만, 목적이 분명하게, 숨기는 것 없이.',
     footer_copy: '© 2026 Booklool · 독서하는 가족을 위해 만들었어요.',
   },
 }
@@ -328,55 +330,43 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── Pricing ── */}
-      <section className="py-24 bg-white">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--purple)' }}>{t.pricing_label}</p>
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-16">{t.pricing_title}</h2>
+      {/* ── Trust & Safety ── */}
+      <section className="py-24" style={{ background: '#fefdf5' }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-6">
+            <p className="text-xs font-black tracking-widest mb-4" style={{ color: 'var(--green)' }}>{t.trust_label}</p>
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-3">{t.trust_title}</h2>
+            <p className="text-sm text-gray-500 max-w-lg mx-auto leading-relaxed">{t.trust_sub}</p>
+          </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-
-            {/* Free */}
-            <div className="rounded-3xl p-8 text-left flex flex-col shadow-2xl" style={{ background: 'var(--green)' }}>
-              <p className="font-black text-xl text-white mb-2">{t.free_name}</p>
-              <div className="flex items-end gap-1 mb-8">
-                <span className="text-5xl font-black text-white">{t.free_price}</span>
-                <span className="text-sm text-white/60 mb-1.5">{t.free_period}</span>
+          <div className="grid sm:grid-cols-2 gap-5 mt-14">
+            {[
+              { icon: '🙈', title: t.trust1_title, desc: t.trust1_desc, color: 'var(--pink-light)' },
+              { icon: '🔒', title: t.trust2_title, desc: t.trust2_desc, color: 'var(--purple-light)' },
+              { icon: '🗑️', title: t.trust3_title, desc: t.trust3_desc, color: 'var(--yellow-light)' },
+              { icon: '🛡️', title: t.trust4_title, desc: t.trust4_desc, color: 'var(--green-light)' },
+            ].map((f, i) => (
+              <div key={i} className="bg-white rounded-3xl p-6 border border-gray-100">
+                <div
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-4"
+                  style={{ background: f.color }}
+                >
+                  {f.icon}
+                </div>
+                <p className="font-black text-gray-800 mb-2">{f.title}</p>
+                <p className="text-sm text-gray-500 leading-relaxed">{f.desc}</p>
               </div>
-              <ul className="space-y-3 flex-1 mb-8">
-                {t.free_features.map((f, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-sm text-white/90">
-                    <span className="font-bold text-white">✓</span> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href={loggedIn ? '/bookshelf' : '/signup'}
-                className="w-full text-center font-black py-3.5 rounded-2xl text-sm transition hover:opacity-90 bg-white"
-                style={{ color: 'var(--green-dark)' }}
-              >
-                {t.plan_cta}
-              </Link>
-            </div>
+            ))}
+          </div>
 
-            {/* Print Book — coming soon */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 text-left flex flex-col">
-              <p className="font-black text-xl text-gray-800 mb-2">📖 {t.print_name}</p>
-              <div className="mb-8">
-                <span className="inline-block text-sm font-black px-3 py-1 rounded-full" style={{ background: 'var(--yellow-light)', color: 'var(--yellow-dark)' }}>
-                  {t.print_price}
-                </span>
-              </div>
-              <p className="text-sm text-gray-500 leading-relaxed flex-1 mb-8">{t.print_desc}</p>
-              <button
-                className="w-full text-center font-bold py-3.5 rounded-2xl border-2 text-sm opacity-40 cursor-not-allowed"
-                style={{ borderColor: 'var(--yellow-light)', color: 'var(--yellow-dark)' }}
-                disabled
-              >
-                {t.print_price}
-              </button>
-            </div>
-
+          <div className="text-center mt-12">
+            <Link
+              href={loggedIn ? '/bookshelf' : '/signup'}
+              className="inline-block text-white font-bold px-8 py-4 rounded-full text-base shadow-lg transition hover:opacity-90 hover:-translate-y-0.5"
+              style={{ background: 'var(--green)' }}
+            >
+              {t.hero_cta} →
+            </Link>
           </div>
         </div>
       </section>
