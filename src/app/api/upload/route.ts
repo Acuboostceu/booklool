@@ -43,7 +43,9 @@ export async function POST(req: NextRequest) {
   const recordKey = `books/${profileId}/${Date.now()}`
 
   const arrayBuffer = await file.arrayBuffer()
-  const buffer = Buffer.from(arrayBuffer)
+  // Vercel 런타임에서 Buffer.from(arrayBuffer)가 공유 메모리를 참조해 AWS SDK가 거부하는
+  // 경우가 있어, Uint8Array.from으로 바이트를 새 메모리에 완전히 복사한다.
+  const buffer = Buffer.from(Uint8Array.from(new Uint8Array(arrayBuffer)))
 
   // 썸네일 생성 — 긴 변 1200px, JPEG q80. 실패해도 원본 업로드는 진행
   let thumbBuffer: Buffer | null = null
@@ -53,8 +55,7 @@ export async function POST(req: NextRequest) {
       .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 80 })
       .toBuffer()
-    // Vercel에서 sharp 출력이 SharedArrayBuffer 기반이라 AWS SDK가 거부 — 일반 버퍼로 복사
-    thumbBuffer = Buffer.from(raw)
+    thumbBuffer = Buffer.from(Uint8Array.from(raw))
   } catch (e) {
     console.error('Thumbnail generation failed:', e)
   }
