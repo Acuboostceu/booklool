@@ -5,7 +5,6 @@ export const translations = {
     // Nav
     nav_bookshelf: '책장',
     nav_add: '책 추가',
-    nav_recommendations: '추천',
     nav_family: '가족',
     nav_logout: '로그아웃',
 
@@ -42,12 +41,6 @@ export const translations = {
     add_generating: 'AI 질문 생성 중...',
 
     // Recommendations
-    rec_title: '추천 도서',
-    rec_subtitle: '학년별 추천 책 목록이에요',
-    rec_count: (n: number) => `${n}권`,
-    rec_lang_ko: '한국',
-    rec_lang_en: 'EN',
-    rec_lang_es: 'ES',
 
     // Family dashboard
     family_title: '가족 대시보드',
@@ -117,7 +110,6 @@ export const translations = {
     // Settings
     settings_title: '설정',
     settings_language: '언어',
-    settings_book_language: '추천 도서 언어',
 
     // Book detail
     book_photo: '내가 찍은 사진',
@@ -204,7 +196,6 @@ export const translations = {
   en: {
     nav_bookshelf: 'Bookshelf',
     nav_add: 'Add Book',
-    nav_recommendations: 'Picks',
     nav_family: 'Family',
     nav_logout: 'Log out',
 
@@ -238,12 +229,6 @@ export const translations = {
     add_select_rating: 'Please select a rating',
     add_generating: 'Generating AI question...',
 
-    rec_title: 'Book Picks',
-    rec_subtitle: 'Recommended reads by grade',
-    rec_count: (n: number) => `${n} books`,
-    rec_lang_ko: 'KO',
-    rec_lang_en: 'EN',
-    rec_lang_es: 'ES',
 
     family_title: 'Family Dashboard',
     family_greeting: (name: string) => `Hi, ${name}!`,
@@ -311,7 +296,6 @@ export const translations = {
 
     settings_title: 'Settings',
     settings_language: 'App Language',
-    settings_book_language: 'Recommended Book Languages',
 
     book_photo: 'My Photo',
     book_photo_add: '+ Add photo',
@@ -397,7 +381,6 @@ export const translations = {
   es: {
     nav_bookshelf: 'Biblioteca',
     nav_add: 'Agregar',
-    nav_recommendations: 'Picks',
     nav_family: 'Familia',
     nav_logout: 'Salir',
 
@@ -430,13 +413,6 @@ export const translations = {
     add_cover_photo: 'Foto\nPortada',
     add_select_rating: 'Selecciona una puntuación',
     add_generating: 'Generando pregunta IA...',
-
-    rec_title: 'Libros Recomendados',
-    rec_subtitle: 'Lecturas recomendadas por grado',
-    rec_count: (n: number) => `${n} libros`,
-    rec_lang_ko: 'KO',
-    rec_lang_en: 'EN',
-    rec_lang_es: 'ES',
 
     family_title: 'Panel Familiar',
     family_greeting: (name: string) => `¡Hola, ${name}!`,
@@ -504,7 +480,6 @@ export const translations = {
 
     settings_title: 'Ajustes',
     settings_language: 'Idioma de la app',
-    settings_book_language: 'Idiomas de libros recomendados',
 
     book_photo: 'Mi foto',
     book_photo_add: '+ Agregar foto',
