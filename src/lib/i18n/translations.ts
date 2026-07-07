@@ -53,6 +53,14 @@ export const translations = {
     child_birth_month: '월',
     child_guidance_young: '👨‍👩‍👧 이 나이에는 부모님이 질문을 읽어주고 아이의 답을 함께 기록하는 걸 추천해요. 독후 대화 시간이 됩니다.',
     child_guidance_older: '🔑 아이 전용 아이디를 만들어주면 스스로 기록할 수 있어요.',
+
+    // PWA install
+    pwa_card_title: '📱 홈 화면에 추가해보세요',
+    pwa_card_desc: '앱처럼 한 번에 열 수 있어요. 다음에도 이렇게 기록해보세요!',
+    pwa_card_install: '지금 설치하기',
+    pwa_card_later: '나중에',
+    pwa_card_ios: 'Safari에서 하단 공유 버튼(□↑) 탭 → "홈 화면에 추가" 선택',
+    pwa_card_android: 'Chrome에서 우측 상단 메뉴(⋮) 탭 → "앱 설치" 또는 "홈 화면에 추가" 선택',
     child_add_btn: '추가하기 🌱',
     child_adding: '추가 중...',
     family_connect: '가족 연결',
@@ -250,6 +258,14 @@ export const translations = {
     child_birth_month: 'Month',
     child_guidance_young: '👨‍👩‍👧 At this age, we recommend reading the question aloud and writing down your child\'s answer together — it becomes a great conversation about the book.',
     child_guidance_older: '🔑 Create a login just for your child so they can record books on their own.',
+
+    // PWA install
+    pwa_card_title: '📱 Add to Home Screen',
+    pwa_card_desc: 'Open it like an app with one tap. Try it for your next entry!',
+    pwa_card_install: 'Install now',
+    pwa_card_later: 'Later',
+    pwa_card_ios: 'In Safari, tap the share button (□↑) → select "Add to Home Screen"',
+    pwa_card_android: 'In Chrome, tap the menu (⋮) → select "Install app" or "Add to Home Screen"',
     child_add_btn: 'Add 🌱',
     child_adding: 'Adding...',
     family_connect: 'Connect Family',
@@ -444,6 +460,14 @@ export const translations = {
     child_birth_month: 'Mes',
     child_guidance_young: '👨‍👩‍👧 A esta edad, recomendamos leer la pregunta en voz alta y anotar juntos la respuesta de tu hijo — se convierte en una linda conversación sobre el libro.',
     child_guidance_older: '🔑 Crea una cuenta solo para tu hijo para que pueda registrar sus lecturas por su cuenta.',
+
+    // PWA install
+    pwa_card_title: '📱 Agrega a la pantalla de inicio',
+    pwa_card_desc: 'Ábrela como una app con un toque. ¡Pruébalo la próxima vez!',
+    pwa_card_install: 'Instalar ahora',
+    pwa_card_later: 'Más tarde',
+    pwa_card_ios: 'En Safari, toca el botón compartir (□↑) → selecciona "Agregar a inicio"',
+    pwa_card_android: 'En Chrome, toca el menú (⋮) → selecciona "Instalar app" o "Agregar a inicio"',
     child_add_btn: 'Agregar 🌱',
     child_adding: 'Agregando...',
     family_connect: 'Conectar familia',

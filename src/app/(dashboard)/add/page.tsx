@@ -306,6 +306,7 @@ export default function AddBookPage() {
     }).select('id').single()
 
     setSaving(false)
+    sessionStorage.setItem('bl_show_pwa_prompt', '1')
     if (newBook) {
       router.push(`/book/${newBook.id}`)
     } else {
@@ -351,6 +352,7 @@ export default function AddBookPage() {
     // Check badges
     await checkBadges(selectedChild)
 
+    sessionStorage.setItem('bl_show_pwa_prompt', '1')
     router.push('/bookshelf')
   }
 

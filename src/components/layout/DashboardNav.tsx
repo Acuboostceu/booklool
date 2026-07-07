@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { useEffect, useState } from 'react'
+import '@/lib/pwaInstallPrompt' // 대시보드 진입 시점부터 beforeinstallprompt 리스너 등록
 
 const supabase = createClient()
 

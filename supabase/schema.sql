@@ -151,3 +151,6 @@ alter table bl_profiles add column if not exists birth_month int check (birth_mo
 
 -- Cached AI translations of book description, keyed by app locale (ko/en/es)
 alter table bl_books add column if not exists description_translations jsonb not null default '{}'::jsonb;
+
+-- PWA "Add to Home Screen" onboarding prompt: shown once, dismissal persists across devices
+alter table bl_profiles add column if not exists pwa_prompt_seen boolean not null default false;

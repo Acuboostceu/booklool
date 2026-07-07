@@ -9,6 +9,7 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 import { usePhotoQuality } from '@/lib/usePhotoQuality'
 import PhotoQualityDialog from '@/components/PhotoQualityDialog'
 import LowResWarning from '@/components/LowResWarning'
+import PwaInstallCard from '@/components/PwaInstallCard'
 import dynamic from 'next/dynamic'
 
 const PerspectiveEditor = dynamic(() => import('@/components/PerspectiveEditor'), { ssr: false })
@@ -409,6 +410,9 @@ function AddArtworkInner() {
             🎨
           </div>
           <h2 className="text-lg font-bold text-gray-800 text-center">{t('artwork_done_title')}</h2>
+          <div className="w-full max-w-sm">
+            <PwaInstallCard />
+          </div>
           <button
             onClick={() => router.push(`/bookshelf?profileId=${profileId}&tab=art`)}
             className="font-bold rounded-2xl px-8 py-3"

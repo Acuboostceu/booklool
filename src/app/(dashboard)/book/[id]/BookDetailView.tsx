@@ -10,6 +10,8 @@ import BookActions, { BookEditForm } from './BookActions'
 import ReadingLogSection from './ReadingLogSection'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useJustSavedRecord } from '@/lib/useJustSavedRecord'
+import PwaInstallCard from '@/components/PwaInstallCard'
 
 type Book = {
   id: string
@@ -87,6 +89,7 @@ export default function BookDetailView({ book, canDelete = true }: { book: Book;
   const { t } = useLocale()
   const searchParams = useSearchParams()
   const [editing, setEditing] = useState(false)
+  const justSaved = useJustSavedRecord()
 
   useEffect(() => {
     if (searchParams.get('edit') === '1') {
@@ -110,6 +113,7 @@ export default function BookDetailView({ book, canDelete = true }: { book: Book;
 
   return (
     <div className="pb-24">
+      {justSaved && <PwaInstallCard />}
 
       {/* Top action buttons (back / edit / delete) — always visible */}
       <BookActions book={bookData} editing={editing} setEditing={setEditing} canDelete={canDelete} />

@@ -8,6 +8,8 @@ import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
 import { useSwipeTab } from '@/lib/useSwipeTab'
+import { useJustSavedRecord } from '@/lib/useJustSavedRecord'
+import PwaInstallCard from '@/components/PwaInstallCard'
 
 const PREVIEW_COUNT = 5
 
@@ -276,6 +278,7 @@ export default function BookshelfView({
   initialProfileId?: string
 }) {
   const { t } = useLocale()
+  const justSaved = useJustSavedRecord()
 
   const booksByProfile: Record<string, Book[]> = {}
   const badgesByProfile: Record<string, Badge[]> = {}
@@ -288,6 +291,7 @@ export default function BookshelfView({
 
   return (
     <div className="pb-24">
+      {justSaved && <PwaInstallCard />}
       <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('bookshelf_title')}</h1>
 
       {profiles.map((profile, idx) => {
