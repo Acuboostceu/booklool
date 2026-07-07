@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
-import { formatDate } from '@/lib/utils'
+import { formatDate, truncateToSentence } from '@/lib/utils'
 import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import BookActions, { BookEditForm } from './BookActions'
@@ -41,6 +41,7 @@ function BookDescription({ book }: { book: Book }) {
 
   const [text, setText] = useState(sourceLocale === locale ? original : cached || original)
   const [loading, setLoading] = useState(false)
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     if (sourceLocale === locale) { setText(original); return }
@@ -61,12 +62,23 @@ function BookDescription({ book }: { book: Book }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locale, book.id])
 
+  const { text: shortText, truncated } = truncateToSentence(text, 260)
+
   return (
     <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
       <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_description')}</p>
       <p className="text-sm text-gray-600 leading-relaxed">
-        {loading ? '…' : text}
+        {loading ? '…' : (expanded ? text : shortText)}
       </p>
+      {!loading && truncated && (
+        <button
+          onClick={() => setExpanded(v => !v)}
+          className="text-xs font-bold mt-2"
+          style={{ color: 'var(--purple-dark)' }}
+        >
+          {expanded ? t('book_desc_less') : t('book_desc_more')}
+        </button>
+      )}
     </div>
   )
 }

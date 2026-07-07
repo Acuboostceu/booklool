@@ -19,7 +19,8 @@ export async function GET(req: NextRequest) {
       author: (info.authors || []).join(', '),
       publisher: info.publisher,
       cover_url: info.imageLinks?.thumbnail?.replace('http:', 'https:'),
-      description: info.description?.slice(0, 200),
+      // 잘림 없이 원문 저장 — 표시 단계에서 문장 단위로 자름
+      description: info.description,
       isbn: info.industryIdentifiers?.find((i: any) => i.type === 'ISBN_13')?.identifier,
       language: lang,
     }
