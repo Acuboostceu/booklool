@@ -49,8 +49,8 @@ export default function AddChildForm({ parentId }: { parentId: string }) {
         onBlur={e => e.target.style.borderColor = 'var(--green-light)'}
       />
 
-      <div>
-        <p className="text-xs text-gray-400 mb-1.5">{t('child_birth_label')}</p>
+      <div className="rounded-2xl p-3" style={{ background: 'var(--yellow-light)' }}>
+        <p className="text-xs font-semibold mb-2" style={{ color: 'var(--yellow-dark)' }}>{t('child_birth_label')}</p>
         <div className="flex gap-2">
           <select
             value={birthYear}
