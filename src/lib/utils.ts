@@ -31,3 +31,12 @@ export function truncateToSentence(text: string, maxLen: number): { text: string
   const safeCut = lastSpace > 0 ? slice.slice(0, lastSpace) : slice
   return { text: safeCut.trim(), truncated: true }
 }
+
+// birthYear/birthMonth만으로 만 나이 계산 (일자 정보 없음)
+export function calcAge(birthYear?: number | null, birthMonth?: number | null): number | null {
+  if (!birthYear || !birthMonth) return null
+  const now = new Date()
+  let age = now.getFullYear() - birthYear
+  if (now.getMonth() + 1 < birthMonth) age -= 1
+  return age
+}

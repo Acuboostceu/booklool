@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { TranslationKey } from '@/lib/i18n/translations'
 import { createClient } from '@/lib/supabase/client'
+import { calcAge } from '@/lib/utils'
 import FamilyConnect from './FamilyConnect'
 import AddChildForm from './AddChildForm'
 import ChildLoginSetup from './ChildLoginSetup'
@@ -108,6 +109,11 @@ function BirthEditor({ profileId, birthYear, birthMonth, t }: {
     setEditing(false)
   }
 
+  const age = calcAge(
+    editing ? (year ? parseInt(year) : null) : displayYear,
+    editing ? (month ? parseInt(month) : null) : displayMonth,
+  )
+
   if (editing) {
     return (
       <div className="mt-3 pt-3 border-t border-gray-50">
@@ -132,6 +138,11 @@ function BirthEditor({ profileId, birthYear, birthMonth, t }: {
             {birthMonths.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
         </div>
+        {age !== null && (
+          <p className="text-xs mb-2 leading-relaxed" style={{ color: 'var(--yellow-dark)' }}>
+            {age <= 8 ? t('child_guidance_young') : t('child_guidance_older')}
+          </p>
+        )}
         <div className="flex gap-2">
           <button onClick={handleSave} disabled={saving} className="text-xs font-bold px-3 py-1.5 rounded-xl" style={{ background: 'var(--green-light)', color: 'var(--green-dark)' }}>
             {saving ? '...' : '저장'}
@@ -142,16 +153,32 @@ function BirthEditor({ profileId, birthYear, birthMonth, t }: {
     )
   }
 
+  if (!displayYear || !displayMonth) {
+    return (
+      <div className="mt-3 pt-3 border-t border-gray-50">
+        <div className="rounded-2xl p-3 flex items-center justify-between gap-2" style={{ background: 'var(--yellow-light)' }}>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--yellow-dark)' }}>{t('child_birth_label')}</p>
+          <button onClick={() => setEditing(true)} className="text-xs font-bold underline underline-offset-2 flex-shrink-0" style={{ color: 'var(--yellow-dark)' }}>
+            입력
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="mt-3 pt-3 border-t border-gray-50 flex items-center justify-between">
-      <p className="text-xs text-gray-400">
-        {displayYear && displayMonth
-          ? `${displayYear}.${String(displayMonth).padStart(2, '0')}`
-          : t('child_birth_label')}
-      </p>
-      <button onClick={() => setEditing(true)} className="text-xs font-bold underline underline-offset-2" style={{ color: 'var(--green-dark)' }}>
-        {displayYear && displayMonth ? '수정' : '입력'}
-      </button>
+    <div className="mt-3 pt-3 border-t border-gray-50">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-gray-400">{`${displayYear}.${String(displayMonth).padStart(2, '0')}`}</p>
+        <button onClick={() => setEditing(true)} className="text-xs font-bold underline underline-offset-2" style={{ color: 'var(--green-dark)' }}>
+          수정
+        </button>
+      </div>
+      {age !== null && (
+        <p className="text-xs mt-1.5 leading-relaxed" style={{ color: 'var(--yellow-dark)' }}>
+          {age <= 8 ? t('child_guidance_young') : t('child_guidance_older')}
+        </p>
+      )}
     </div>
   )
 }

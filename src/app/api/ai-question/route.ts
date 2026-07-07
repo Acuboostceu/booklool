@@ -1,19 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { calcAge } from '@/lib/utils'
 
 const langMap: Record<string, string> = {
   ko: 'Korean',
   en: 'English',
   es: 'Spanish',
-}
-
-// birthYear/birthMonth만으로 만 나이 계산 (일자 정보 없음)
-function calcAge(birthYear?: number | null, birthMonth?: number | null): number | null {
-  if (!birthYear || !birthMonth) return null
-  const now = new Date()
-  let age = now.getFullYear() - birthYear
-  if (now.getMonth() + 1 < birthMonth) age -= 1
-  return age
 }
 
 function ageTierGuidance(age: number | null): string {

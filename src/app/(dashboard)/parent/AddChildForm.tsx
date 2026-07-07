@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
+import { calcAge } from '@/lib/utils'
 
 const currentYear = new Date().getFullYear()
 const years = Array.from({ length: 19 }, (_, i) => currentYear - i) // 0~18세
@@ -17,6 +18,7 @@ export default function AddChildForm({ parentId }: { parentId: string }) {
   const [birthYear, setBirthYear] = useState('')
   const [birthMonth, setBirthMonth] = useState('')
   const [loading, setLoading] = useState(false)
+  const age = calcAge(birthYear ? parseInt(birthYear) : null, birthMonth ? parseInt(birthMonth) : null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -71,6 +73,11 @@ export default function AddChildForm({ parentId }: { parentId: string }) {
             {months.map(m => <option key={m} value={m}>{m}</option>)}
           </select>
         </div>
+        {age !== null && (
+          <p className="text-xs mt-2 leading-relaxed" style={{ color: 'var(--yellow-dark)' }}>
+            {age <= 8 ? t('child_guidance_young') : t('child_guidance_older')}
+          </p>
+        )}
       </div>
 
       <button
