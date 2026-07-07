@@ -57,20 +57,25 @@ export async function POST(req: NextRequest) {
     console.error('Thumbnail generation failed:', e)
   }
 
-  await s3.send(new PutObjectCommand({
-    Bucket: BUCKET,
-    Key: `${recordKey}/original.${ext}`,
-    Body: buffer,
-    ContentType: contentType,
-  }))
-
-  if (thumbBuffer) {
+  try {
     await s3.send(new PutObjectCommand({
       Bucket: BUCKET,
-      Key: `${recordKey}/thumb.jpg`,
-      Body: thumbBuffer,
-      ContentType: 'image/jpeg',
+      Key: `${recordKey}/original.${ext}`,
+      Body: buffer,
+      ContentType: contentType,
     }))
+
+    if (thumbBuffer) {
+      await s3.send(new PutObjectCommand({
+        Bucket: BUCKET,
+        Key: `${recordKey}/thumb.jpg`,
+        Body: thumbBuffer,
+        ContentType: 'image/jpeg',
+      }))
+    }
+  } catch (e) {
+    console.error('S3 upload failed:', e)
+    return NextResponse.json({ error: `S3 upload failed: ${String(e)}` }, { status: 500 })
   }
 
   const originalUrl = `${S3_BASE}/${recordKey}/original.${ext}`
