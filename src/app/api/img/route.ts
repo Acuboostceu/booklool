@@ -12,6 +12,9 @@ const s3 = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
+  // 이 런타임에서 기본 CRC32 체크섬 계산 경로가 SharedArrayBuffer를 만들어
+  // AWS SDK 자체 검증에 실패하는 문제 회피
+  requestChecksumCalculation: 'WHEN_REQUIRED',
 })
 
 const SIGN_TTL_SECONDS = 10 * 60 // 10분 (≤15분 권장)
