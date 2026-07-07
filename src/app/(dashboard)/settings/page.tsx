@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Trash2, ChevronRight } from 'lucide-react'
+import { Trash2, ChevronRight, Share, MoreVertical } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { Locale } from '@/lib/i18n/translations'
@@ -60,21 +60,21 @@ export default function SettingsPage() {
           <div className="rounded-2xl p-3 text-xs text-gray-600 space-y-1" style={{ background: 'var(--green-light)' }}>
             <p className="font-bold text-gray-700">🍎 iPhone / iPad</p>
             {locale === 'ko' ? (
-              <p>Safari에서 하단 <strong>공유 버튼(□↑)</strong> 탭 → <strong>"홈 화면에 추가"</strong> 선택</p>
+              <p>Safari에서 하단 <strong className="inline-flex items-center gap-1">공유 버튼 <Share className="w-3.5 h-3.5" /></strong> 탭 → <strong>&quot;홈 화면에 추가&quot;</strong> 선택</p>
             ) : locale === 'es' ? (
-              <p>En Safari, toca el botón <strong>compartir (□↑)</strong> → selecciona <strong>"Agregar a inicio"</strong></p>
+              <p>En Safari, toca el botón <strong className="inline-flex items-center gap-1">compartir <Share className="w-3.5 h-3.5" /></strong> → selecciona <strong>&quot;Agregar a inicio&quot;</strong></p>
             ) : (
-              <p>In Safari, tap the <strong>share button (□↑)</strong> → select <strong>"Add to Home Screen"</strong></p>
+              <p>In Safari, tap the <strong className="inline-flex items-center gap-1">share button <Share className="w-3.5 h-3.5" /></strong> → select <strong>&quot;Add to Home Screen&quot;</strong></p>
             )}
           </div>
           <div className="rounded-2xl p-3 text-xs text-gray-600 space-y-1" style={{ background: 'var(--purple-light)' }}>
             <p className="font-bold text-gray-700">🤖 Android</p>
             {locale === 'ko' ? (
-              <p>Chrome에서 우측 상단 <strong>메뉴(⋮)</strong> 탭 → <strong>"앱 설치"</strong> 또는 <strong>"홈 화면에 추가"</strong> 선택</p>
+              <p>Chrome에서 우측 상단 <strong className="inline-flex items-center gap-1">메뉴 <MoreVertical className="w-3.5 h-3.5" /></strong> 탭 → <strong>&quot;앱 설치&quot;</strong> 또는 <strong>&quot;홈 화면에 추가&quot;</strong> 선택</p>
             ) : locale === 'es' ? (
-              <p>En Chrome, toca el <strong>menú (⋮)</strong> → selecciona <strong>"Instalar app"</strong> o <strong>"Agregar a inicio"</strong></p>
+              <p>En Chrome, toca el <strong className="inline-flex items-center gap-1">menú <MoreVertical className="w-3.5 h-3.5" /></strong> → selecciona <strong>&quot;Instalar app&quot;</strong> o <strong>&quot;Agregar a inicio&quot;</strong></p>
             ) : (
-              <p>In Chrome, tap the <strong>menu (⋮)</strong> → select <strong>"Install app"</strong> or <strong>"Add to Home Screen"</strong></p>
+              <p>In Chrome, tap the <strong className="inline-flex items-center gap-1">menu <MoreVertical className="w-3.5 h-3.5" /></strong> → select <strong>&quot;Install app&quot;</strong> or <strong>&quot;Add to Home Screen&quot;</strong></p>
             )}
           </div>
         </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { X, Download } from 'lucide-react'
+import { X, Download, Share, MoreVertical } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import {
@@ -61,6 +61,20 @@ export default function PwaInstallCard() {
 
   if (!visible) return null
 
+  // 안내 문구의 {icon} 자리에 실제 공유/메뉴 아이콘을 끼워 넣는다.
+  function renderInstructions() {
+    const text = platform === 'ios' ? t('pwa_card_ios') : t('pwa_card_android')
+    const Icon = platform === 'ios' ? Share : MoreVertical
+    const [before, after] = text.split('{icon}')
+    return (
+      <>
+        {before}
+        <Icon className="w-3.5 h-3.5 inline-block mx-1 -mt-0.5" />
+        {after}
+      </>
+    )
+  }
+
   return (
     <div className="rounded-3xl p-4 mb-4 border" style={{ background: 'var(--green-light)', borderColor: 'var(--green-light)' }}>
       <div className="flex items-start justify-between gap-2 mb-2">
@@ -81,7 +95,7 @@ export default function PwaInstallCard() {
         </button>
       ) : (
         <div className="rounded-2xl p-3 text-xs text-gray-600 bg-white/70">
-          {platform === 'ios' ? t('pwa_card_ios') : t('pwa_card_android')}
+          {renderInstructions()}
         </div>
       )}
 
