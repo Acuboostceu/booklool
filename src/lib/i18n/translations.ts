@@ -13,6 +13,7 @@ export const translations = {
     bookshelf_title: '가족 책장',
     bookshelf_empty: '아직 읽은 책이 없어요',
     bookshelf_add_first: '+ 첫 번째 책 추가하기',
+    book_add_btn: '+ 책 추가',
     bookshelf_count: (n: number) => `읽은 책 ${n}권`,
     bookshelf_badges: (n: number) => `${n}개 배지`,
 
@@ -207,6 +208,7 @@ export const translations = {
     bookshelf_title: 'Family Bookshelf',
     bookshelf_empty: 'No books yet',
     bookshelf_add_first: '+ Add first book',
+    book_add_btn: '+ Add Book',
     bookshelf_count: (n: number) => `${n} book${n !== 1 ? 's' : ''}`,
     bookshelf_badges: (n: number) => `${n} badge${n !== 1 ? 's' : ''}`,
 
@@ -396,6 +398,7 @@ export const translations = {
     bookshelf_title: 'Biblioteca Familiar',
     bookshelf_empty: 'Aún no hay libros',
     bookshelf_add_first: '+ Agregar primer libro',
+    book_add_btn: '+ Agregar libro',
     bookshelf_count: (n: number) => `${n} libro${n !== 1 ? 's' : ''}`,
     bookshelf_badges: (n: number) => `${n} insignia${n !== 1 ? 's' : ''}`,
 

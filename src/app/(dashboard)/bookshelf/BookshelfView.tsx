@@ -9,7 +9,7 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
 import { useSwipeTab } from '@/lib/useSwipeTab'
 
-const PREVIEW_COUNT = 3
+const PREVIEW_COUNT = 5
 
 type Profile = { id: string; name: string; color?: string | null }
 type Book = {
@@ -129,6 +129,9 @@ function ProfileSection({
                       >
                         <Plus className="w-7 h-7" style={{ color: color.accent }} />
                       </div>
+                      <p className="text-xs font-semibold truncate mt-1 px-0.5 text-center" style={{ color: color.accent }}>
+                        {t('book_add_btn')}
+                      </p>
                     </Link>
                   )}
                   {books.slice(0, PREVIEW_COUNT).map(book => (
@@ -211,6 +214,9 @@ function ProfileSection({
                       >
                         <Plus className="w-7 h-7" style={{ color: color.accent }} />
                       </div>
+                      <p className="text-xs font-semibold truncate mt-1 px-0.5 text-center" style={{ color: color.accent }}>
+                        {t('artwork_add_btn')}
+                      </p>
                     </Link>
                   )}
                   {artworks.slice(0, PREVIEW_COUNT).map(art => (
