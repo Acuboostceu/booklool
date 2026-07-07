@@ -19,6 +19,15 @@ const s3 = new S3Client({
 const BUCKET = process.env.AWS_S3_BUCKET!
 const S3_BASE = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com`
 
+// Node의 내부 Buffer 풀이 이 런타임에서 SharedArrayBuffer로 동작해 AWS SDK의
+// isArrayBuffer 검사를 통과 못하는 경우가 있음. allocUnsafeSlow로 풀을 우회해
+// 항상 전용(non-shared) ArrayBuffer에 바이트를 복사한다.
+function toSafeBuffer(view: Uint8Array): Buffer {
+  const out = Buffer.allocUnsafeSlow(view.byteLength)
+  out.set(view)
+  return out
+}
+
 // POST: 서버에서 S3에 직접 업로드 (CORS 문제 없음)
 // 원본은 무손실 보존(인쇄용), 썸네일(1200px q80)은 화면용
 export async function POST(req: NextRequest) {
@@ -43,9 +52,7 @@ export async function POST(req: NextRequest) {
   const recordKey = `books/${profileId}/${Date.now()}`
 
   const arrayBuffer = await file.arrayBuffer()
-  // Vercel 런타임에서 Buffer.from(arrayBuffer)가 공유 메모리를 참조해 AWS SDK가 거부하는
-  // 경우가 있어, Uint8Array.from으로 바이트를 새 메모리에 완전히 복사한다.
-  const buffer = Buffer.from(Uint8Array.from(new Uint8Array(arrayBuffer)))
+  const buffer = toSafeBuffer(new Uint8Array(arrayBuffer))
 
   // 썸네일 생성 — 긴 변 1200px, JPEG q80. 실패해도 원본 업로드는 진행
   let thumbBuffer: Buffer | null = null
@@ -55,7 +62,7 @@ export async function POST(req: NextRequest) {
       .resize(1200, 1200, { fit: 'inside', withoutEnlargement: true })
       .jpeg({ quality: 80 })
       .toBuffer()
-    thumbBuffer = Buffer.from(Uint8Array.from(raw))
+    thumbBuffer = toSafeBuffer(raw)
   } catch (e) {
     console.error('Thumbnail generation failed:', e)
   }
