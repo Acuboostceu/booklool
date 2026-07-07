@@ -224,6 +224,13 @@ export default function ParentPageView({
         <h3 className="font-semibold text-gray-800 mb-4">{t('family_add_child')}</h3>
         <AddChildForm parentId={parentId} />
       </div>
+
+      <a
+        href="/trash"
+        className="mt-4 flex items-center justify-center gap-2 text-xs font-bold py-3 rounded-2xl text-gray-400 hover:text-gray-600 transition"
+      >
+        🗑 {t('trash_title')}
+      </a>
     </div>
   )
 }

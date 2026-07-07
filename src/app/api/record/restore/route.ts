@@ -4,16 +4,12 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getSessionProfile } from '@/lib/session'
 import { RECORD_TABLES, verifyFamilyOwnership, type RecordType } from '@/lib/recordAccess'
 
-const RETENTION_DAYS = 30
-
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
   const session = await getSessionProfile(supabase)
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  // 아이 세션은 삭제 불가 — UI 숨김과 별개로 API 레벨에서 차단
   if (session.role !== 'parent') {
-    return NextResponse.json({ error: 'Children cannot delete records' }, { status: 403 })
+    return NextResponse.json({ error: 'Children cannot restore records' }, { status: 403 })
   }
 
   const { type, id } = await req.json() as { type: RecordType; id: string }
@@ -25,16 +21,8 @@ export async function POST(req: NextRequest) {
   if (access === 'not_found') return NextResponse.json({ error: 'Not found' }, { status: 404 })
   if (access === 'forbidden') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  // Soft delete — 휴지통으로 이동
-  const { error } = await admin.from(RECORD_TABLES[type]).update({ deleted_at: new Date().toISOString() }).eq('id', id)
+  const { error } = await admin.from(RECORD_TABLES[type]).update({ deleted_at: null }).eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-
-  // Lazy purge: 30일 지난 휴지통 레코드는 이 시점에 실제 삭제
-  const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString()
-  for (const t of Object.values(RECORD_TABLES)) {
-    const { error: purgeError } = await admin.from(t).delete().lt('deleted_at', cutoff)
-    if (purgeError) console.error(`Purge failed for ${t}:`, purgeError)
-  }
 
   return NextResponse.json({ ok: true })
 }
