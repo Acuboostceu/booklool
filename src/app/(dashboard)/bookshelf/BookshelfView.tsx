@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
-import { Star, BookOpen, Palette, ChevronRight } from 'lucide-react'
+import { Star, BookOpen, Palette, ChevronRight, Plus } from 'lucide-react'
 import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
@@ -121,6 +121,16 @@ function ProfileSection({
             ) : (
               <>
                 <div className="grid grid-cols-3 gap-3">
+                  {!isPartner && (
+                    <Link href={`/add?profileId=${profile.id}`} className="group">
+                      <div
+                        className="rounded-2xl overflow-hidden border-2 border-dashed transition group-hover:shadow-md group-hover:scale-[1.02] aspect-[2/3] flex items-center justify-center"
+                        style={{ borderColor: color.bg, background: color.bg + '55' }}
+                      >
+                        <Plus className="w-7 h-7" style={{ color: color.accent }} />
+                      </div>
+                    </Link>
+                  )}
                   {books.slice(0, PREVIEW_COUNT).map(book => (
                     <Link key={book.id} href={`/book/${book.id}`} className="group">
                       <div
@@ -193,6 +203,16 @@ function ProfileSection({
             ) : (
               <>
                 <div className="grid grid-cols-3 gap-3">
+                  {!isPartner && (
+                    <Link href={`/add-artwork?profileId=${profile.id}`} className="group">
+                      <div
+                        className="rounded-2xl overflow-hidden border-2 border-dashed transition group-hover:shadow-md group-hover:scale-[1.02] aspect-square flex items-center justify-center"
+                        style={{ borderColor: color.bg, background: color.bg + '55' }}
+                      >
+                        <Plus className="w-7 h-7" style={{ color: color.accent }} />
+                      </div>
+                    </Link>
+                  )}
                   {artworks.slice(0, PREVIEW_COUNT).map(art => (
                     <Link key={art.id} href={`/artwork/${art.id}`} className="group">
                       <div
