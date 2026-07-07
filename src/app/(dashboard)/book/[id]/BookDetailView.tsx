@@ -10,7 +10,7 @@ import BookActions, { BookEditForm } from './BookActions'
 import ReadingLogSection from './ReadingLogSection'
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useJustSavedRecord } from '@/lib/useJustSavedRecord'
+import { usePwaPromptTrigger } from '@/lib/usePwaPromptTrigger'
 import PwaInstallCard from '@/components/PwaInstallCard'
 
 type Book = {
@@ -89,7 +89,7 @@ export default function BookDetailView({ book, canDelete = true }: { book: Book;
   const { t } = useLocale()
   const searchParams = useSearchParams()
   const [editing, setEditing] = useState(false)
-  const justSaved = useJustSavedRecord()
+  const justSaved = usePwaPromptTrigger()
 
   useEffect(() => {
     if (searchParams.get('edit') === '1') {

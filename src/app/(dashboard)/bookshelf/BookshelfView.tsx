@@ -8,7 +8,7 @@ import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
 import { useSwipeTab } from '@/lib/useSwipeTab'
-import { useJustSavedRecord } from '@/lib/useJustSavedRecord'
+import { usePwaPromptTrigger } from '@/lib/usePwaPromptTrigger'
 import PwaInstallCard from '@/components/PwaInstallCard'
 
 const PREVIEW_COUNT = 5
@@ -278,7 +278,7 @@ export default function BookshelfView({
   initialProfileId?: string
 }) {
   const { t } = useLocale()
-  const justSaved = useJustSavedRecord()
+  const justSaved = usePwaPromptTrigger()
 
   const booksByProfile: Record<string, Book[]> = {}
   const badgesByProfile: Record<string, Badge[]> = {}

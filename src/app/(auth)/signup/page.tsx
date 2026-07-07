@@ -45,6 +45,7 @@ export default function SignupPage() {
       }
     }
 
+    sessionStorage.setItem('bl_show_pwa_prompt', '1')
     router.push('/bookshelf')
   }
 
