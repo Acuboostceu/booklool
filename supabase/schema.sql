@@ -148,3 +148,6 @@ $function$;
 -- Birth year/month (no day) for age-aware AI question difficulty
 alter table bl_profiles add column if not exists birth_year int;
 alter table bl_profiles add column if not exists birth_month int check (birth_month between 1 and 12);
+
+-- Cached AI translations of book description, keyed by app locale (ko/en/es)
+alter table bl_books add column if not exists description_translations jsonb not null default '{}'::jsonb;

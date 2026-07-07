@@ -24,8 +24,51 @@ type Book = {
   ai_question: string | null
   ai_answer: string | null
   description: string | null
+  description_translations: Record<string, string> | null
+  language: string | null
   read_at: string | null
   total_pages: number | null
+}
+
+const descLangName: Record<string, string> = { ko: 'Korean', en: 'English', es: 'Spanish' }
+
+// 책 소개 원문 언어와 앱 언어가 다르면 AI로 번역(결과는 DB에 캐싱)해서 보여준다.
+function BookDescription({ book }: { book: Book }) {
+  const { locale, t } = useLocale()
+  const original = book.description!
+  const sourceLocale = book.language === 'ko' ? 'ko' : 'en'
+  const cached = book.description_translations?.[locale]
+
+  const [text, setText] = useState(sourceLocale === locale ? original : cached || original)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (sourceLocale === locale) { setText(original); return }
+    if (cached) { setText(cached); return }
+    if (!descLangName[locale]) { setText(original); return }
+
+    let cancelled = false
+    setLoading(true)
+    fetch('/api/books/translate-description', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookId: book.id, targetLocale: locale }),
+    })
+      .then(res => res.json())
+      .then(data => { if (!cancelled && data.description) setText(data.description) })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, book.id])
+
+  return (
+    <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
+      <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_description')}</p>
+      <p className="text-sm text-gray-600 leading-relaxed">
+        {loading ? '…' : text}
+      </p>
+    </div>
+  )
 }
 
 export default function BookDetailView({ book, canDelete = true }: { book: Book; canDelete?: boolean }) {
@@ -115,12 +158,7 @@ export default function BookDetailView({ book, canDelete = true }: { book: Book;
       )}
 
       {/* Description */}
-      {book.description && (
-        <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('book_description')}</p>
-          <p className="text-sm text-gray-600 leading-relaxed">{book.description}</p>
-        </div>
-      )}
+      {book.description && <BookDescription book={book} />}
 
       {/* Reading Log — only for log-mode books (total_pages set) */}
       {book.total_pages && (
