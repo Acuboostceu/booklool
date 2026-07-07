@@ -6,6 +6,9 @@ import Image from 'next/image'
 import { Camera, ImageIcon, Loader2, CheckCircle2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useLocale } from '@/lib/i18n/LocaleContext'
+import { usePhotoQuality } from '@/lib/usePhotoQuality'
+import PhotoQualityDialog from '@/components/PhotoQualityDialog'
+import LowResWarning from '@/components/LowResWarning'
 import dynamic from 'next/dynamic'
 
 const PerspectiveEditor = dynamic(() => import('@/components/PerspectiveEditor'), { ssr: false })
@@ -34,6 +37,8 @@ function AddArtworkInner() {
   const [saving, setSaving] = useState(false)
   const [profileId, setProfileId] = useState<string>('')
   const [profileName, setProfileName] = useState<string>('')
+  const [rawLowRes, setRawLowRes] = useState(false)
+  const photoQuality = usePhotoQuality()
 
   const preselectedProfileId = searchParams.get('profileId')
 
@@ -77,9 +82,15 @@ function AddArtworkInner() {
     loadProfile()
   }, [preselectedProfileId]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+
+    const { keep, isLowRes } = await photoQuality.checkFile(file)
+    if (!keep) return
+
+    setRawLowRes(isLowRes)
     const url = URL.createObjectURL(file)
     setRawFile(file)
     setRawImageUrl(url)
@@ -189,6 +200,11 @@ function AddArtworkInner() {
 
   return (
     <div className="pb-24">
+      <PhotoQualityDialog
+        open={photoQuality.showDarkPrompt}
+        onRetake={photoQuality.confirmRetake}
+        onContinue={photoQuality.confirmContinue}
+      />
       <h1 className="text-xl font-bold text-gray-800 mb-4 text-center">{t('artwork_title')}</h1>
 
       {/* Step indicator */}
@@ -240,6 +256,7 @@ function AddArtworkInner() {
                   <div className="relative w-full rounded-2xl overflow-hidden">
                     <Image src={flattenedUrl} alt="flattened artwork" width={600} height={600} className="w-full h-auto object-contain rounded-2xl" unoptimized />
                   </div>
+                  <LowResWarning show={rawLowRes} />
                   <div className="flex gap-2">
                     <button
                       onClick={() => { setRawFile(null); setRawImageUrl(''); setFlattenedUrl('') }}
@@ -260,6 +277,7 @@ function AddArtworkInner() {
                 <div className="space-y-3">
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-wide text-center">{locale === 'ko' ? '원근 교정 (선택)' : 'Perspective correction (optional)'}</p>
                   <PerspectiveEditor imageUrl={rawImageUrl} onFlattened={handleFlattened} locale={locale} />
+                  <LowResWarning show={rawLowRes} />
                   <div className="flex gap-2">
                     <button
                       onClick={() => { setRawFile(null); setRawImageUrl(''); setFlattenedUrl('') }}

@@ -7,6 +7,9 @@ import { Camera, Image as ImageIcon, Search, Star, ChevronRight, Loader2, PenLin
 import { createClient } from '@/lib/supabase/client'
 import type { BookSearchResult } from '@/types'
 import { useLocale } from '@/lib/i18n/LocaleContext'
+import { usePhotoQuality } from '@/lib/usePhotoQuality'
+import PhotoQualityDialog from '@/components/PhotoQualityDialog'
+import LowResWarning from '@/components/LowResWarning'
 
 type Step = 'capture' | 'search' | 'mode' | 'confirm' | 'review' | 'log'
 
@@ -71,6 +74,9 @@ export default function AddBookPage() {
   const [profileId, setProfileId] = useState<string | null>(null)
   const [children, setChildren] = useState<{ id: string; name: string }[]>([])
   const [selectedChild, setSelectedChild] = useState<string>('')
+  const [photoLowRes, setPhotoLowRes] = useState(false)
+  const [coverPhotoLowRes, setCoverPhotoLowRes] = useState(false)
+  const photoQuality = usePhotoQuality()
 
   const preselectedProfileId = searchParams.get('profileId')
 
@@ -132,7 +138,13 @@ export default function AddBookPage() {
 
   async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+
+    const { keep, isLowRes } = await photoQuality.checkFile(file)
+    if (!keep) return
+
+    setPhotoLowRes(isLowRes)
     setPhotoFile(file)
     setPhotoPreview(URL.createObjectURL(file))
     setOcrLoading(true)
@@ -200,9 +212,15 @@ export default function AddBookPage() {
     setStep('mode')
   }
 
-  function handleCoverPhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleCoverPhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+
+    const { keep, isLowRes } = await photoQuality.checkFile(file)
+    if (!keep) return
+
+    setCoverPhotoLowRes(isLowRes)
     setCoverPhotoFile(file)
     setCoverPhotoPreview(URL.createObjectURL(file))
   }
@@ -354,6 +372,11 @@ export default function AddBookPage() {
 
   return (
     <div className="pb-24">
+      <PhotoQualityDialog
+        open={photoQuality.showDarkPrompt}
+        onRetake={photoQuality.confirmRetake}
+        onContinue={photoQuality.confirmContinue}
+      />
       <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('add_title')}</h1>
 
       {/* Child selector — hidden when profileId is in URL */}
@@ -517,6 +540,7 @@ export default function AddBookPage() {
         <div className="space-y-4">
           <div className="mb-2">
             <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} photoPreview={photoPreview} />
+            <LowResWarning show={coverPhotoFile ? coverPhotoLowRes : photoLowRes} />
           </div>
           <p className="text-center font-bold text-gray-700 text-base">{t('add_mode_title')}</p>
           <div className="grid grid-cols-2 gap-3">
@@ -548,6 +572,7 @@ export default function AddBookPage() {
       {step === 'log' && selected && (
         <div className="space-y-4">
           <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} photoPreview={photoPreview} />
+          <LowResWarning show={coverPhotoFile ? coverPhotoLowRes : photoLowRes} />
           <div className="bg-white rounded-3xl p-4 border border-gray-100">
             <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">{t('add_log_total_pages')}</p>
             <input
@@ -577,6 +602,7 @@ export default function AddBookPage() {
         <div className="space-y-4">
           {/* Book info */}
           <SelectedBookCard book={selected} coverPhotoPreview={coverPhotoPreview} photoPreview={photoPreview} size="lg" />
+          <LowResWarning show={coverPhotoFile ? coverPhotoLowRes : photoLowRes} />
 
           {/* Photo preview */}
           {photoPreview && (

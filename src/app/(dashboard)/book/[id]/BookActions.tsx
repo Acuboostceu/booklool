@@ -7,6 +7,9 @@ import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
+import { usePhotoQuality } from '@/lib/usePhotoQuality'
+import PhotoQualityDialog from '@/components/PhotoQualityDialog'
+import LowResWarning from '@/components/LowResWarning'
 
 type BookData = {
   id: string
@@ -124,10 +127,18 @@ export function BookEditForm({ book, setEditing }: {
   const [saving, setSaving] = useState(false)
   const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null)
   const [newPhotoPreview, setNewPhotoPreview] = useState<string>('')
+  const [newPhotoLowRes, setNewPhotoLowRes] = useState(false)
+  const photoQuality = usePhotoQuality()
 
-  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
+
+    const { keep, isLowRes } = await photoQuality.checkFile(file)
+    if (!keep) return
+
+    setNewPhotoLowRes(isLowRes)
     setNewPhotoFile(file)
     setNewPhotoPreview(URL.createObjectURL(file))
   }
@@ -165,6 +176,11 @@ export function BookEditForm({ book, setEditing }: {
 
   return (
     <div className="bg-white rounded-3xl p-4 border border-gray-100 mt-4 space-y-4">
+      <PhotoQualityDialog
+        open={photoQuality.showDarkPrompt}
+        onRetake={photoQuality.confirmRetake}
+        onContinue={photoQuality.confirmContinue}
+      />
       <div className="flex items-center justify-between">
         <p className="font-black text-gray-800">{t('book_edit')}</p>
         <button onClick={() => { setEditing(false); setNewPhotoFile(null); setNewPhotoPreview('') }}>
@@ -187,6 +203,7 @@ export function BookEditForm({ book, setEditing }: {
               />
             </div>
           ) : null}
+          {newPhotoPreview && <LowResWarning show={newPhotoLowRes} />}
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
