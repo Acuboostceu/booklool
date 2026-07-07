@@ -14,7 +14,10 @@ export async function POST(req: NextRequest) {
   const lang = langMap[locale] ?? 'Korean'
   // COPPA: 아이 이름은 OpenAI로 보내지 않음 — {child} 플레이스홀더를 응답 후 치환
   const artDesc = `Artwork title: "${title}"${keywords ? `, keywords: ${keywords}` : ''}`
-  const langInstruction = `Respond in ${lang}. If you refer to the child, use the literal placeholder {child} instead of a name.`
+  const guardrails = `Rules:
+- Only reference artists or art movements if the user explicitly named them in the keywords above. Never invent or assume an artistic influence.
+- End the caption on a concrete, specific visual detail from the artwork itself (e.g. the character's expression, the energy of the linework, a specific color choice) — never end on an abstract closing line like "a shared human experience" or "the wonder of childhood."
+- Respond in ${lang}. If you refer to the child, use the literal placeholder {child} instead of a name.`
 
   const [curator, parent, child] = await Promise.all([
     openai.chat.completions.create({
@@ -22,7 +25,7 @@ export async function POST(req: NextRequest) {
       max_tokens: 150,
       messages: [{
         role: 'user',
-        content: `Write a short art curator-style caption (2-3 sentences, formal and aesthetic language) for this child's artwork. ${artDesc}. ${langInstruction} Output only the caption.`,
+        content: `Write a short art curator-style caption (2-3 sentences, formal and aesthetic language) for this child's artwork. ${artDesc}.\n${guardrails}\nOutput only the caption.`,
       }],
     }),
     openai.chat.completions.create({
@@ -30,7 +33,7 @@ export async function POST(req: NextRequest) {
       max_tokens: 150,
       messages: [{
         role: 'user',
-        content: `Write a short warm parent diary-style caption (2-3 sentences, personal and loving) about this child's artwork, referring to the child as {child}. ${artDesc}. ${langInstruction} Output only the caption.`,
+        content: `Write a short warm parent diary-style caption (2-3 sentences, personal and loving) about this child's artwork, referring to the child as {child}. ${artDesc}.\n${guardrails}\nOutput only the caption.`,
       }],
     }),
     openai.chat.completions.create({
@@ -38,7 +41,7 @@ export async function POST(req: NextRequest) {
       max_tokens: 150,
       messages: [{
         role: 'user',
-        content: `Write a short caption in a child's voice (simple, excited, first-person, like the child is describing their own drawing). ${artDesc}. ${langInstruction} Output only the caption.`,
+        content: `Write a short caption in a child's voice (simple, excited, first-person, like the child is describing their own drawing). ${artDesc}.\n${guardrails}\nOutput only the caption.`,
       }],
     }),
   ])
