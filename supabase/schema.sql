@@ -110,3 +110,37 @@ alter table bl_artworks add column if not exists has_original boolean not null d
 -- Soft delete (30-day retention; purged lazily by /api/record/delete)
 alter table bl_books add column if not exists deleted_at timestamptz;
 alter table bl_artworks add column if not exists deleted_at timestamptz;
+
+-- Artwork RPCs: exclude soft-deleted rows at SQL level
+CREATE OR REPLACE FUNCTION public.get_artwork_by_id(artwork_id uuid)
+ RETURNS TABLE(id uuid, profile_id uuid, title text, image_url text, keywords text, caption_curator text, caption_parent text, caption_child text, selected_caption text, created_at timestamp with time zone)
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN QUERY
+  SELECT a.id, a.profile_id, a.title, a.image_url,
+         a.keywords, a.caption_curator, a.caption_parent,
+         a.caption_child, a.selected_caption, a.created_at
+  FROM bl_artworks a
+  WHERE a.id = artwork_id
+    AND a.deleted_at IS NULL;
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.get_family_artworks(profile_ids uuid[])
+ RETURNS TABLE(id uuid, profile_id uuid, title text, image_url text, keywords text, caption_curator text, caption_parent text, caption_child text, selected_caption text, created_at timestamp with time zone)
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN QUERY
+  SELECT a.id, a.profile_id, a.title, a.image_url,
+         a.keywords, a.caption_curator, a.caption_parent,
+         a.caption_child, a.selected_caption, a.created_at
+  FROM bl_artworks a
+  WHERE a.profile_id = ANY(profile_ids)
+    AND a.deleted_at IS NULL
+  ORDER BY a.created_at DESC;
+END;
+$function$;
