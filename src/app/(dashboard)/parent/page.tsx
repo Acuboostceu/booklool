@@ -9,7 +9,7 @@ export default async function ParentPage() {
 
   const { data: parent } = await supabase
     .from('bl_profiles')
-    .select('id, name, family_code, partner_parent_id, plan, stripe_customer_id, color')
+    .select('id, name, family_code, partner_parent_id, color')
     .eq('user_id', user.id)
     .eq('role', 'parent')
     .single()
@@ -51,7 +51,7 @@ export default async function ParentPage() {
       children={children || []}
       recentBooks={recentBooks || []}
       badges={badges || []}
-      isAdmin={!!parent?.stripe_customer_id}
+      isAdmin={!!parent}
       parentColor={parent?.color || null}
     />
   )
