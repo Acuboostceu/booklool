@@ -46,3 +46,12 @@ body {
   color: var(--foreground);
   font-family: var(--font-comfortaa), var(--font-poor-story), sans-serif;
 }
+
+@keyframes swipe-flash {
+  0% { opacity: 0; }
+  25% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.animate-swipe-flash {
+  animation: swipe-flash 220ms ease-out;
+}

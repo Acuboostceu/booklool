@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { useSwipeNavigate } from '@/lib/useSwipeNavigate'
+import SwipeFlash from '@/components/SwipeFlash'
 
 type Artwork = {
   id: string
@@ -36,7 +37,7 @@ export default function ArtworkDetailView({ artwork, canDelete = true, prevId = 
   const [deleting, setDeleting] = useState(false)
 
   // 스와이프: 왼쪽으로 밀면 다음, 오른쪽으로 밀면 이전 (편집 중엔 비활성)
-  const swipe = useSwipeNavigate(
+  const { flash, ...swipe } = useSwipeNavigate(
     () => { if (!editing && nextId) router.push(`/artwork/${nextId}`) },
     () => { if (!editing && prevId) router.push(`/artwork/${prevId}`) },
   )
@@ -85,6 +86,7 @@ export default function ArtworkDetailView({ artwork, canDelete = true, prevId = 
 
   return (
     <div className="min-h-screen pb-24 px-4 py-6 max-w-lg mx-auto" {...swipe}>
+      <SwipeFlash direction={flash} />
       {/* Top bar */}
       <div className="flex gap-2 mb-8">
         <button

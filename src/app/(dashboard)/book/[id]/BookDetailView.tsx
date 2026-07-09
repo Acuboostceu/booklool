@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { usePwaPromptTrigger } from '@/lib/usePwaPromptTrigger'
 import PwaInstallCard from '@/components/PwaInstallCard'
 import { useSwipeNavigate } from '@/lib/useSwipeNavigate'
+import SwipeFlash from '@/components/SwipeFlash'
 
 type Book = {
   id: string
@@ -99,7 +100,7 @@ export default function BookDetailView({ book, canDelete = true, prevId = null, 
   const justSaved = usePwaPromptTrigger()
 
   // 스와이프: 왼쪽으로 밀면 다음, 오른쪽으로 밀면 이전 (편집 중엔 비활성)
-  const swipe = useSwipeNavigate(
+  const { flash, ...swipe } = useSwipeNavigate(
     () => { if (!editing && nextId) router.push(`/book/${nextId}`) },
     () => { if (!editing && prevId) router.push(`/book/${prevId}`) },
   )
@@ -126,6 +127,7 @@ export default function BookDetailView({ book, canDelete = true, prevId = null, 
 
   return (
     <div className="pb-24" {...swipe}>
+      <SwipeFlash direction={flash} />
       {justSaved && <PwaInstallCard />}
 
       {/* Top action buttons (back / edit / delete) — always visible */}
