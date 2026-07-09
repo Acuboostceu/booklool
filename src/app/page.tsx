@@ -374,7 +374,15 @@ export default function LandingPage() {
       {/* ── Footer ── */}
       <footer className="py-10 border-t border-gray-100 text-center bg-white">
         <img src="/booklool.png" alt="Booklool" className="h-6 w-auto object-contain mx-auto mb-3 opacity-40" />
-        <p className="text-xs text-gray-400">{t.footer_copy}</p>
+        <p className="text-xs text-gray-400 mb-3">{t.footer_copy}</p>
+        <div className="flex items-center justify-center gap-4">
+          <Link href="/privacy" className="text-xs text-gray-400 underline underline-offset-2 hover:text-gray-600 transition">
+            {lang === 'ko' ? '개인정보처리방침' : 'Privacy Policy'}
+          </Link>
+          <Link href="/terms" className="text-xs text-gray-400 underline underline-offset-2 hover:text-gray-600 transition">
+            {lang === 'ko' ? '이용약관' : 'Terms of Service'}
+          </Link>
+        </div>
       </footer>
 
     </div>

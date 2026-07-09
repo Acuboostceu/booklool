@@ -145,6 +145,11 @@ export default function SignupPage() {
             {t('auth_child_login')}
           </Link>
         </div>
+        <p className="text-center text-xs text-gray-400 mt-4">
+          <Link href="/privacy" className="underline underline-offset-2">Privacy Policy</Link>
+          {' · '}
+          <Link href="/terms" className="underline underline-offset-2">Terms of Service</Link>
+        </p>
       </div>
     </div>
   )
