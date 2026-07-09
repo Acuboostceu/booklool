@@ -31,9 +31,7 @@ export default function SettingsPage() {
   }, [])
 
   return (
-    <div className="pb-24">
-      <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('settings_title')}</h1>
-
+    <div className="pb-24 pt-2">
       {/* Trash — parents only */}
       {isParent && (
         <Link

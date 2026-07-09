@@ -308,8 +308,7 @@ export default function ParentPageView({
 
   return (
     <div className="pb-24">
-      <h1 className="text-xl font-bold text-gray-800 mb-2 text-center">{t('family_title')}</h1>
-      <p className="text-sm text-gray-500 mb-4">{t('family_greeting', displayParentName as never)}</p>
+      <p className="text-sm text-gray-500 mb-4 mt-2">{t('family_greeting', displayParentName as never)}</p>
 
       {/* Parent profile: name + color */}
       <div className="bg-white rounded-3xl p-4 border border-gray-100 mb-4">

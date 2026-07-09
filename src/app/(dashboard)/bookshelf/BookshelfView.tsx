@@ -275,7 +275,6 @@ export default function BookshelfView({
   initialTab?: string
   initialProfileId?: string
 }) {
-  const { t } = useLocale()
   const justSaved = usePwaPromptTrigger()
 
   const booksByProfile: Record<string, Book[]> = {}
@@ -290,7 +289,6 @@ export default function BookshelfView({
   return (
     <div className="pb-24">
       {justSaved && <PwaInstallCard />}
-      <h1 className="text-xl font-bold text-gray-800 mb-6 text-center">{t('bookshelf_title')}</h1>
 
       {profiles.map((profile, idx) => {
         const colorKey = profile.color || fallbackColors[idx % fallbackColors.length]
