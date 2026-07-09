@@ -7,7 +7,6 @@ import { Star, Plus, BookOpen, Palette, ChevronLeft } from 'lucide-react'
 import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
-import { useSwipeTab } from '@/lib/useSwipeTab'
 
 type Book = {
   id: string; title: string; cover_url: string | null; photo_url: string | null
@@ -49,7 +48,6 @@ export default function ProfileView({
   const { t } = useLocale()
   const [tab, setTab] = useState<'books' | 'art'>(initialTab === 'art' ? 'art' : 'books')
   const color = getProfileColor(profile.color || 'green')
-  const swipe = useSwipeTab(tab, setTab)
 
   const bookGroups = groupByMonth(books)
   const artGroups = groupByMonth(artworks)
@@ -92,7 +90,7 @@ export default function ProfileView({
       </div>
 
       {/* Swipeable tab content */}
-      <div {...swipe}>
+      <div>
 
       {/* Books by month */}
       {tab === 'books' && (

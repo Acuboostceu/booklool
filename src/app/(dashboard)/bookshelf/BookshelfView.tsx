@@ -7,7 +7,6 @@ import { Star, BookOpen, Palette, ChevronRight, Plus } from 'lucide-react'
 import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
 import { getProfileColor } from '@/lib/profileColors'
-import { useSwipeTab } from '@/lib/useSwipeTab'
 import { usePwaPromptTrigger } from '@/lib/usePwaPromptTrigger'
 import PwaInstallCard from '@/components/PwaInstallCard'
 
@@ -48,7 +47,6 @@ function ProfileSection({
     setTab(initialTab ?? 'books')
   }, [initialTab])
   const color = getProfileColor(colorKey)
-  const swipe = useSwipeTab(tab, setTab)
 
   return (
     <div className="mb-10">
@@ -92,7 +90,7 @@ function ProfileSection({
       </div>
 
       {/* Swipeable content */}
-      <div {...swipe}>
+      <div>
         {/* Books tab */}
         {tab === 'books' && (
           <>
@@ -131,7 +129,7 @@ function ProfileSection({
                       >
                         <Plus className="w-7 h-7" style={{ color: color.accent }} />
                         <span className="text-xs font-semibold text-center leading-tight" style={{ color: color.accent }}>
-                          {t('book_add_btn')}
+                          {t('book_add_btn').replace(/^\+\s*/, '')}
                         </span>
                       </div>
                     </Link>
@@ -216,7 +214,7 @@ function ProfileSection({
                       >
                         <Plus className="w-7 h-7" style={{ color: color.accent }} />
                         <span className="text-xs font-semibold text-center leading-tight" style={{ color: color.accent }}>
-                          {t('artwork_add_btn')}
+                          {t('artwork_add_btn').replace(/^\+\s*/, '')}
                         </span>
                       </div>
                     </Link>
