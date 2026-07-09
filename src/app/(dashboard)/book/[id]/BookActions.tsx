@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Pencil, Trash2, Star, X, Check, Camera, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
@@ -88,7 +89,10 @@ export default function BookActions({ book, editing, setEditing, canDelete = tru
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
             <p className="font-black text-gray-800 text-lg mb-2">{t('book_delete_confirm')}</p>
-            <p className="text-sm text-gray-500 mb-6">{t('book_delete_desc')}</p>
+            <p className="text-sm text-gray-500 mb-2">{t('book_delete_desc')}</p>
+            <Link href="/trash" className="text-xs font-bold underline underline-offset-2 mb-6 inline-block" style={{ color: 'var(--green-dark)' }}>
+              🗑 {t('trash_title')}
+            </Link>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}

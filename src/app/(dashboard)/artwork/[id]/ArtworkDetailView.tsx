@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ArrowLeft, Pencil, Check, X, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -197,7 +198,10 @@ export default function ArtworkDetailView({ artwork, canDelete = true, prevId = 
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-3xl p-6 w-full max-w-sm">
             <p className="font-black text-gray-800 text-lg mb-2">{t('artwork_detail_delete_title')}</p>
-            <p className="text-sm text-gray-500 mb-6">{t('artwork_detail_delete_desc')}</p>
+            <p className="text-sm text-gray-500 mb-2">{t('artwork_detail_delete_desc')}</p>
+            <Link href="/trash" className="text-xs font-bold underline underline-offset-2 mb-6 inline-block" style={{ color: 'var(--green-dark)' }}>
+              🗑 {t('trash_title')}
+            </Link>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
