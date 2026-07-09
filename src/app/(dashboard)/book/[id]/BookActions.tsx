@@ -10,6 +10,7 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 import { usePhotoQuality } from '@/lib/usePhotoQuality'
 import PhotoQualityDialog from '@/components/PhotoQualityDialog'
 import LowResWarning from '@/components/LowResWarning'
+import { uploadPhoto } from '@/lib/uploadPhoto'
 
 type BookData = {
   id: string
@@ -128,6 +129,7 @@ export function BookEditForm({ book, setEditing }: {
   const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null)
   const [newPhotoPreview, setNewPhotoPreview] = useState<string>('')
   const [newPhotoLowRes, setNewPhotoLowRes] = useState(false)
+  const [uploadError, setUploadError] = useState(false)
   const photoQuality = usePhotoQuality()
 
   async function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -145,21 +147,19 @@ export function BookEditForm({ book, setEditing }: {
 
   async function handleSave() {
     setSaving(true)
+    setUploadError(false)
     let photoUrl = book.photo_url || ''
     let originalUrl: string | null = null
     if (newPhotoFile) {
       try {
-        const formData = new FormData()
-        formData.append('file', newPhotoFile)
-        formData.append('profileId', book.profile_id)
-        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
-        if (uploadRes.ok) {
-          const { publicUrl, thumbUrl, originalUrl: origUrl } = await uploadRes.json()
-          photoUrl = thumbUrl || publicUrl
-          originalUrl = origUrl || null
-        }
+        const uploaded = await uploadPhoto(newPhotoFile, book.profile_id, 'books')
+        photoUrl = uploaded.thumbUrl
+        originalUrl = uploaded.originalUrl || null
       } catch (err) {
         console.error('Photo upload failed:', err)
+        setSaving(false)
+        setUploadError(true)
+        return
       }
     }
     await supabase.from('bl_books').update({
@@ -260,6 +260,7 @@ export function BookEditForm({ book, setEditing }: {
         </div>
       )}
 
+      {uploadError && <p className="text-sm text-red-500 text-center">{t('add_upload_error')}</p>}
       <button
         onClick={handleSave}
         disabled={saving}

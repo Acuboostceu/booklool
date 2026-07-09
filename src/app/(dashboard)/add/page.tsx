@@ -10,6 +10,7 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 import { usePhotoQuality } from '@/lib/usePhotoQuality'
 import PhotoQualityDialog from '@/components/PhotoQualityDialog'
 import LowResWarning from '@/components/LowResWarning'
+import { uploadPhoto } from '@/lib/uploadPhoto'
 
 type Step = 'capture' | 'search' | 'mode' | 'confirm' | 'review' | 'log'
 
@@ -67,6 +68,7 @@ export default function AddBookPage() {
   const [aiQuestion, setAiQuestion] = useState('')
   const [aiAnswer, setAiAnswer] = useState('')
   const [saving, setSaving] = useState(false)
+  const [uploadError, setUploadError] = useState(false)
   const [totalPages, setTotalPages] = useState('')
   const [coverPhotoFile, setCoverPhotoFile] = useState<File | null>(null)
   const [coverPhotoPreview, setCoverPhotoPreview] = useState<string>('')
@@ -259,21 +261,10 @@ export default function AddBookPage() {
     setStep('review')
   }
 
-  async function uploadFile(file: File, pid: string): Promise<{ thumbUrl: string; originalUrl: string }> {
-    const formData = new FormData()
-    formData.append('file', file)
-    formData.append('profileId', pid)
-    const res = await fetch('/api/upload', { method: 'POST', body: formData })
-    if (res.ok) {
-      const { publicUrl, thumbUrl, originalUrl } = await res.json()
-      return { thumbUrl: thumbUrl || publicUrl, originalUrl: originalUrl || '' }
-    }
-    return { thumbUrl: '', originalUrl: '' }
-  }
-
   async function handleSaveLog() {
     if (!selected || !selectedChild) return
     setSaving(true)
+    setUploadError(false)
 
     // Use coverPhotoFile if provided, otherwise fall back to OCR photoFile
     const fileToUpload = coverPhotoFile || photoFile
@@ -281,11 +272,14 @@ export default function AddBookPage() {
     let originalUrl = ''
     if (fileToUpload) {
       try {
-        const uploaded = await uploadFile(fileToUpload, selectedChild)
+        const uploaded = await uploadPhoto(fileToUpload, selectedChild, 'books')
         photoUrl = uploaded.thumbUrl
         originalUrl = uploaded.originalUrl
       } catch (err) {
         console.error('Photo upload failed:', err)
+        setSaving(false)
+        setUploadError(true)
+        return
       }
     }
 
@@ -317,17 +311,21 @@ export default function AddBookPage() {
   async function handleSave() {
     if (!selected || !selectedChild) return
     setSaving(true)
+    setUploadError(false)
 
     const fileToUpload = coverPhotoFile || photoFile
     let photoUrl = ''
     let originalUrl = ''
     if (fileToUpload) {
       try {
-        const uploaded = await uploadFile(fileToUpload, selectedChild)
+        const uploaded = await uploadPhoto(fileToUpload, selectedChild, 'books')
         photoUrl = uploaded.thumbUrl
         originalUrl = uploaded.originalUrl
       } catch (err) {
         console.error('Photo upload failed:', err)
+        setSaving(false)
+        setUploadError(true)
+        return
       }
     }
 
@@ -588,6 +586,7 @@ export default function AddBookPage() {
               onBlur={e => e.target.style.borderColor = 'var(--green-light)'}
             />
           </div>
+          {uploadError && <p className="text-sm text-red-500 text-center">{t('add_upload_error')}</p>}
           <button
             onClick={handleSaveLog}
             disabled={saving}
@@ -669,6 +668,7 @@ export default function AddBookPage() {
             </p>
           )}
 
+          {uploadError && <p className="text-sm text-red-500 text-center">{t('add_upload_error')}</p>}
           <button
             onClick={handleSave}
             disabled={saving || rating === 0}
