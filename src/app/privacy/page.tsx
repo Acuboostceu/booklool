@@ -73,7 +73,7 @@ const copy = {
       },
       {
         h: 'Contact',
-        body: ['Questions about this policy? Email us at support@acuboostceu.com.'],
+        body: ['Questions about this policy? Email us at hello@booklool.com.'],
       },
     ],
   },
@@ -146,7 +146,7 @@ const copy = {
       },
       {
         h: '문의',
-        body: ['이 정책에 대해 궁금하신 점은 support@acuboostceu.com으로 연락해주세요.'],
+        body: ['이 정책에 대해 궁금하신 점은 hello@booklool.com으로 연락해주세요.'],
       },
     ],
   },

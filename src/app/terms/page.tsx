@@ -59,7 +59,7 @@ const copy = {
       },
       {
         h: 'Contact',
-        body: ['Questions about these terms? Email us at support@acuboostceu.com.'],
+        body: ['Questions about these terms? Email us at hello@booklool.com.'],
       },
     ],
   },
@@ -118,7 +118,7 @@ const copy = {
       },
       {
         h: '문의',
-        body: ['본 약관에 대해 궁금하신 점은 support@acuboostceu.com으로 연락해주세요.'],
+        body: ['본 약관에 대해 궁금하신 점은 hello@booklool.com으로 연락해주세요.'],
       },
     ],
   },
