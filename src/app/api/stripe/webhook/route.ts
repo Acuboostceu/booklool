@@ -23,19 +23,17 @@ export async function POST(req: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
     const profileId = session.metadata?.profile_id
-    console.log('[webhook] checkout completed, profileId:', profileId)
     if (profileId) {
       const { error } = await supabase.rpc('set_plan_family', { profile_id_input: profileId })
-      console.log('[webhook] set_plan_family error:', error)
+      if (error) console.error('[stripe/webhook] set_plan_family failed:', error)
     }
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object as Stripe.Subscription
     const customerId = sub.customer as string
-    console.log('[webhook] cancelling plan for customer:', customerId)
     const { error } = await supabase.rpc('cancel_plan_by_customer', { customer_id: customerId })
-    console.log('[webhook] cancel error:', error)
+    if (error) console.error('[stripe/webhook] cancel_plan_by_customer failed:', error)
     // Reset cancel_scheduled flag
     await supabase.from('bl_profiles').update({ cancel_scheduled: false }).eq('stripe_customer_id', customerId)
   }

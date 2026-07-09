@@ -36,7 +36,6 @@ export default function FamilyConnect({
 
   async function handleJoin(e: React.FormEvent) {
     e.preventDefault()
-    console.log('[join] submitting code:', code)
     setLoading(true)
     setError('')
     try {
@@ -45,9 +44,7 @@ export default function FamilyConnect({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ family_code: code }),
       })
-      console.log('[join] response status:', res.status)
       const data = await res.json()
-      console.log('[join] response data:', data)
       if (!res.ok) {
         setError(data.error || '연결 실패')
       } else {

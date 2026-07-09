@@ -17,8 +17,6 @@ export async function POST(req: NextRequest) {
     .eq('role', 'parent')
     .single()
 
-  console.log('[join] targetParent:', targetParent, 'error:', targetErr)
-
   if (!targetParent) return NextResponse.json({ error: '코드를 찾을 수 없어요', detail: targetErr?.message }, { status: 404 })
   if (targetParent.user_id === user.id) return NextResponse.json({ error: '본인 코드는 사용할 수 없어요' }, { status: 400 })
 
@@ -30,8 +28,6 @@ export async function POST(req: NextRequest) {
     .eq('role', 'parent')
     .single()
 
-  console.log('[join] myProfile:', myProfile, 'error:', myErr)
-
   if (!myProfile) return NextResponse.json({ error: '부모 프로필이 없어요', detail: myErr?.message }, { status: 404 })
   if (myProfile.partner_parent_id) return NextResponse.json({ error: '이미 가족이 연결되어 있어요' }, { status: 400 })
 
@@ -40,8 +36,10 @@ export async function POST(req: NextRequest) {
     my_profile_id: myProfile.id,
     target_profile_id: targetParent.id,
   })
-  console.log('[join] link error:', linkErr)
-  if (linkErr) return NextResponse.json({ error: '연결 실패', detail: linkErr.message }, { status: 500 })
+  if (linkErr) {
+    console.error('[family/join] link_partners failed:', linkErr)
+    return NextResponse.json({ error: '연결 실패', detail: linkErr.message }, { status: 500 })
+  }
 
   return NextResponse.json({ ok: true })
 }
