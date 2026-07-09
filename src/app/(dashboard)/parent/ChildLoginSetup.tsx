@@ -74,7 +74,7 @@ export default function ChildLoginSetup({
             onChange={e => setPassword(e.target.value)}
             placeholder={hasLogin ? t('child_login_pw_new') : t('child_login_pw_set')}
             required={!hasLogin}
-            minLength={4}
+            minLength={6}
             className="w-full border-2 rounded-xl px-3 py-2 text-sm outline-none"
             style={{ borderColor: 'var(--purple-light)' }}
           />
