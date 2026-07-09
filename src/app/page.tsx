@@ -227,7 +227,7 @@ export default function LandingPage() {
             </div>
 
             {/* Step 02 — two methods */}
-            <div className="flex flex-col md:flex-row items-start gap-8">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
               <div className="flex-shrink-0 flex flex-col items-center gap-3 md:w-24">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style={{ background: 'var(--purple-light)' }}>
                   ✏️
