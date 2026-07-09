@@ -15,5 +15,15 @@ export default async function ArtworkPage({ params }: { params: Promise<{ id: st
 
   const session = await getSessionProfile(supabase)
 
-  return <ArtworkDetailView artwork={artwork} canDelete={session?.role === 'parent'} />
+  // 같은 프로필의 작품 목록(생성일 내림차순, get_family_artworks와 동일 정렬)에서 이전/다음 id 계산
+  const { data: siblings } = await supabase
+    .rpc('get_family_artworks', { profile_ids: [artwork.profile_id] })
+  const ids = ((siblings || []) as { id: string; deleted_at?: string | null }[])
+    .filter(a => !a.deleted_at)
+    .map(a => a.id)
+  const idx = ids.indexOf(id)
+  const prevId = idx > 0 ? ids[idx - 1] : null
+  const nextId = idx >= 0 && idx < ids.length - 1 ? ids[idx + 1] : null
+
+  return <ArtworkDetailView artwork={artwork} canDelete={session?.role === 'parent'} prevId={prevId} nextId={nextId} />
 }

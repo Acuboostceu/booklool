@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { toImgSrc } from '@/lib/imageProxy'
 import { useLocale } from '@/lib/i18n/LocaleContext'
+import { useSwipeNavigate } from '@/lib/useSwipeNavigate'
 
 type Artwork = {
   id: string
@@ -17,7 +18,12 @@ type Artwork = {
   created_at: string
 }
 
-export default function ArtworkDetailView({ artwork, canDelete = true }: { artwork: Artwork; canDelete?: boolean }) {
+export default function ArtworkDetailView({ artwork, canDelete = true, prevId = null, nextId = null }: {
+  artwork: Artwork
+  canDelete?: boolean
+  prevId?: string | null
+  nextId?: string | null
+}) {
   const router = useRouter()
   const supabase = createClient()
   const { locale, t } = useLocale()
@@ -28,6 +34,12 @@ export default function ArtworkDetailView({ artwork, canDelete = true }: { artwo
   const [saving, setSaving] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting, setDeleting] = useState(false)
+
+  // 스와이프: 왼쪽으로 밀면 다음, 오른쪽으로 밀면 이전 (편집 중엔 비활성)
+  const swipe = useSwipeNavigate(
+    () => { if (!editing && nextId) router.push(`/artwork/${nextId}`) },
+    () => { if (!editing && prevId) router.push(`/artwork/${prevId}`) },
+  )
 
   const dateLocale = locale === 'ko' ? 'ko-KR' : locale === 'es' ? 'es-ES' : 'en-US'
   const formattedDate = new Date(artwork.created_at).toLocaleDateString(dateLocale, {
@@ -72,7 +84,7 @@ export default function ArtworkDetailView({ artwork, canDelete = true }: { artwo
   }
 
   return (
-    <div className="min-h-screen pb-24 px-4 py-6 max-w-lg mx-auto">
+    <div className="min-h-screen pb-24 px-4 py-6 max-w-lg mx-auto" {...swipe}>
       {/* Top bar */}
       <div className="flex gap-2 mb-8">
         <button

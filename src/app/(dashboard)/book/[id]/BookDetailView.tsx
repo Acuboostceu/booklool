@@ -9,9 +9,10 @@ import { useLocale } from '@/lib/i18n/LocaleContext'
 import BookActions, { BookEditForm } from './BookActions'
 import ReadingLogSection from './ReadingLogSection'
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { usePwaPromptTrigger } from '@/lib/usePwaPromptTrigger'
 import PwaInstallCard from '@/components/PwaInstallCard'
+import { useSwipeNavigate } from '@/lib/useSwipeNavigate'
 
 type Book = {
   id: string
@@ -85,11 +86,23 @@ function BookDescription({ book }: { book: Book }) {
   )
 }
 
-export default function BookDetailView({ book, canDelete = true }: { book: Book; canDelete?: boolean }) {
+export default function BookDetailView({ book, canDelete = true, prevId = null, nextId = null }: {
+  book: Book
+  canDelete?: boolean
+  prevId?: string | null
+  nextId?: string | null
+}) {
   const { t } = useLocale()
+  const router = useRouter()
   const searchParams = useSearchParams()
   const [editing, setEditing] = useState(false)
   const justSaved = usePwaPromptTrigger()
+
+  // 스와이프: 왼쪽으로 밀면 다음, 오른쪽으로 밀면 이전 (편집 중엔 비활성)
+  const swipe = useSwipeNavigate(
+    () => { if (!editing && nextId) router.push(`/book/${nextId}`) },
+    () => { if (!editing && prevId) router.push(`/book/${prevId}`) },
+  )
 
   useEffect(() => {
     if (searchParams.get('edit') === '1') {
@@ -112,7 +125,7 @@ export default function BookDetailView({ book, canDelete = true }: { book: Book;
   }
 
   return (
-    <div className="pb-24">
+    <div className="pb-24" {...swipe}>
       {justSaved && <PwaInstallCard />}
 
       {/* Top action buttons (back / edit / delete) — always visible */}
