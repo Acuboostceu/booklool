@@ -48,7 +48,7 @@ export default function BookActions({ book, editing, setEditing, canDelete = tru
   return (
     <div className="flex gap-2 mb-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => router.push(`/bookshelf?profileId=${book.profile_id}&tab=books`)}
         className="flex items-center justify-center gap-1 px-3 py-2.5 rounded-2xl text-sm font-bold transition"
         style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
       >
