@@ -289,7 +289,9 @@ export default function PerspectiveEditor({ imageUrl, onFlattened, locale = 'en'
         onPointerCancel={onPointerUp}
       />
       <p className="text-xs text-gray-400 text-center">
-        {locale === 'ko' ? '모서리를 드래그해서 작품 영역을 맞추세요' : 'Drag the corners to align with the artwork'}
+        {locale === 'ko' ? '모서리를 드래그해서 작품 영역을 맞추세요'
+          : locale === 'es' ? 'Arrastra las esquinas para ajustar el área de la obra'
+          : 'Drag the corners to align with the artwork'}
       </p>
       <button
         onClick={handleFlatten}
@@ -298,8 +300,8 @@ export default function PerspectiveEditor({ imageUrl, onFlattened, locale = 'en'
         style={{ background: 'var(--purple-light)', color: 'var(--purple-dark)' }}
       >
         {flattening
-          ? (locale === 'ko' ? '처리 중...' : 'Processing...')
-          : (locale === 'ko' ? '📐 평면으로 펴기' : '📐 Flatten')}
+          ? (locale === 'ko' ? '처리 중...' : locale === 'es' ? 'Procesando...' : 'Processing...')
+          : (locale === 'ko' ? '📐 평면으로 펴기' : locale === 'es' ? '📐 Aplanar' : '📐 Flatten')}
       </button>
     </div>
   )
