@@ -23,6 +23,7 @@ export async function proxy(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
+  const isRoot = request.nextUrl.pathname === '/'
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||
     request.nextUrl.pathname.startsWith('/signup')
 
@@ -38,7 +39,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (user && isAuthRoute) {
+  // 로그인 세션이 유지된 사용자는 랜딩/로그인/가입 페이지 대신 바로 앱으로
+  if (user && (isAuthRoute || isRoot)) {
     return NextResponse.redirect(new URL('/bookshelf', request.url))
   }
 
