@@ -34,10 +34,12 @@ export async function uploadPhoto(
 
   const thumbBlob = await makeThumbBlob(file)
 
-  await Promise.all([
+  const [originalRes, thumbRes] = await Promise.all([
     fetch(originalUploadUrl, { method: 'PUT', headers: { 'Content-Type': file.type || 'image/jpeg' }, body: file }),
     fetch(thumbUploadUrl, { method: 'PUT', headers: { 'Content-Type': 'image/jpeg' }, body: thumbBlob }),
   ])
+  if (!originalRes.ok) throw new Error(`Original upload to S3 failed: ${originalRes.status}`)
+  if (!thumbRes.ok) throw new Error(`Thumbnail upload to S3 failed: ${thumbRes.status}`)
 
   return { thumbUrl, originalUrl }
 }

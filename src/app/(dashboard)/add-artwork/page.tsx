@@ -36,6 +36,7 @@ function AddArtworkInner() {
   const [selectedCaption, setSelectedCaption] = useState<'curator' | 'parent' | 'child' | null>(null)
   const [generating, setGenerating] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(false)
   const [profileId, setProfileId] = useState<string>('')
   const [profileName, setProfileName] = useState<string>('')
   const [rawLowRes, setRawLowRes] = useState(false)
@@ -141,6 +142,7 @@ function AddArtworkInner() {
   async function handleSave() {
     if (!activeImageUrl || !artTitle || !selectedCaption || !captions) return
     setSaving(true)
+    setSaveError(false)
     try {
       // 1. Get presigned URLs (original + thumb) from server
       const urlRes = await fetch('/api/artwork/upload-url', {
@@ -152,6 +154,7 @@ function AddArtworkInner() {
           originalContentType: rawFile?.type || 'image/jpeg',
         }),
       })
+      if (!urlRes.ok) throw new Error(`Failed to get upload URL: ${urlRes.status}`)
       const { originalUploadUrl, thumbUploadUrl, originalUrl, thumbUrl } = await urlRes.json()
 
       // 2. Upload original (uncompressed, for print) and thumb (screen) to S3
@@ -170,7 +173,9 @@ function AddArtworkInner() {
           body: rawFile,
         }))
       }
-      await Promise.all(uploads)
+      const uploadResults = await Promise.all(uploads)
+      const failed = uploadResults.find(r => !r.ok)
+      if (failed) throw new Error(`Upload to S3 failed: ${failed.status}`)
 
       // 3. Save metadata to DB (no image payload)
       const saveRes = await fetch('/api/artwork', {
@@ -188,9 +193,11 @@ function AddArtworkInner() {
           selectedCaption: captions[selectedCaption],
         }),
       })
-      if (saveRes.ok) {
-        setStep('done')
-      }
+      if (!saveRes.ok) throw new Error(`Failed to save artwork: ${saveRes.status}`)
+      setStep('done')
+    } catch (err) {
+      console.error('Artwork save failed:', err)
+      setSaveError(true)
     } finally {
       setSaving(false)
     }
@@ -387,6 +394,7 @@ function AddArtworkInner() {
                 </div>
               ))}
 
+              {saveError && <p className="text-sm text-red-500 text-center">{t('add_upload_error')}</p>}
               <button
                 onClick={handleSave}
                 disabled={!selectedCaption || saving}
