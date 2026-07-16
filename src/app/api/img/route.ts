@@ -17,7 +17,7 @@ const s3 = new S3Client({
   requestChecksumCalculation: 'WHEN_REQUIRED',
 })
 
-const SIGN_TTL_SECONDS = 10 * 60 // 10분 (≤15분 권장)
+const SIGN_TTL_SECONDS = 15 * 60 // 15분 (AWS 권장 상한)
 const KEY_RE = /^(books|artworks|print)\/([0-9a-f-]{36})\//
 
 // 인증된 가족 구성원에게만 presigned GET으로 리다이렉트
@@ -46,7 +46,9 @@ export async function GET(req: NextRequest) {
   )
 
   return NextResponse.redirect(signedUrl, {
-    // presigned 만료보다 짧게 브라우저 캐시 허용 (재로드 시 프록시 재검증)
-    headers: { 'Cache-Control': 'private, max-age=300' },
+    // presigned 만료보다 짧게 브라우저 캐시 허용 (재로드 시 프록시 재검증).
+    // stale-while-revalidate로 만료 직후에도 이전 응답을 즉시 쓰고 백그라운드에서 갱신 —
+    // 매 이미지마다 세션+가족 조회를 반복하는 비용이 커서 캐시 적중률이 체감 속도에 직결됨.
+    headers: { 'Cache-Control': 'private, max-age=840, stale-while-revalidate=120' },
   })
 }
