@@ -127,14 +127,14 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-3">
           <img src="/booklool.png" alt="Booklool" className="h-8 w-auto object-contain shrink-0" />
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3 sm:gap-4">
             <button
               onClick={toggleLang}
               className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition whitespace-nowrap"
             >
               {t.lang_toggle}
             </button>
-            <Link href={loggedIn ? '/bookshelf' : '/login'} className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition">
+            <Link href={loggedIn ? '/bookshelf' : '/login'} className="text-sm font-bold text-gray-700 hover:text-gray-900 transition">
               {loggedIn ? '→ App' : t.nav_login}
             </Link>
           </div>
