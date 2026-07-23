@@ -136,7 +136,7 @@ export default function LandingPage() {
             >
               {t.lang_toggle}
             </button>
-            <Link href="/login" className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition hidden sm:block">
+            <Link href="/login" className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition">
               {t.nav_login}
             </Link>
             <Link
