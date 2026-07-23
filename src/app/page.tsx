@@ -134,7 +134,7 @@ export default function LandingPage() {
             >
               {t.lang_toggle}
             </button>
-            <Link href={loggedIn ? '/bookshelf' : '/login'} className="text-sm font-bold text-gray-700 hover:text-gray-900 transition">
+            <Link href={loggedIn ? '/bookshelf' : '/login'} className="text-sm font-bold text-gray-700 hover:text-gray-900 border border-gray-700 hover:border-gray-900 rounded-lg px-3 py-1 transition">
               {loggedIn ? '→ App' : t.nav_login}
             </Link>
           </div>
