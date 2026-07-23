@@ -8,7 +8,6 @@ import { createClient } from '@/lib/supabase/client'
 const copy = {
   en: {
     nav_login: 'Log in',
-    nav_start: 'Get started free',
     lang_toggle: '한국어',
     hero_tag: '📚 Family Reading Journal',
     hero_title: "Your child's bookshelf,",
@@ -55,7 +54,6 @@ const copy = {
   },
   ko: {
     nav_login: '로그인',
-    nav_start: '무료로 시작',
     lang_toggle: 'English',
     hero_tag: '📚 가족 독서 일기',
     hero_title: '몇 년 후, 아이의 책장을',
@@ -136,15 +134,8 @@ export default function LandingPage() {
             >
               {t.lang_toggle}
             </button>
-            <Link href="/login" className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition">
-              {t.nav_login}
-            </Link>
-            <Link
-              href={loggedIn ? '/bookshelf' : '/signup'}
-              className="text-sm font-bold px-4 py-2 rounded-full text-white transition hover:opacity-90"
-              style={{ background: 'var(--green)' }}
-            >
-              {loggedIn ? '→ App' : t.nav_start}
+            <Link href={loggedIn ? '/bookshelf' : '/login'} className="text-sm font-semibold text-gray-500 hover:text-gray-800 transition">
+              {loggedIn ? '→ App' : t.nav_login}
             </Link>
           </div>
         </div>
